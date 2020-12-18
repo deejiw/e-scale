@@ -22,8 +22,15 @@ export const AppNavBar = () => {
 
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
 
+  const user = useSelector(state => state.auth.user)
+
   const authLinks = (
     <Fragment>
+      <NavItem>
+        <span className='navbar-text mr-3'>
+          <strong>{user ? `Welcome ${user.name}` : ''}</strong>
+        </span>
+      </NavItem>
       <NavItem>
         <Logout />
       </NavItem>
