@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { AppNavBar } from './components/AppNavBar'
+import AppNavBar from './components/AppNavBar'
 import ShoppingList from './components/ShoppingList'
 import ItemModal from './components/ItemModal'
 

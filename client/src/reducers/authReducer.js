@@ -17,9 +17,7 @@ const initialState = {
 }
 
 export default function (state = initialState, action) {
-  switch (
-    action.type // eslint-disable-line no-unused-vars
-  ) {
+  switch (action.type) {
     case USER_LOADING:
       return {
         ...state,

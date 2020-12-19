@@ -15,13 +15,10 @@ import RegisterModal from './auth/RegisterModal'
 import LoginModal from './auth/LoginModal'
 import Logout from './auth/Logout'
 
-export const AppNavBar = () => {
-  const handleToggle = () => setIsOpen(!isOpen)
-
+const AppNavBar = () => {
   const [isOpen, setIsOpen] = useState(false)
-
+  const handleToggle = () => setIsOpen(!isOpen)
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
-
   const user = useSelector(state => state.auth.user)
 
   const authLinks = (
@@ -66,3 +63,5 @@ export const AppNavBar = () => {
     </div>
   )
 }
+
+export default AppNavBar
