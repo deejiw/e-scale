@@ -1,6 +1,7 @@
 // aka container; a  compoenent that is hooked with redux
 
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
+import { connect, useSelector, useDispatch } from 'react-redux'
 import {
   Button,
   Modal,
@@ -11,88 +12,59 @@ import {
   Label,
   Input
 } from 'reactstrap'
-import { connect } from 'react-redux'
+
 import { addItem } from '../actions/itemActions'
-import PropTypes from 'prop-types'
-class ItemModal extends Component {
-  state = {
-    modal: false,
-    name: ''
-  }
 
-  static propTypes = {
-    isAuthenticated: PropTypes.bool
-  }
-
-  toggle = () => {
-    this.setState({
-      modal: !this.state.modal
-    })
-  }
-
-  onChange = e => {
-    this.setState({ [e.target.name]: e.target.value })
-  }
-
-  onSubmit = e => {
-    // Prevent the actual form from submitting
+const ItemModal = () => {
+  const [isOpen, setIsOpen] = useState(false)
+  const [name, setName] = useState('')
+  const handleToggle = () => setIsOpen(!isOpen)
+  const item = useSelector(state => state.item)
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
+  const dispatch = useDispatch()
+  const handleSubmit = e => {
     e.preventDefault()
-
-    const newItem = {
-      name: this.state.name
-    }
-
-    // Add item via addItem
-    this.props.addItem(newItem)
-
-    // Close modal
-    this.toggle()
+    dispatch(addItem(name))
+    handleToggle()
   }
 
-  render() {
-    return (
-      <div>
-        {this.props.isAuthenticated ? (
-          <Button
-            color='dark'
-            style={{ marginBottom: '2rem' }}
-            onClick={this.toggle}>
-            Add Item
-          </Button>
-        ) : (
-          <h4 className='mb-3' ml-4>
-            Please login to manage items
-          </h4>
-        )}
+  return (
+    <div>
+      {isAuthenticated ? (
+        <Button
+          color='dark'
+          style={{ marginBottom: '2rem' }}
+          onClick={handleToggle}>
+          Add Item
+        </Button>
+      ) : (
+        <h4 className='mb-3 ml-4'>Please login to manage items</h4>
+      )}
 
-        <Modal isOpen={this.state.modal} toggle={this.toggle}>
-          <ModalHeader toggle={this.toggle}>Add To Shopping List</ModalHeader>
-          <ModalBody>
-            <Form onSubmit={this.onSubmit}>
-              <FormGroup>
-                <Label for='item'>Item</Label>
-                <Input
-                  type='text'
-                  name='name'
-                  id='item'
-                  placeholder='Add shopping item'
-                  onChange={this.onChange}
-                />
-                <Button color='dark' style={{ marginTop: '2rem' }} block>
-                  Add Item
-                </Button>
-              </FormGroup>
-            </Form>
-          </ModalBody>
-        </Modal>
-      </div>
-    )
-  }
+      <Modal isOpen={isOpen} handleToggle={handleToggle}>
+        <ModalHeader handleToggle={handleToggle}>
+          Add To Shopping List
+        </ModalHeader>
+        <ModalBody>
+          <Form onSubmit={handleSubmit}>
+            <FormGroup>
+              <Label for='item'>Item</Label>
+              <Input
+                type='text'
+                name='name'
+                id='item'
+                placeholder='Add shopping item'
+                onChange={e => setName(e.target.value)}
+              />
+              <Button color='dark' style={{ marginTop: '2rem' }} block>
+                Add Item
+              </Button>
+            </FormGroup>
+          </Form>
+        </ModalBody>
+      </Modal>
+    </div>
+  )
 }
 
-const mapStateToProps = state => ({
-  item: state.item,
-  isAuthenticated: state.auth.isAuthenticated
-})
-
-export default connect(mapStateToProps, { addItem })(ItemModal)
+export default ItemModal
