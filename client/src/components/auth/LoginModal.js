@@ -71,50 +71,51 @@ const LoginModal = () => {
       password
     }
     dispatch(login(user))
-
-    return (
-      <div>
-        <NavLink onClick={toggle} href='#'>
-          Login
-        </NavLink>
-
-        <Modal isOpen={state.modal} toggle={toggle}>
-          <ModalHeader toggle={toggle}>Login</ModalHeader>
-          <ModalBody>
-            {state.msg ? <Alert color='danger'>{state.msg}</Alert> : null}
-            <Form onSubmit={onSubmit}>
-              <FormGroup>
-                <Input
-                  type='email'
-                  name='email'
-                  id='email'
-                  placeholder='Email'
-                  className='mb-3'
-                  onChange={onChange}
-                />
-                <Input
-                  type='password'
-                  name='password'
-                  id='password'
-                  placeholder='Password'
-                  className='mb-3'
-                  onChange={onChange}
-                />
-                <Button color='dark' style={{ marginTop: '2rem' }} block>
-                  Login
-                </Button>
-              </FormGroup>
-            </Form>
-          </ModalBody>
-        </Modal>
-      </div>
-    )
   }
-  LoginModal.propTypes = {
-    isAuthenticated: PropTypes.bool,
-    error: PropTypes.object.isRequired,
-    login: PropTypes.func.isRequired,
-    clearErrors: PropTypes.func.isRequired
-  }
+
+  return (
+    <div>
+      <NavLink onClick={toggle} href='#'>
+        Login
+      </NavLink>
+
+      <Modal isOpen={state.modal} toggle={toggle}>
+        <ModalHeader toggle={toggle}>Login</ModalHeader>
+        <ModalBody>
+          {state.msg ? <Alert color='danger'>{state.msg}</Alert> : null}
+          <Form onSubmit={onSubmit}>
+            <FormGroup>
+              <Input
+                type='email'
+                name='email'
+                id='email'
+                placeholder='Email'
+                className='mb-3'
+                onChange={onChange}
+              />
+              <Input
+                type='password'
+                name='password'
+                id='password'
+                placeholder='Password'
+                className='mb-3'
+                onChange={onChange}
+              />
+              <Button color='dark' style={{ marginTop: '2rem' }} block>
+                Login
+              </Button>
+            </FormGroup>
+          </Form>
+        </ModalBody>
+      </Modal>
+    </div>
+  )
 }
+LoginModal.propTypes = {
+  isAuthenticated: PropTypes.bool,
+  error: PropTypes.object.isRequired,
+  login: PropTypes.func.isRequired,
+  clearErrors: PropTypes.func.isRequired
+}
+
 export default LoginModal

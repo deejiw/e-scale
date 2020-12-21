@@ -34,7 +34,7 @@ const RegisterModal = () => {
   const usePrevious = value => {
     const ref = useRef()
     useEffect(() => {
-      ref.current = value
+      ref.current = value // eslint-disable-next-line
     })
     return ref.current
   }
