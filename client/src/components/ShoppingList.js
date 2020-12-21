@@ -3,19 +3,14 @@ import { Container, ListGroup, ListGroupItem, Button } from 'reactstrap'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { useSelector, useDispatch } from 'react-redux'
 import { getItems, deleteItem } from '../actions/itemActions'
+import PropTypes from 'prop-types'
 
 const ShoppingList = () => {
+  const dispatch = useDispatch()
   const items = useSelector(state => state.item.items)
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
-  const dispatch = useDispatch()
-  useEffect(() => {
-    dispatch(getItems())
-  }, [])
-
-  // _id is parsed as id here
-  const onDeleteClick = id => {
-    dispatch(deleteItem(id))
-  }
+  useEffect(() => dispatch(getItems()), [])
+  const onDeleteClick = id => dispatch(deleteItem(id))
 
   return (
     <Container>
@@ -41,6 +36,13 @@ const ShoppingList = () => {
       ) : null}
     </Container>
   )
+}
+
+ShoppingList.propTypes = {
+  getItems: PropTypes.func.isRequired,
+  deleteItem: PropTypes.func.isRequired,
+  items: PropTypes.object.isRequired,
+  isAuthenticated: PropTypes.bool.isRequired
 }
 
 export default ShoppingList

@@ -1,7 +1,4 @@
-// aka container; a  compoenent that is hooked with redux
-
 import React, { useState, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
 import {
   Button,
   Modal,
@@ -13,13 +10,14 @@ import {
   Input
 } from 'reactstrap'
 
+import { useSelector, useDispatch } from 'react-redux'
 import { addItem } from '../actions/itemActions'
+import PropTypes from 'prop-types'
 
 const ItemModal = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [name, setName] = useState('')
   const handleToggle = () => setIsOpen(!isOpen)
-  const item = useSelector(state => state.item)
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
   const dispatch = useDispatch()
   const handleSubmit = e => {
@@ -65,6 +63,10 @@ const ItemModal = () => {
       </Modal>
     </div>
   )
+}
+
+ItemModal.propTypes = {
+  isAuthenticated: PropTypes.bool.isRequired
 }
 
 export default ItemModal

@@ -9,8 +9,9 @@ import {
   NavLink,
   Container
 } from 'reactstrap'
-
 import { useSelector } from 'react-redux'
+import PropTypes from 'prop-types'
+
 import RegisterModal from './auth/RegisterModal'
 import LoginModal from './auth/LoginModal'
 import Logout from './auth/Logout'
@@ -62,6 +63,11 @@ const AppNavBar = () => {
       </Navbar>
     </div>
   )
+}
+
+AppNavBar.propTypes = {
+  isAuthenticated: PropTypes.bool.isRequired,
+  user: PropTypes.object
 }
 
 export default AppNavBar
