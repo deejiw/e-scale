@@ -50,7 +50,7 @@ const AppNavBar = () => {
     <div>
       <Navbar color='dark' dark expand='sm' className='mb-5'>
         <Container>
-          <NavbarBrand href='/'>ShoppingList</NavbarBrand>
+          <NavbarBrand href='/'>e-Record Scale</NavbarBrand>
           {/* Handle clicking toggle */}
           <NavbarToggler onClick={handleToggle} />
           <Collapse isOpen={isOpen} navbar>
