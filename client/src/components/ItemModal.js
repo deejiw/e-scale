@@ -1,7 +1,7 @@
 // aka container; a  compoenent that is hooked with redux
 
 import React, { useState, useEffect } from 'react'
-import { connect, useSelector, useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import {
   Button,
   Modal,
@@ -24,7 +24,7 @@ const ItemModal = () => {
   const dispatch = useDispatch()
   const handleSubmit = e => {
     e.preventDefault()
-    dispatch(addItem(name))
+    dispatch(addItem({ name: name }))
     handleToggle()
   }
 

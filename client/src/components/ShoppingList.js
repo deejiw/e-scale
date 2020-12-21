@@ -1,58 +1,46 @@
-import React, { Component } from 'react'
+import React, { useEffect } from 'react'
 import { Container, ListGroup, ListGroupItem, Button } from 'reactstrap'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
-import { connect } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { getItems, deleteItem } from '../actions/itemActions'
-import PropTypes from 'prop-types'
 
-class ShoppingList extends Component {
-  static propTypes = {
-    getItems: PropTypes.func.isRequired,
-    deleteItem: PropTypes.func.isRequired,
-    item: PropTypes.object.isRequired,
-    isAuthenticated: PropTypes.bool
-  }
+const ShoppingList = () => {
+  const items = useSelector(state => state.item.items)
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(getItems())
+  }, [])
 
-  componentDidMount() {
-    this.props.getItems()
-  }
   // _id is parsed as id here
-  onDeleteClick = id => {
-    this.props.deleteItem(id)
+  const onDeleteClick = id => {
+    dispatch(deleteItem(id))
   }
 
-  render() {
-    const { items } = this.props.item
-    return (
-      <Container>
-        {this.props.isAuthenticated ? (
-          <ListGroup>
-            <TransitionGroup className='shopping-list'>
-              {items.map(({ _id, name }) => (
-                <CSSTransition key={_id} timeout={500} classNames='fade'>
-                  <ListGroupItem>
-                    <Button
-                      className='remove-btn'
-                      color='danger'
-                      size='sm'
-                      onClick={this.onDeleteClick.bind(this, _id)}>
-                      &times;
-                    </Button>
-                    {name}
-                  </ListGroupItem>
-                </CSSTransition>
-              ))}
-            </TransitionGroup>
-          </ListGroup>
-        ) : null}
-      </Container>
-    )
-  }
+  return (
+    <Container>
+      {isAuthenticated ? (
+        <ListGroup>
+          <TransitionGroup className='shopping-list'>
+            {items.map(({ _id, name }) => (
+              <CSSTransition key={_id} timeout={500} classNames='fade'>
+                <ListGroupItem>
+                  <Button
+                    className='remove-btn'
+                    color='danger'
+                    size='sm'
+                    onClick={() => onDeleteClick(_id)}>
+                    &times;
+                  </Button>
+                  {name}
+                </ListGroupItem>
+              </CSSTransition>
+            ))}
+          </TransitionGroup>
+        </ListGroup>
+      ) : null}
+    </Container>
+  )
 }
 
-const mapStateToProps = state => ({
-  item: state.item,
-  isAuthenticated: state.auth.isAuthenticated
-})
-
-export default connect(mapStateToProps, { getItems, deleteItem })(ShoppingList)
+export default ShoppingList
