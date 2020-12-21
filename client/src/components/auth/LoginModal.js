@@ -1,5 +1,5 @@
 // aka container; a  compoenent that is hooked with redux
-import React, { Component } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import {
   Button,
   Modal,
@@ -12,82 +12,77 @@ import {
   NavLink,
   Alert
 } from 'reactstrap'
-import { connect } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import { login } from '../../actions/authActions'
 import { clearErrors } from '../../actions/errorActions'
-class LoginModal extends Component {
-  state = {
+
+const LoginModal = () => {
+  const dispatch = useDispatch()
+  const [state, setState] = useState({
     modal: false,
+    name: '',
     email: '',
     password: '',
     msg: null
+  })
+
+  const error = useSelector(state => state.error)
+
+  const isAuthenticated = useSelector(state => state.isAuthenticated)
+
+  const usePrevious = value => {
+    const ref = useRef()
+    useEffect(() => {
+      ref.current = value
+    })
+    return ref.current
   }
 
-  static propTypes = {
-    isAuthenticated: PropTypes.bool,
-    error: PropTypes.object.isRequired,
-    login: PropTypes.func.isRequired,
-    clearErrors: PropTypes.func.isRequired
-  }
+  const prevError = usePrevious(error)
 
-  componentDidUpdate(prevProps) {
-    const { error, isAuthenticated } = this.props
-    if (error !== prevProps.error) {
+  useEffect(() => {
+    if (error !== prevError) {
       // Check for register error
       if (error.id === 'LOGIN_FAIL') {
-        this.setState({ msg: error.msg.msg })
+        setState(prevState => ({ ...prevState, msg: error.msg.msg }))
       } else {
-        this.setState({ msg: null })
+        setState({ msg: null })
       }
     }
-
-    // If authenticate, close modal
-    if (this.state.modal) {
-      if (isAuthenticated) {
-        this.toggle()
-      }
+    if (state.modal && isAuthenticated) {
+      toggle()
     }
-  }
-  toggle = () => {
-    // Clear errors
-    this.props.clearErrors()
+  }, [prevError])
 
-    this.setState({
-      modal: !this.state.modal
-    })
+  const toggle = () => {
+    dispatch(clearErrors())
+    setState(prevState => ({ ...prevState, modal: !prevState.modal }))
   }
 
-  onChange = e => {
-    this.setState({ [e.target.name]: e.target.value })
-  }
+  const onChange = e =>
+    setState(prevState => ({ ...prevState, [e.target.name]: e.target.value }))
 
-  onSubmit = e => {
-    // Prevent the actual form from submitting
+  const onSubmit = e => {
     e.preventDefault()
-
-    const { email, password } = this.state
+    const { email, password } = state
     const user = {
       email,
       password
     }
-    this.props.login(user)
-  }
+    dispatch(login(user))
 
-  render() {
     return (
       <div>
-        <NavLink onClick={this.toggle} href='#'>
+        <NavLink onClick={toggle} href='#'>
           Login
         </NavLink>
 
-        <Modal isOpen={this.state.modal} toggle={this.toggle}>
-          <ModalHeader toggle={this.toggle}>Login</ModalHeader>
+        <Modal isOpen={state.modal} toggle={toggle}>
+          <ModalHeader toggle={toggle}>Login</ModalHeader>
           <ModalBody>
-            {this.state.msg ? (
-              <Alert color='danger'>{this.state.msg}</Alert>
-            ) : null}
-            <Form onSubmit={this.onSubmit}>
+            {state.msg ? <Alert color='danger'>{state.msg}</Alert> : null}
+            <Form onSubmit={onSubmit}>
               <FormGroup>
                 <Input
                   type='email'
@@ -95,7 +90,7 @@ class LoginModal extends Component {
                   id='email'
                   placeholder='Email'
                   className='mb-3'
-                  onChange={this.onChange}
+                  onChange={onChange}
                 />
                 <Input
                   type='password'
@@ -103,7 +98,7 @@ class LoginModal extends Component {
                   id='password'
                   placeholder='Password'
                   className='mb-3'
-                  onChange={this.onChange}
+                  onChange={onChange}
                 />
                 <Button color='dark' style={{ marginTop: '2rem' }} block>
                   Login
@@ -115,11 +110,11 @@ class LoginModal extends Component {
       </div>
     )
   }
+  LoginModal.propTypes = {
+    isAuthenticated: PropTypes.bool,
+    error: PropTypes.object.isRequired,
+    login: PropTypes.func.isRequired,
+    clearErrors: PropTypes.func.isRequired
+  }
 }
-
-const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated,
-  error: state.error
-})
-
-export default connect(mapStateToProps, { login, clearErrors })(LoginModal)
+export default LoginModal

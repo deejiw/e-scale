@@ -1,5 +1,5 @@
 // aka container; a  compoenent that is hooked with redux
-import React, { Component } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import {
   Button,
   Modal,
@@ -12,131 +12,121 @@ import {
   NavLink,
   Alert
 } from 'reactstrap'
-import { connect } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import { register } from '../../actions/authActions'
 import { clearErrors } from '../../actions/errorActions'
-class RegisterModal extends Component {
-  state = {
+
+const RegisterModal = () => {
+  const dispatch = useDispatch()
+  const [state, setState] = useState({
     modal: false,
     name: '',
     email: '',
     password: '',
     msg: null
+  })
+
+  const error = useSelector(state => state.error)
+
+  const isAuthenticated = useSelector(state => state.isAuthenticated)
+
+  const usePrevious = value => {
+    const ref = useRef()
+    useEffect(() => {
+      ref.current = value
+    })
+    return ref.current
   }
 
-  static propTypes = {
-    isAuthenticated: PropTypes.bool,
-    error: PropTypes.object.isRequired,
-    register: PropTypes.func.isRequired,
-    clearErrors: PropTypes.func.isRequired
-  }
+  const prevError = usePrevious(error)
 
-  componentDidUpdate(prevProps) {
-    const { error, isAuthenticated } = this.props
-    if (error !== prevProps.error) {
+  useEffect(() => {
+    if (error !== prevError) {
       // Check for register error
       if (error.id === 'REGISTER_FAIL') {
-        this.setState({ msg: error.msg.msg })
+        setState(prevState => ({ ...prevState, msg: error.msg.msg }))
       } else {
-        this.setState({ msg: null })
+        setState({ msg: null })
       }
     }
-
-    // If authenticate, close modal
-    if (this.state.modal) {
-      if (isAuthenticated) {
-        this.toggle()
-      }
+    if (state.modal && isAuthenticated) {
+      toggle()
     }
-  }
-  toggle = () => {
-    // Clear errors
-    this.props.clearErrors()
+  }, [prevError])
 
-    this.setState({
-      modal: !this.state.modal
-    })
+  const toggle = () => {
+    dispatch(clearErrors())
+    setState(prevState => ({ ...prevState, modal: !prevState.modal }))
   }
 
-  onChange = e => {
-    this.setState({ [e.target.name]: e.target.value })
-  }
+  const onChange = e =>
+    setState(prevState => ({ ...prevState, [e.target.name]: e.target.value }))
 
-  onSubmit = e => {
-    // Prevent the actual form from submitting
+  const onSubmit = e => {
     e.preventDefault()
-
-    const { name, email, password } = this.state
-
-    // Create user object
+    const { name, email, password } = state
     const newUser = {
       name,
       email,
       password
     }
-
-    // Attempt to register
-    this.props.register(newUser)
+    dispatch(register(newUser))
   }
 
-  render() {
-    return (
-      <div>
-        <NavLink onClick={this.toggle} href='#'>
-          Register
-        </NavLink>
+  return (
+    <div>
+      <NavLink onClick={toggle} href='#'>
+        Register
+      </NavLink>
 
-        <Modal isOpen={this.state.modal} toggle={this.toggle}>
-          <ModalHeader toggle={this.toggle}>Register</ModalHeader>
-          <ModalBody>
-            {this.state.msg ? (
-              <Alert color='danger'>{this.state.msg}</Alert>
-            ) : null}
-            <Form onSubmit={this.onSubmit}>
-              <FormGroup>
-                <Label for='name'>Name</Label>
-                <Input
-                  type='text'
-                  name='name'
-                  id='name'
-                  placeholder='Name'
-                  className='mb-3'
-                  onChange={this.onChange}
-                />
-                <Input
-                  type='email'
-                  name='email'
-                  id='email'
-                  placeholder='Email'
-                  className='mb-3'
-                  onChange={this.onChange}
-                />
-                <Input
-                  type='password'
-                  name='password'
-                  id='password'
-                  placeholder='Password'
-                  className='mb-3'
-                  onChange={this.onChange}
-                />
-                <Button color='dark' style={{ marginTop: '2rem' }} block>
-                  Register
-                </Button>
-              </FormGroup>
-            </Form>
-          </ModalBody>
-        </Modal>
-      </div>
-    )
-  }
+      <Modal isOpen={state.modal} toggle={toggle}>
+        <ModalHeader toggle={toggle}>Register</ModalHeader>
+        <ModalBody>
+          {state.msg ? <Alert color='danger'>{state.msg}</Alert> : null}
+          <Form onSubmit={onSubmit}>
+            <FormGroup>
+              <Label for='name'>Name</Label>
+              <Input
+                type='text'
+                name='name'
+                id='name'
+                placeholder='Name'
+                className='mb-3'
+                onChange={onChange}
+              />
+              <Input
+                type='email'
+                name='email'
+                id='email'
+                placeholder='Email'
+                className='mb-3'
+                onChange={onChange}
+              />
+              <Input
+                type='password'
+                name='password'
+                id='password'
+                placeholder='Password'
+                className='mb-3'
+                onChange={onChange}
+              />
+              <Button color='dark' style={{ marginTop: '2rem' }} block>
+                Register
+              </Button>
+            </FormGroup>
+          </Form>
+        </ModalBody>
+      </Modal>
+    </div>
+  )
 }
 
-const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated,
-  error: state.error
-})
+RegisterModal.propTypes = {
+  isAuthenticated: PropTypes.bool,
+  error: PropTypes.object.isRequired,
+  register: PropTypes.func.isRequired,
+  clearErrors: PropTypes.func.isRequired
+}
 
-export default connect(mapStateToProps, { register, clearErrors })(
-  RegisterModal
-)
+export default RegisterModal
