@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Fragment } from 'react'
 import { NavLink } from 'reactstrap'
 import { useDispatch } from 'react-redux'
 import { logout } from '../../actions/authActions'
