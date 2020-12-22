@@ -1,11 +1,6 @@
-import React, { useState, useEffect, View } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  Form,
-  FormGroup,
   Label,
   Input,
   Container,
@@ -20,7 +15,7 @@ import {
   deleteItem,
   updateItem
 } from '../actions/transactionActions'
-
+import AddModal from './AddModal'
 import PropTypes from 'prop-types'
 
 const ShoppingList = () => {
@@ -74,34 +69,13 @@ const ShoppingList = () => {
               Manage Business Partner
             </Button>
 
-            <Modal isOpen={isAddModal} toggle={handleAddModal}>
-              <ModalHeader toggle={handleAddModal}>Add New Record</ModalHeader>
-              <ModalBody>
-                <Form onSubmit={handleAdd}>
-                  <FormGroup>
-                    <Label for='name'>Business Partner Name</Label>
-                    <Input
-                      type='text'
-                      name='name'
-                      id='name'
-                      placeholder='Type name and identity here'
-                      onChange={e => setName(e.target.value)}
-                    />
-                    <Label for='weighIn1'>Weigh In (kg)</Label>
-                    <Input
-                      type='number'
-                      name='weighIn1'
-                      id='weighIn1'
-                      placeholder='Type weigh in here'
-                      onChange={e => setWeighIn1(e.target.value)}
-                    />
-                    <Button color='dark' style={{ marginTop: '2rem' }} block>
-                      Add Record
-                    </Button>
-                  </FormGroup>
-                </Form>
-              </ModalBody>
-            </Modal>
+            <AddModal
+              show={isAddModal}
+              handleAdd={handleAdd}
+              setName={setName}
+              setWeighIn1={setWeighIn1}
+              onClose={handleAddModal}
+            />
 
             <ListGroup>
               <TransitionGroup className='shopping-list'>
