@@ -52,8 +52,8 @@ const RegisterModal = () => {
     }
     if (state.modal && isAuthenticated) {
       toggle()
-    }
-  }, [prevError])
+    } // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, prevError)
 
   const toggle = () => {
     dispatch(clearErrors())

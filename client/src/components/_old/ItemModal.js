@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import {
   Button,
   Modal,
@@ -11,7 +11,7 @@ import {
 } from 'reactstrap'
 
 import { useSelector, useDispatch } from 'react-redux'
-import { addItem } from '../actions/itemActions'
+import { addItem } from '../../actions/itemActions'
 import PropTypes from 'prop-types'
 
 const ItemModal = () => {
@@ -33,10 +33,10 @@ const ItemModal = () => {
           color='dark'
           style={{ marginBottom: '2rem' }}
           onClick={handleToggle}>
-          Add Item
+          Add Record
         </Button>
       ) : (
-        <h4 className='mb-3 ml-4'>Please login to manage items</h4>
+        <h5 className='mb-3 ml-4'>Please login to manage items</h5>
       )}
 
       <Modal isOpen={isOpen} handleToggle={handleToggle}>

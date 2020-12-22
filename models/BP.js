@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const Item_Schema = new Schema({
+const BP_Schema = new Schema({
   name: {
     type: String,
     required: true
@@ -12,4 +12,4 @@ const Item_Schema = new Schema({
   }
 })
 
-module.exports = Item = mongoose.model('item', Item_Schema)
+module.exports = BP = mongoose.model('bp_master', BP_Schema)

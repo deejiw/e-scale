@@ -7,7 +7,6 @@ import {
   ModalBody,
   Form,
   FormGroup,
-  Label,
   Input,
   NavLink,
   Alert
@@ -52,8 +51,8 @@ const LoginModal = () => {
     }
     if (state.modal && isAuthenticated) {
       toggle()
-    }
-  }, [prevError])
+    } // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, prevError)
 
   const toggle = () => {
     dispatch(clearErrors())
