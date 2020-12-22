@@ -10,24 +10,9 @@ import { tokenConfig } from './authActions'
 import { returnErrors } from './errorActions'
 
 // dispatch utilizes thunk for asyncronous request
-export const getItems = () => dispatch => {
-  dispatch(setItemsLoading())
-  axios
-    .get('./api/bps')
-    .then(res =>
-      dispatch({
-        type: GET_ITEMS,
-        payload: res.data
-      })
-    )
-    .catch(err =>
-      dispatch(returnErrors(err.response.data, err.response.status))
-    )
-}
-
 export const addItem = item => (dispatch, getState) => {
   axios
-    .post('/api/bps', item, tokenConfig(getState))
+    .post('/api/transactions', item, tokenConfig(getState))
     .then(res =>
       dispatch({
         type: ADD_ITEM,
@@ -40,9 +25,24 @@ export const addItem = item => (dispatch, getState) => {
     )
 }
 
+export const getItems = () => dispatch => {
+  dispatch(setItemsLoading())
+  axios
+    .get('./api/transactions')
+    .then(res =>
+      dispatch({
+        type: GET_ITEMS,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch(returnErrors(err.response.data, err.response.status))
+    )
+}
+
 export const updateItem = item => (dispatch, getState) => {
   axios
-    .patch(`/api/bps/${item.id}`, item, tokenConfig(getState))
+    .patch(`/api/transactions/${item.id}`, item, tokenConfig(getState))
     .then(res =>
       dispatch({
         type: UPDATE_ITEM,
@@ -58,7 +58,7 @@ export const updateItem = item => (dispatch, getState) => {
 export const deleteItem = id => (dispatch, getState) => {
   // Delete from MongoDB
   axios
-    .delete(`/api/bps/${id}`, tokenConfig(getState))
+    .delete(`/api/transactions/${id}`, tokenConfig(getState))
     .then(res =>
       // Dispatch to reducer
       dispatch({

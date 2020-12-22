@@ -11,7 +11,7 @@ const initialState = {
 }
 
 // eslint-disable-next-line react-hooks/exhaustive-deps
-const bpReducer = (state = initialState, action) => {
+const transactionReducer = (state = initialState, action) => {
   switch (
     action.type // eslint-disable-line no-unused-vars
   ) {
@@ -43,4 +43,4 @@ const bpReducer = (state = initialState, action) => {
   }
 }
 
-export default bpReducer
+export default transactionReducer

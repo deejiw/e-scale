@@ -1,11 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, View } from 'react'
 import {
   Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  Form,
-  FormGroup,
   Label,
   Input,
   Container,
@@ -14,7 +9,13 @@ import {
 } from 'reactstrap'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { useSelector, useDispatch } from 'react-redux'
-import { addItem, getItems, deleteItem } from '../actions/bpActions'
+import {
+  addItem,
+  getItems,
+  deleteItem,
+  updateItem
+} from '../actions/transactionActions'
+import AddModal from './AddModal'
 import PropTypes from 'prop-types'
 
 const ShoppingList = () => {
@@ -22,7 +23,8 @@ const ShoppingList = () => {
   const [name, setName] = useState('')
   const [weighIn1, setWeighIn1] = useState(0)
   const [isDelete, setIsDelete] = useState(false)
-  const [isRecModal, setIsRecModal] = useState(false)
+  const [isAddModal, setIsAddModal] = useState(false)
+  const [isEditModal, setIsEditModal] = useState(false)
 
   const items = useSelector(state => state.item.items)
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
@@ -30,17 +32,20 @@ const ShoppingList = () => {
   // eslint-disable-next-line
   useEffect(() => dispatch(getItems()), [])
   const onDeleteClick = id => dispatch(deleteItem(id))
-  const handleRecModal = () => setIsRecModal(!isRecModal)
+  const _handleAddModal = () => setIsAddModal(!isAddModal)
+  const _handleEditModal = () => setIsEditModal(!isEditModal)
 
-  const handleSubmit = e => {
+  const callbackModal = () => setIsAddModal(false)
+
+  const handleAdd = e => {
     e.preventDefault()
     dispatch(
       addItem({
-        bp_name: name,
-        weigh_in1: weighIn1
+        name: name,
+        weighIn1: weighIn1
       })
     )
-    handleRecModal()
+    _handleAddModal()
   }
 
   return (
@@ -51,8 +56,8 @@ const ShoppingList = () => {
             <Button
               color='dark'
               style={{ marginBottom: '1rem', marginRight: '0.5rem' }}
-              onClick={handleRecModal}>
-              New Record
+              onClick={_handleAddModal}>
+              Add Record
             </Button>
 
             <Button
@@ -60,6 +65,10 @@ const ShoppingList = () => {
               style={{ marginBottom: '1rem', marginRight: '0.5rem' }}
               onClick={() => setIsDelete(!isDelete)}>
               {setIsDelete ? 'Edit' : 'Done'}
+            </Button>
+
+            <Button color='dark' style={{ marginBottom: '1rem' }} href='./bps'>
+              Manage Business Partner
             </Button>
 
             <ListGroup>
@@ -87,44 +96,21 @@ const ShoppingList = () => {
           <div>
             <h4 className='mb-3 ml-4'>Welcome to e-Scale Record System</h4>
             <br />
-            <h4 className='mb-3 ml-4'>Please login to access the record</h4>
+            <h4 className='mb-3 ml-4'>Please login to access the system</h4>
           </div>
         )}
       </Container>
-      <Modal isOpen={isRecModal} toggle={handleRecModal}>
-        <ModalHeader toggle={handleRecModal}>Add New Record</ModalHeader>
-        <ModalBody>
-          <Form onSubmit={handleSubmit}>
-            <FormGroup>
-              <Label for='bp_name'>Business Partner Name</Label>
-              <Input
-                type='text'
-                name='bp_name'
-                id='bp_name'
-                placeholder='Type name and identity here'
-                onChange={e => setName(e.target.value)}
-              />
-              <Label for='weigh_in1'>Business Partner Name</Label>
-              <Input
-                type='number'
-                name='weigh_in1'
-                id='weigh_in1'
-                placeholder='Type weigh in here'
-                onChange={e => setWeighIn1(e.target.value)}
-              />
-              <Button color='dark' style={{ marginTop: '2rem' }} block>
-                Add Record
-              </Button>
-            </FormGroup>
-          </Form>
-        </ModalBody>
-      </Modal>
+      <AddModal>
+        open={isAddModal}
+        onClose={_handleAddModal}
+      </AddModal>
     </div>
   )
 }
 
 ShoppingList.propTypes = {
   getItems: PropTypes.func.isRequired,
+  addItem: PropTypes.func.isRequired,
   deleteItem: PropTypes.func.isRequired,
   items: PropTypes.object.isRequired,
   isAuthenticated: PropTypes.bool.isRequired
