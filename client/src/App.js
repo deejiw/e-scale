@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import AppNavBar from './components/AppNavBar'
-import ShoppingList from './components/ShoppingList'
+import MainList from './components/MainList'
 
 import { Container } from 'reactstrap'
 
@@ -21,7 +21,7 @@ const App = () => {
       <div className='App'>
         <AppNavBar />
         <Container>
-          <ShoppingList />
+          <MainList />
         </Container>
       </div>
     </Provider>

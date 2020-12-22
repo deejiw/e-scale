@@ -18,7 +18,7 @@ import {
 import AddModal from './AddModal'
 import PropTypes from 'prop-types'
 
-const ShoppingList = () => {
+const MainList = () => {
   const dispatch = useDispatch()
   const [name, setName] = useState('')
   const [weighIn1, setWeighIn1] = useState(0)
@@ -46,36 +46,50 @@ const ShoppingList = () => {
     handleAddModal()
   }
 
+  const handleEdit = e => {
+    e.preventDefault()
+    dispatch(
+      updateItem({
+        name: name,
+        weighIn1: weighIn1
+      })
+    )
+    handleAddModal()
+  }
+
   return (
     <div>
       <Container>
         {isAuthenticated ? (
           <div>
-            <Button
+            <Button // Add Record
               color='dark'
               style={{ marginBottom: '1rem', marginRight: '0.5rem' }}
               onClick={handleAddModal}>
               Add Record
             </Button>
 
-            <Button
+            <Button // Edit
               color='dark'
               style={{ marginBottom: '1rem', marginRight: '0.5rem' }}
               onClick={() => setIsDelete(!isDelete)}>
               {setIsDelete ? 'Edit' : 'Done'}
             </Button>
 
-            <Button color='dark' style={{ marginBottom: '1rem' }} href='./bps'>
+            <Button // Manage Business Partner
+              color='dark'
+              style={{ marginBottom: '1rem' }}
+              href='./bps'>
               Manage Business Partner
             </Button>
 
-            <AddModal
+            <AddModal>
               show={isAddModal}
               handleAdd={handleAdd}
               setName={setName}
               setWeighIn1={setWeighIn1}
               onClose={handleAddModal}
-            />
+            </AddModal>
 
             <ListGroup>
               <TransitionGroup className='shopping-list'>
@@ -100,6 +114,8 @@ const ShoppingList = () => {
           </div>
         ) : (
           <div>
+            {' '}
+            // Welcome...
             <h4 className='mb-3 ml-4'>Welcome to e-Scale Record System</h4>
             <br />
             <h4 className='mb-3 ml-4'>Please login to access the system</h4>
@@ -110,12 +126,13 @@ const ShoppingList = () => {
   )
 }
 
-ShoppingList.propTypes = {
+MainList.propTypes = {
   getItems: PropTypes.func.isRequired,
   addItem: PropTypes.func.isRequired,
+  updateItem: PropTypes.func.isRequired,
   deleteItem: PropTypes.func.isRequired,
   items: PropTypes.object.isRequired,
   isAuthenticated: PropTypes.bool.isRequired
 }
 
-export default ShoppingList
+export default MainList
