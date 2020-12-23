@@ -10,17 +10,13 @@ import {
   Input
 } from 'reactstrap'
 
-export default function TransactionModal() {
-  const [isRecModal, setIsRecModal] = useState(false)
-
-  const handleRecModal = () => setIsRecModal(!isRecModal)
-
+const EditModal = ({ isOpen, submitEdit, changeEditForm, toggle }) => {
   return (
     <div>
-      <Modal isOpen={isRecModal} toggle={handleRecModal}>
-        <ModalHeader toggle={handleRecModal}>Add New Record</ModalHeader>
+      <Modal isOpen={isOpen} toggle={toggle}>
+        <ModalHeader toggle={toggle}>Add New Record</ModalHeader>
         <ModalBody>
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={submitEdit}>
             <FormGroup>
               <Label for='name'>Business Partner Name</Label>
               <Input
@@ -28,7 +24,7 @@ export default function TransactionModal() {
                 name='name'
                 id='name'
                 placeholder='Type name and identity here'
-                onChange={e => setName(e.target.value)}
+                onChange={changeEditForm}
               />
               <Label for='weighIn1'>Weigh In (kg)</Label>
               <Input
@@ -36,7 +32,7 @@ export default function TransactionModal() {
                 name='weighIn1'
                 id='weighIn1'
                 placeholder='Type weigh in here'
-                onChange={e => setWeighIn1(e.target.value)}
+                onChange={changeEditForm}
               />
               <Button color='dark' style={{ marginTop: '2rem' }} block>
                 Add Record
@@ -48,3 +44,5 @@ export default function TransactionModal() {
     </div>
   )
 }
+
+export default EditModal

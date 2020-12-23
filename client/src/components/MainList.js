@@ -16,17 +16,35 @@ import {
   updateItem
 } from '../actions/transactionActions'
 
-import NewModal from './NewModal.js'
+import AddModal from './AddModal'
+import EditModal from './EditModal'
 import PropTypes from 'prop-types'
 import BusinessPartner from './BusinessPartner'
 
 const MainList = () => {
   const dispatch = useDispatch()
-  const [name, setName] = useState('')
-  const [weighIn1, setWeighIn1] = useState(0)
+
+  const [addForm, setAddForm] = useState({
+    name: '',
+    weighIn1: 0
+  })
+
+  const [editForm, setEditForm] = useState({
+    weighIn1: 0,
+    weighOut1: 0
+  })
+
+  const changeAddForm = e => {
+    setAddForm({ ...addForm, [e.target.name]: e.target.value })
+  }
+
+  const changeEditForm = e => {
+    setEditForm({ ...editForm, [e.target.name]: e.target.value })
+  }
+
   const [isDelete, setIsDelete] = useState(false)
-  const [AddModal, setAddModal] = useState(false)
-  const [EditModal, setEditModal] = useState(false)
+  const [viewAdd, setViewAdd] = useState(false)
+  const [viewEdit, setViewEdit] = useState(false)
 
   const items = useSelector(state => state.item.items)
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
@@ -34,40 +52,36 @@ const MainList = () => {
   // eslint-disable-next-line
   useEffect(() => dispatch(getItems()), [])
   const onDeleteClick = id => dispatch(deleteItem(id))
-  const handleAddModal = () => setAddModal(!AddModal)
-  const handleEditModal = () => setEditModal(!EditModal)
+  const toggleViewAdd = () => setViewAdd(!viewAdd)
+  const toggleViewEdit = () => setViewEdit(!viewEdit)
 
-  const handleAdd = e => {
+  const submitAdd = e => {
     e.preventDefault()
-    dispatch(
-      addItem({
-        name: name,
-        weighIn: weighIn1
-      })
-    )
-    handleAddModal()
+    dispatch(addItem(addForm))
+    toggleViewAdd()
   }
 
-  const handleEdit = e => {
+  const submitEdit = e => {
     e.preventDefault()
-    dispatch(
-      updateItem({
-        name: name,
-        weighIn: weighIn1
-      })
-    )
-    handleAddModal()
+    dispatch(updateItem(editForm))
+    toggleViewEdit()
   }
 
   return (
     <div>
       <Container>
-        <NewModal
-          isOpen={AddModal}
-          handleAdd={handleAdd}
-          setName={setName}
-          setWeighIn1={setWeighIn1}
-          toggle={handleAddModal}
+        <AddModal
+          isOpen={viewAdd}
+          submitAdd={submitAdd}
+          changeAddForm={changeAddForm}
+          toggle={toggleViewAdd}
+        />
+
+        <EditModal
+          isOpen={viewEdit}
+          submitEdit={submitEdit}
+          changeEditForm={changeEditForm}
+          toggle={toggleViewEdit}
         />
 
         {isAuthenticated ? (
@@ -77,7 +91,7 @@ const MainList = () => {
             <Button // Add Record
               color='dark'
               style={{ marginBottom: '1rem', marginRight: '0.5rem' }}
-              onClick={handleAddModal}>
+              onClick={toggleViewAdd}>
               Add Record
             </Button>
 
