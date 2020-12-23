@@ -8,7 +8,8 @@ const Transaction = require('../../models/Transaction')
 // @access  Private
 router.post('/', auth, (req, res) => {
   const newItem = new Transaction({
-    name: req.body.name
+    name: req.body.name,
+    records: { weighIn: req.body.weighIn1, weighOut: 0 }
   })
   newItem.save().then(item => res.json(item))
 })

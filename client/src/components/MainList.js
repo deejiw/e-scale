@@ -15,16 +15,18 @@ import {
   deleteItem,
   updateItem
 } from '../actions/transactionActions'
-import AddModal from './AddModal'
+
+import NewModal from './NewModal.js'
 import PropTypes from 'prop-types'
+import BusinessPartner from './BusinessPartner'
 
 const MainList = () => {
   const dispatch = useDispatch()
   const [name, setName] = useState('')
   const [weighIn1, setWeighIn1] = useState(0)
   const [isDelete, setIsDelete] = useState(false)
-  const [isAddModal, setIsAddModal] = useState(false)
-  const [isEditModal, setIsEditModal] = useState(false)
+  const [AddModal, setAddModal] = useState(false)
+  const [EditModal, setEditModal] = useState(false)
 
   const items = useSelector(state => state.item.items)
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
@@ -32,8 +34,8 @@ const MainList = () => {
   // eslint-disable-next-line
   useEffect(() => dispatch(getItems()), [])
   const onDeleteClick = id => dispatch(deleteItem(id))
-  const handleAddModal = () => setIsAddModal(!isAddModal)
-  const handleEditModal = () => setIsEditModal(!isEditModal)
+  const handleAddModal = () => setAddModal(!AddModal)
+  const handleEditModal = () => setEditModal(!EditModal)
 
   const handleAdd = e => {
     e.preventDefault()
@@ -60,8 +62,18 @@ const MainList = () => {
   return (
     <div>
       <Container>
+        <NewModal
+          isOpen={AddModal}
+          handleAdd={handleAdd}
+          setName={setName}
+          setWeighIn1={setWeighIn1}
+          toggle={handleAddModal}
+        />
+
         {isAuthenticated ? (
           <div>
+            <BusinessPartner />
+
             <Button // Add Record
               color='dark'
               style={{ marginBottom: '1rem', marginRight: '0.5rem' }}
@@ -75,21 +87,6 @@ const MainList = () => {
               onClick={() => setIsDelete(!isDelete)}>
               {setIsDelete ? 'Edit' : 'Done'}
             </Button>
-
-            <Button // Manage Business Partner
-              color='dark'
-              style={{ marginBottom: '1rem' }}
-              href='./bps'>
-              Manage Business Partner
-            </Button>
-
-            <AddModal>
-              show={isAddModal}
-              handleAdd={handleAdd}
-              setName={setName}
-              setWeighIn1={setWeighIn1}
-              onClose={handleAddModal}
-            </AddModal>
 
             <ListGroup>
               <TransitionGroup className='shopping-list'>
@@ -114,8 +111,6 @@ const MainList = () => {
           </div>
         ) : (
           <div>
-            {' '}
-            // Welcome...
             <h4 className='mb-3 ml-4'>Welcome to e-Scale Record System</h4>
             <br />
             <h4 className='mb-3 ml-4'>Please login to access the system</h4>

@@ -10,10 +10,10 @@ import {
   Input
 } from 'reactstrap'
 
-const AddModal = ({ show, handleAdd, setName, setWeighIn1, onClose }) => {
+const NewModal = ({ isOpen, handleAdd, setName, setWeighIn1, toggle }) => {
   return (
-    <Modal isOpen={show} toggle={onClose}>
-      <ModalHeader toggle={onClose}>Add New Record</ModalHeader>
+    <Modal isOpen={isOpen} toggle={toggle}>
+      <ModalHeader toggle={toggle}>Add New Record</ModalHeader>
       <ModalBody>
         <Form onSubmit={handleAdd}>
           <FormGroup>
@@ -43,4 +43,4 @@ const AddModal = ({ show, handleAdd, setName, setWeighIn1, onClose }) => {
   )
 }
 
-export default AddModal
+export default NewModal
