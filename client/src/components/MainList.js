@@ -42,7 +42,7 @@ const MainList = () => {
     dispatch(
       addItem({
         name: name,
-        weighIn1: weighIn1
+        weighIn: weighIn1
       })
     )
     handleAddModal()
@@ -53,7 +53,7 @@ const MainList = () => {
     dispatch(
       updateItem({
         name: name,
-        weighIn1: weighIn1
+        weighIn: weighIn1
       })
     )
     handleAddModal()
