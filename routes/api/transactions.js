@@ -30,7 +30,14 @@ router.patch('/:id', auth, (req, res) => {
   Transaction.findById(req.params.id)
     .then(item => {
       item
-        .updateOne({ $set: { date: Date.now } })
+        .updateOne({
+          $set: {
+            records: {
+              weighIn: req.body.weighIn1,
+              weighOut: req.body.weighOut1
+            }
+          }
+        })
         .then(() => res.json({ success: true }))
     })
     .catch(err => res.status(404).json({ success: false }))

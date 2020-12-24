@@ -34,17 +34,26 @@ const MainList = () => {
 
   const [editForm, setEditForm] = useState({
     isOpen: false,
-    activeItemId: null,
-    activeItemName: '',
-    weighIn1: 0,
-    weighOut1: 0
+    activeItemId: '',
+    activeItemName: ''
   })
+  const editInputTemplate = {
+    material: '',
+    weighIn: 0,
+    weighOut: 0,
+    remarks: ''
+  }
+
+  const [editInput, setEditInput] = useState([editInputTemplate])
 
   const changeAddForm = e =>
     setAddForm({ ...addForm, [e.target.name]: e.target.value })
 
-  const changeEditForm = e =>
-    setEditForm({ ...editForm, [e.target.name]: e.target.value })
+  const changeEditInput = (ind, e) => {
+    const values = [...editInput]
+    values[ind][e.target.name] = e.target.value
+    setEditInput(values)
+  }
 
   const [isDelete, setIsDelete] = useState(false)
 
@@ -56,10 +65,20 @@ const MainList = () => {
   const openViewEdit = item =>
     setEditForm({
       isOpen: true,
-      activeItemId: item._id,
-      activeItemName: item.name,
-      activeItemWeighIn1: item.records[0].weighIn
+      id: item._id,
+      name: item.name,
+      weighIn1: item.records[0].weighIn,
+      weighOut1: item.records[0].weighOut
     })
+
+  const handleAddField = () => {
+    setEditInput([...editInput, editInputTemplate])
+  }
+  const handleRemoveField = i => {
+    const values = [...editInput]
+    values.splice(i, 1)
+    setEditInput(values)
+  }
 
   const submitAdd = e => {
     e.preventDefault()
@@ -68,7 +87,7 @@ const MainList = () => {
   }
   const submitEdit = e => {
     e.preventDefault()
-    dispatch(updateItem(editForm))
+    dispatch(updateItem(editInput))
     closeViewEdit()
   }
 
@@ -125,7 +144,10 @@ const MainList = () => {
 
                       <EditModal
                         editForm={editForm}
-                        changeEditForm={changeEditForm}
+                        editInput={editInput}
+                        changeEditInput={changeEditInput}
+                        handleAddField={handleAddField}
+                        handleRemoveField={handleRemoveField}
                         submitEdit={submitEdit}
                         toggle={closeViewEdit}
                       />

@@ -1,4 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { useState } from 'react'
+import { Container, TextField, IconButton } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+
+import { Remove, Add } from '@material-ui/icons'
+
 import {
   Button,
   Modal,
@@ -6,12 +11,30 @@ import {
   ModalBody,
   Form,
   FormGroup,
-  Label,
-  Input
+  Row,
+  Col
 } from 'reactstrap'
+import { CallMissedSharp } from '@material-ui/icons'
 
-const EditModal = ({ editForm, changeEditForm, submitEdit, toggle }) => {
-  useEffect(() => {}, [])
+const useStyles = makeStyles(theme => ({
+  root: {
+    '& .MuiTextField-root': {
+      margin: theme.spacing(0.5)
+    }
+  }
+}))
+
+const EditModal = ({
+  editForm,
+  editInput,
+  changeEditInput,
+  handleAddField,
+  handleRemoveField,
+  submitEdit,
+  toggle
+}) => {
+  const classes = useStyles()
+
   return (
     <div>
       <Modal isOpen={editForm.isOpen} toggle={toggle}>
@@ -19,27 +42,65 @@ const EditModal = ({ editForm, changeEditForm, submitEdit, toggle }) => {
           Edit {editForm.activeItemName} Record{' '}
         </ModalHeader>
         <ModalBody>
-          <Form onSubmit={submitEdit}>
-            <FormGroup>
-              <Label for='weighIn1'> Weigh In (kg)</Label>
-              <Input
-                type='text'
-                name='weighIn1'
-                id='weighIn1'
-                onChange={changeEditForm}
-                value={editForm.activeItemWeighIn1}
-              />
-              <Label for='weighOut1'>Weigh Out (kg)</Label>
-              <Input
-                type='number'
-                name='weighOut1'
-                id='weighOut1'
-                onChange={changeEditForm}
-              />
+          <Form className={classes.root} onSubmit={submitEdit}>
+            <Container>
+              {editInput.map((inputField, index) => (
+                <div key={index}>
+                  <Row>
+                    <Col>
+                      <TextField
+                        name='material'
+                        label='Material'
+                        variant='filled'
+                        value={inputField.material}
+                        onChange={e => changeEditInput(index, e)}
+                      />
+                    </Col>
+
+                    <Col>
+                      <TextField
+                        name='remarks'
+                        label='Remarks'
+                        variant='filled'
+                        value={inputField.remarks}
+                        onChange={e => changeEditInput(index, e)}
+                      />
+                    </Col>
+                    <Col>
+                      <IconButton onClick={() => handleRemoveField(index)}>
+                        <Remove />
+                      </IconButton>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <TextField
+                        name='weighIn'
+                        label='Weigh In'
+                        variant='filled'
+                        value={inputField.weighIn}
+                        onChange={e => changeEditInput(index, e)}
+                      />
+                    </Col>
+                    <Col>
+                      <TextField
+                        name='weighOut'
+                        label='Weigh Out'
+                        variant='filled'
+                        value={inputField.weighOut}
+                        onChange={e => changeEditInput(index, e)}
+                      />
+                    </Col>
+                  </Row>
+                </div>
+              ))}
+              <IconButton onClick={() => handleAddField()}>
+                <Add />
+              </IconButton>
               <Button color='dark' style={{ marginTop: '2rem' }} block>
-                Update Record
+                UPDATE
               </Button>
-            </FormGroup>
+            </Container>
           </Form>
         </ModalBody>
       </Modal>

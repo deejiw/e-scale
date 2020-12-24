@@ -42,7 +42,11 @@ export const getItems = () => dispatch => {
 
 export const updateItem = item => (dispatch, getState) => {
   axios
-    .patch(`/api/transactions/${item.id}`, item, tokenConfig(getState))
+    .patch(
+      `/api/transactions/${item.activeItemId}`,
+      item,
+      tokenConfig(getState)
+    )
     .then(res =>
       dispatch({
         type: UPDATE_ITEM,
