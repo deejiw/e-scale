@@ -22,13 +22,14 @@ const MainList = () => {
     material: '',
     weighIn: 0,
     weighOut: 0,
-    remarks: ''
+    deduction: 0,
+    remarks: '',
+    price: 0
   }
 
   const [addForm, setAddForm] = useState({
     isOpen: false,
-    name: '',
-    weighIn1: 0
+    name: ''
   })
 
   const [editForm, setEditForm] = useState({
@@ -55,12 +56,14 @@ const MainList = () => {
   const onDeleteClick = id => dispatch(deleteItem(id))
 
   const openViewAdd = () => setAddForm({ isOpen: true })
-  const openViewEdit = item =>
+  const openViewEdit = item => {
     setEditForm({
       isOpen: true,
       id: item._id,
       name: item.name
     })
+    setEditInput(item.records)
+  }
 
   const handleAddField = () => {
     setEditInput([...editInput, subRecordTemplate])

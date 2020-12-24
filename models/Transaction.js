@@ -28,9 +28,19 @@ const TransactionSchema = new Schema({
         max: [99999, 'Must be less than 99999'],
         required: [true, 'Please enter weigh out']
       },
+      deduction: {
+        type: String,
+        required: false
+      },
       remarks: {
         type: String,
         required: false
+      },
+      price: {
+        type: Number,
+        min: [0, 'Must be positive'],
+        max: [1000, 'Must be less than 1000'],
+        required: [true, 'Please enter price']
       }
     }
   ]

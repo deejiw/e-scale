@@ -25,14 +25,6 @@ const AddModal = ({ addForm, changeAddForm, submitAdd, toggle }) => {
               placeholder='Type name and identity here'
               onChange={changeAddForm}
             />
-            <Label for='weighIn1'>Weigh In (kg)</Label>
-            <Input
-              type='number'
-              name='weighIn1'
-              id='weighIn1'
-              placeholder='Type weigh in here'
-              onChange={changeAddForm}
-            />
             <Button color='dark' style={{ marginTop: '2rem' }} block>
               Add Record
             </Button>

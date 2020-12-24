@@ -15,7 +15,7 @@ import {
 const useStyles = makeStyles(theme => ({
   root: {
     '& .MuiTextField-root': {
-      margin: theme.spacing(0.5)
+      margin: theme.spacing(0.75, -1)
     }
   }
 }))
@@ -38,29 +38,37 @@ const EditModal = ({
         <ModalBody>
           <Form className={classes.root} onSubmit={submitEdit}>
             <Container>
-              {editInput.map((inputField, index) => (
+              {editInput.map((subInput, index) => (
                 <div key={index}>
                   <Row>
-                    <Col>
+                    <Col xs='4' sm='5'>
                       <TextField
                         name='material'
                         label='Material'
                         variant='filled'
-                        value={inputField.material}
+                        value={subInput.material}
                         onChange={e => changeEditInput(index, e)}
                       />
                     </Col>
-
-                    <Col>
+                    <Col xs='2' sm='2'>
+                      <TextField
+                        name='deduction'
+                        label='Deduct'
+                        variant='filled'
+                        value={subInput.deduction}
+                        onChange={e => changeEditInput(index, e)}
+                      />
+                    </Col>
+                    <Col xs='3' sm='4'>
                       <TextField
                         name='remarks'
                         label='Remarks'
                         variant='filled'
-                        value={inputField.remarks}
+                        value={subInput.remarks}
                         onChange={e => changeEditInput(index, e)}
                       />
                     </Col>
-                    <Col>
+                    <Col xs='0.5' sm='1' className='pl-2'>
                       <IconButton onClick={() => handleRemoveField(index)}>
                         <Remove />
                       </IconButton>
@@ -72,7 +80,7 @@ const EditModal = ({
                         name='weighIn'
                         label='Weigh In'
                         variant='filled'
-                        value={inputField.weighIn}
+                        value={subInput.weighIn}
                         onChange={e => changeEditInput(index, e)}
                       />
                     </Col>
@@ -81,16 +89,30 @@ const EditModal = ({
                         name='weighOut'
                         label='Weigh Out'
                         variant='filled'
-                        value={inputField.weighOut}
+                        value={subInput.weighOut}
+                        onChange={e => changeEditInput(index, e)}
+                      />
+                    </Col>
+                    <Col xs='2' sm='2'>
+                      <TextField
+                        name='price'
+                        label='Price'
+                        variant='filled'
+                        value={subInput.price}
                         onChange={e => changeEditInput(index, e)}
                       />
                     </Col>
                   </Row>
                 </div>
               ))}
-              <IconButton onClick={() => handleAddField()}>
-                <Add />
-              </IconButton>
+              <Row>
+                <Col sm='12' md={{ size: 6, offset: 3 }}>
+                  <IconButton onClick={() => handleAddField()}>
+                    <Add />
+                  </IconButton>
+                </Col>
+              </Row>
+
               <Button color='dark' style={{ marginTop: '2rem' }} block>
                 UPDATE
               </Button>
