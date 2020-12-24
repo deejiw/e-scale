@@ -12,7 +12,6 @@ import {
 import AddModal from './modal/AddModal'
 import EditModal from './modal/EditModal'
 import PropTypes from 'prop-types'
-import BusinessPartner from './BusinessPartner'
 
 const MainList = () => {
   const items = useSelector(state => state.item.items)
@@ -100,7 +99,7 @@ const MainList = () => {
 
         {isAuthenticated ? (
           <div>
-            <BusinessPartner />
+            {/* <BusinessPartner /> */}
 
             <Button // Add Record
               color='dark'
