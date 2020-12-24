@@ -9,7 +9,7 @@ const Transaction = require('../../models/Transaction')
 router.post('/', auth, (req, res) => {
   const newItem = new Transaction({
     name: req.body.name,
-    records: { weighIn: req.body.weighIn1, weighOut: 0 }
+    records: []
   })
   newItem.save().then(item => res.json(item))
 })
@@ -32,10 +32,7 @@ router.patch('/:id', auth, (req, res) => {
       item
         .updateOne({
           $set: {
-            records: {
-              weighIn: req.body.weighIn1,
-              weighOut: req.body.weighOut1
-            }
+            records: [req.body]
           }
         })
         .then(() => res.json({ success: true }))

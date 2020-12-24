@@ -1,20 +1,16 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Container, TextField, IconButton } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-
 import { Remove, Add } from '@material-ui/icons'
-
 import {
   Button,
   Modal,
   ModalHeader,
   ModalBody,
   Form,
-  FormGroup,
   Row,
   Col
 } from 'reactstrap'
-import { CallMissedSharp } from '@material-ui/icons'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -38,9 +34,7 @@ const EditModal = ({
   return (
     <div>
       <Modal isOpen={editForm.isOpen} toggle={toggle}>
-        <ModalHeader toggle={toggle}>
-          Edit {editForm.activeItemName} Record{' '}
-        </ModalHeader>
+        <ModalHeader toggle={toggle}>Edit {editForm.name} Record </ModalHeader>
         <ModalBody>
           <Form className={classes.root} onSubmit={submitEdit}>
             <Container>

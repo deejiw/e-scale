@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import {
-  Button,
-  Label,
-  Input,
-  Container,
-  ListGroup,
-  ListGroupItem
-} from 'reactstrap'
+import { Button, Container, ListGroup, ListGroupItem } from 'reactstrap'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { useSelector, useDispatch } from 'react-redux'
 import {
@@ -16,8 +9,8 @@ import {
   updateItem
 } from '../actions/transactionActions'
 
-import AddModal from './AddModal'
-import EditModal from './EditModal'
+import AddModal from './modal/AddModal'
+import EditModal from './modal/EditModal'
 import PropTypes from 'prop-types'
 import BusinessPartner from './BusinessPartner'
 
@@ -25,6 +18,12 @@ const MainList = () => {
   const items = useSelector(state => state.item.items)
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
   const dispatch = useDispatch()
+  const subRecordTemplate = {
+    material: '',
+    weighIn: 0,
+    weighOut: 0,
+    remarks: ''
+  }
 
   const [addForm, setAddForm] = useState({
     isOpen: false,
@@ -34,17 +33,11 @@ const MainList = () => {
 
   const [editForm, setEditForm] = useState({
     isOpen: false,
-    activeItemId: '',
-    activeItemName: ''
+    id: '',
+    name: ''
   })
-  const editInputTemplate = {
-    material: '',
-    weighIn: 0,
-    weighOut: 0,
-    remarks: ''
-  }
 
-  const [editInput, setEditInput] = useState([editInputTemplate])
+  const [editInput, setEditInput] = useState([subRecordTemplate])
 
   const changeAddForm = e =>
     setAddForm({ ...addForm, [e.target.name]: e.target.value })
@@ -66,13 +59,11 @@ const MainList = () => {
     setEditForm({
       isOpen: true,
       id: item._id,
-      name: item.name,
-      weighIn1: item.records[0].weighIn,
-      weighOut1: item.records[0].weighOut
+      name: item.name
     })
 
   const handleAddField = () => {
-    setEditInput([...editInput, editInputTemplate])
+    setEditInput([...editInput, subRecordTemplate])
   }
   const handleRemoveField = i => {
     const values = [...editInput]
@@ -87,7 +78,7 @@ const MainList = () => {
   }
   const submitEdit = e => {
     e.preventDefault()
-    dispatch(updateItem(editInput))
+    dispatch(updateItem(editInput.id, editInput))
     closeViewEdit()
   }
 
