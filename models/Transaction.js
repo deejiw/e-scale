@@ -16,7 +16,7 @@ const TransactionSchema = new Schema({
         type: Number,
         min: [0, 'Must be positive'],
         max: [99999, 'Must be less than 99999'],
-        required: [true, 'Each sub-record must contain weigh in']
+        required: false
       },
       weighOut: {
         type: Number,

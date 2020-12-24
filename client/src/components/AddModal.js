@@ -10,9 +10,9 @@ import {
   Input
 } from 'reactstrap'
 
-const AddModal = ({ isOpen, submitAdd, changeAddForm, toggle }) => {
+const AddModal = ({ addForm, changeAddForm, submitAdd, toggle }) => {
   return (
-    <Modal isOpen={isOpen} toggle={toggle}>
+    <Modal isOpen={addForm.isOpen} toggle={toggle}>
       <ModalHeader toggle={toggle}>Add New Record</ModalHeader>
       <ModalBody>
         <Form onSubmit={submitAdd}>

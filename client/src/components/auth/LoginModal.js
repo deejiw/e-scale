@@ -52,7 +52,7 @@ const LoginModal = () => {
     if (state.modal && isAuthenticated) {
       toggle()
     } // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, prevError)
+  }, [prevError])
 
   const toggle = () => {
     dispatch(clearErrors())

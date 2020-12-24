@@ -22,66 +22,67 @@ import PropTypes from 'prop-types'
 import BusinessPartner from './BusinessPartner'
 
 const MainList = () => {
+  const items = useSelector(state => state.item.items)
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
   const dispatch = useDispatch()
 
   const [addForm, setAddForm] = useState({
+    isOpen: false,
     name: '',
     weighIn1: 0
   })
 
   const [editForm, setEditForm] = useState({
+    isOpen: false,
+    activeItemId: null,
+    activeItemName: '',
     weighIn1: 0,
     weighOut1: 0
   })
 
-  const changeAddForm = e => {
+  const changeAddForm = e =>
     setAddForm({ ...addForm, [e.target.name]: e.target.value })
-  }
 
-  const changeEditForm = e => {
+  const changeEditForm = e =>
     setEditForm({ ...editForm, [e.target.name]: e.target.value })
-  }
 
   const [isDelete, setIsDelete] = useState(false)
-  const [viewAdd, setViewAdd] = useState(false)
-  const [viewEdit, setViewEdit] = useState(false)
-
-  const items = useSelector(state => state.item.items)
-  const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
 
   // eslint-disable-next-line
   useEffect(() => dispatch(getItems()), [])
   const onDeleteClick = id => dispatch(deleteItem(id))
-  const toggleViewAdd = () => setViewAdd(!viewAdd)
-  const toggleViewEdit = () => setViewEdit(!viewEdit)
+
+  const openViewAdd = () => setAddForm({ isOpen: true })
+  const openViewEdit = item =>
+    setEditForm({
+      isOpen: true,
+      activeItemId: item._id,
+      activeItemName: item.name,
+      activeItemWeighIn1: item.records[0].weighIn
+    })
 
   const submitAdd = e => {
     e.preventDefault()
     dispatch(addItem(addForm))
-    toggleViewAdd()
+    closeViewAdd()
   }
-
   const submitEdit = e => {
     e.preventDefault()
     dispatch(updateItem(editForm))
-    toggleViewEdit()
+    closeViewEdit()
   }
+
+  const closeViewAdd = () => setAddForm({ isOpen: false })
+  const closeViewEdit = () => setEditForm({ isOpen: false })
 
   return (
     <div>
       <Container>
         <AddModal
-          isOpen={viewAdd}
-          submitAdd={submitAdd}
+          addForm={addForm}
           changeAddForm={changeAddForm}
-          toggle={toggleViewAdd}
-        />
-
-        <EditModal
-          isOpen={viewEdit}
-          submitEdit={submitEdit}
-          changeEditForm={changeEditForm}
-          toggle={toggleViewEdit}
+          submitAdd={submitAdd}
+          toggle={closeViewAdd}
         />
 
         {isAuthenticated ? (
@@ -91,7 +92,7 @@ const MainList = () => {
             <Button // Add Record
               color='dark'
               style={{ marginBottom: '1rem', marginRight: '0.5rem' }}
-              onClick={toggleViewAdd}>
+              onClick={openViewAdd}>
               Add Record
             </Button>
 
@@ -104,19 +105,30 @@ const MainList = () => {
 
             <ListGroup>
               <TransitionGroup className='shopping-list'>
-                {items.map(({ _id, name }) => (
-                  <CSSTransition key={_id} timeout={500} classNames='fade'>
+                {items.map(item => (
+                  <CSSTransition key={item._id} timeout={500} classNames='fade'>
                     <ListGroupItem>
                       {isDelete ? (
                         <Button
                           className='remove-btn'
                           color='danger'
                           size='sm'
-                          onClick={() => onDeleteClick(_id)}>
+                          onClick={() => onDeleteClick(item._id)}>
                           &times;
                         </Button>
                       ) : null}
-                      <Button className='mr-2'>{name}</Button>
+                      <Button
+                        className='mr-2'
+                        onClick={() => openViewEdit(item)}>
+                        {item.name}
+                      </Button>
+
+                      <EditModal
+                        editForm={editForm}
+                        changeEditForm={changeEditForm}
+                        submitEdit={submitEdit}
+                        toggle={closeViewEdit}
+                      />
                     </ListGroupItem>
                   </CSSTransition>
                 ))}

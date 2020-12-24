@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   Button,
   Modal,
@@ -10,32 +10,34 @@ import {
   Input
 } from 'reactstrap'
 
-const EditModal = ({ isOpen, submitEdit, changeEditForm, toggle }) => {
+const EditModal = ({ editForm, changeEditForm, submitEdit, toggle }) => {
+  useEffect(() => {}, [])
   return (
     <div>
-      <Modal isOpen={isOpen} toggle={toggle}>
-        <ModalHeader toggle={toggle}>Add New Record</ModalHeader>
+      <Modal isOpen={editForm.isOpen} toggle={toggle}>
+        <ModalHeader toggle={toggle}>
+          Edit {editForm.activeItemName} Record{' '}
+        </ModalHeader>
         <ModalBody>
           <Form onSubmit={submitEdit}>
             <FormGroup>
-              <Label for='name'>Business Partner Name</Label>
+              <Label for='weighIn1'> Weigh In (kg)</Label>
               <Input
                 type='text'
-                name='name'
-                id='name'
-                placeholder='Type name and identity here'
-                onChange={changeEditForm}
-              />
-              <Label for='weighIn1'>Weigh In (kg)</Label>
-              <Input
-                type='number'
                 name='weighIn1'
                 id='weighIn1'
-                placeholder='Type weigh in here'
+                onChange={changeEditForm}
+                value={editForm.activeItemWeighIn1}
+              />
+              <Label for='weighOut1'>Weigh Out (kg)</Label>
+              <Input
+                type='number'
+                name='weighOut1'
+                id='weighOut1'
                 onChange={changeEditForm}
               />
               <Button color='dark' style={{ marginTop: '2rem' }} block>
-                Add Record
+                Update Record
               </Button>
             </FormGroup>
           </Form>
