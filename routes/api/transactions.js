@@ -32,7 +32,7 @@ router.patch('/:id', auth, (req, res) => {
       item
         .updateOne({
           $set: {
-            records: [req.body]
+            records: req.body
           }
         })
         .then(() => res.json({ success: true }))

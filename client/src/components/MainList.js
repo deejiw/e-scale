@@ -78,7 +78,7 @@ const MainList = () => {
   }
   const submitEdit = e => {
     e.preventDefault()
-    dispatch(updateItem(editInput.id, editInput))
+    dispatch(updateItem(editForm.id, editInput))
     closeViewEdit()
   }
 

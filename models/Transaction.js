@@ -12,16 +12,24 @@ const TransactionSchema = new Schema({
   },
   records: [
     {
+      material: {
+        type: String,
+        required: [true, 'Please enter the material']
+      },
       weighIn: {
         type: Number,
         min: [0, 'Must be positive'],
         max: [99999, 'Must be less than 99999'],
-        required: false
+        required: [true, 'Please enter weigh in']
       },
       weighOut: {
         type: Number,
         min: [0, 'Must be positive'],
         max: [99999, 'Must be less than 99999'],
+        required: [true, 'Please enter weigh out']
+      },
+      remarks: {
+        type: String,
         required: false
       }
     }
