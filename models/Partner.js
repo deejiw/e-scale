@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const BP_Schema = new Schema({
+const PartnerSchema = new Schema({
   name: {
     type: String,
     required: true
@@ -32,4 +32,4 @@ const BP_Schema = new Schema({
   ]
 })
 
-module.exports = BP = mongoose.model('bp_master', BP_Schema)
+module.exports = Partner = mongoose.model('bp_master', PartnerSchema)

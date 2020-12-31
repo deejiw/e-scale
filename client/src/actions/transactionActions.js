@@ -10,9 +10,9 @@ import { tokenConfig } from './authActions'
 import { returnErrors } from './errorActions'
 
 // dispatch utilizes thunk for asyncronous request
-export const addTransaction = item => (dispatch, getState) => {
+export const addTransaction = (name, plate) => (dispatch, getState) => {
   axios
-    .post('/api/transactions', item, tokenConfig(getState))
+    .post('/api/transactions', { name, plate }, tokenConfig(getState))
     .then(res =>
       dispatch({
         type: ADD_ITEM,

@@ -20,7 +20,7 @@ mongoose
   .catch(err => console.log(err))
 
 // Use routes
-app.use('/api/bps', require('./routes/api/bps'))
+app.use('/api/partners', require('./routes/api/partners'))
 app.use('/api/transactions', require('./routes/api/transactions'))
 app.use('/api/items', require('./routes/api/items'))
 app.use('/api/users', require('./routes/api/users'))

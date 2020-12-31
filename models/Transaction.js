@@ -10,10 +10,6 @@ const TransactionSchema = new Schema({
     type: String,
     required: [true, 'Fill in name']
   },
-  plate: {
-    type: String,
-    required: [true, 'Please enter car ID']
-  },
   date: {
     type: Date,
     default: Date.now
@@ -40,7 +36,11 @@ const TransactionSchema = new Schema({
   ],
   records: [
     {
-      plate: [
+      plate: {
+        type: String,
+        required: [true, 'Please enter plate number']
+      },
+      record: [
         {
           material: {
             type: String,

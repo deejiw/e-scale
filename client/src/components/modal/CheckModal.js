@@ -38,7 +38,7 @@ const CheckModal = ({
         isOpen={header.isOpen && header.type === CHECK_MODAL}
         toggle={toggle}>
         <ModalHeader toggle={toggle}>
-          {header.name} [{header.plate}]
+          Check Out {header.name} [{header.plate}]
         </ModalHeader>
         <ModalBody>
           <Form className={classes.root} onSubmit={handleSubmit}>

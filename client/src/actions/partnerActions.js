@@ -31,7 +31,6 @@ export const addPartner = item => (dispatch, getState) => {
     .then(res =>
       dispatch({
         type: ADD_ITEM,
-        // res.data as designed from ../../routes/api/items (newItem)
         payload: res.data
       })
     )
@@ -46,7 +45,6 @@ export const updatePartner = item => (dispatch, getState) => {
     .then(res =>
       dispatch({
         type: UPDATE_ITEM,
-        // res.data as designed from ../../routes/api/items (newItem)
         payload: res.data
       })
     )
@@ -56,11 +54,9 @@ export const updatePartner = item => (dispatch, getState) => {
 }
 
 export const deletePartner = id => (dispatch, getState) => {
-  // Delete from MongoDB
   axios
     .delete(`/api/bps/${id}`, tokenConfig(getState))
     .then(res =>
-      // Dispatch to reducer
       dispatch({
         type: DELETE_ITEM,
         payload: id

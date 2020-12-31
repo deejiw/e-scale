@@ -27,6 +27,10 @@ const MainList = () => {
   const items = useSelector(state => state.item.items)
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
   const dispatch = useDispatch()
+
+  const plateTemplate = {
+    plate: ''
+  }
   const recordTemplate = {
     material: '',
     weighIn: 0,
@@ -43,7 +47,7 @@ const MainList = () => {
     accountName: ''
   }
 
-  const [plate, setPlate] = useState([{ plate: '' }])
+  const [plate, setPlate] = useState([plateTemplate])
 
   const [header, setHeader] = useState({
     isOpen: false,
@@ -110,6 +114,15 @@ const MainList = () => {
     setRecords(item.records)
   }
 
+  // Handle plate
+  const addPlate = () => setPlate([...plate, plateTemplate])
+  const removePlate = i => {
+    const values = [...plate]
+    values.splice(i, 1)
+    setPlate(values)
+  }
+
+  // Handle record
   const handleAddRecord = () => {
     setRecords([...records, recordTemplate])
     // const i = records.length
@@ -117,17 +130,17 @@ const MainList = () => {
     // setRecords((records[i - 1].weightIn = records[i - 2].weighOut))
     // }
   }
+  const handleRemoveRecord = i => {
+    const values = [...records]
+    values.splice(i, 1)
+    setRecords(values)
+  }
 
   const handleAddPayment = () => {
     setPayment([...payment, paymentTemplate])
     // const i = payment.length
   }
 
-  const handleRemoveRecord = i => {
-    const values = [...records]
-    values.splice(i, 1)
-    setRecords(values)
-  }
   const handleRemovePayment = i => {
     const values = [...payment]
     values.splice(i, 1)
@@ -136,7 +149,7 @@ const MainList = () => {
 
   const submitAdd = e => {
     e.preventDefault()
-    dispatch(addTransaction(header))
+    dispatch(addTransaction(header.name, plate))
     closeModal()
   }
   const submitEdit = e => {
@@ -160,6 +173,8 @@ const MainList = () => {
           plate={plate}
           changeHeader={changeHeader}
           changePlate={changePlate}
+          handleAddPlate={addPlate}
+          handleRemovePlate={removePlate}
           handleSubmit={submitAdd}
           toggle={closeModal}
         />

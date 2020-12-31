@@ -5,9 +5,10 @@ import {
   ModalHeader,
   ModalBody,
   Form,
-  FormGroup
+  Row,
+  Col
 } from 'reactstrap'
-import { TextField } from '@material-ui/core'
+import { Container, TextField } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { ADD_MODAL } from './types'
 
@@ -25,37 +26,60 @@ const AddModal = ({
   changeHeader,
   changePlate,
   handleSubmit,
+  handleAddPlate,
+  handleRemovePlate,
   toggle
 }) => {
   const classes = useStyles()
 
   return (
     <Modal isOpen={header.isOpen && header.type === ADD_MODAL} toggle={toggle}>
-      <ModalHeader toggle={toggle}>เพิ่มบันทึกใหม่</ModalHeader>
+      <ModalHeader toggle={toggle}>เพิ่มบิลใหม่</ModalHeader>
       <ModalBody>
         <Form className={classes.root} onSubmit={handleSubmit}>
-          <FormGroup>
-            <TextField
-              type='text'
-              label='Business Partner'
-              variant='filled'
-              name='name'
-              id='name'
-              onChange={changeHeader}
-            />
-            <br />
-            <TextField
-              type='text'
-              label='Car ID'
-              variant='filled'
-              name='plate'
-              id='plate'
-              onChange={changePlate}
-            />
-            <Button color='dark' style={{ marginTop: '2rem' }} block>
-              Add Record
+          <Container>
+            <Row>
+              <TextField
+                type='text'
+                label='Business Partner'
+                variant='filled'
+                name='name'
+                style={{ margin: ' 0 0 0.25rem 1rem' }}
+                id='name'
+                onChange={changeHeader}
+              />
+            </Row>
+
+            {plate.map((subRecord, index) => (
+              <div key={index}>
+                <Row>
+                  <Col xs='5' sm='6'>
+                    <TextField
+                      name='plate'
+                      label='Car Number'
+                      variant='filled'
+                      id='plate'
+                      value={subRecord.plate}
+                      onChange={e => changePlate(index, e)}
+                    />
+                  </Col>
+                  <Button
+                    onClick={() => handleRemovePlate(index)}
+                    style={{ padding: '0 1.5rem 0 1.5rem' }}
+                    bold='true'
+                    color='danger'>
+                    &minus;
+                  </Button>
+                </Row>
+              </div>
+            ))}
+            <Button onClick={() => handleAddPlate()} color='secondary'>
+              เพิ่มรถ
             </Button>
-          </FormGroup>
+            <Button color='dark' style={{ marginTop: '2rem' }} block>
+              บันทึกบิลใหม่
+            </Button>
+          </Container>
         </Form>
       </ModalBody>
     </Modal>

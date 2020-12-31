@@ -38,7 +38,7 @@ const EditModal = ({
         isOpen={header.isOpen && header.type === EDIT_MODAL}
         toggle={toggle}>
         <ModalHeader toggle={toggle} onChange={changeHeader}>
-          {header.name} [{header.plate}]
+          Edit {header.name} [{header.plate}]
         </ModalHeader>
         <ModalBody>
           <Form className={classes.root} onSubmit={handleSubmit}>
