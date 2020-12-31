@@ -19,11 +19,11 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const EditModal = ({
+const CheckModal = ({
   header,
   records,
-  changeHeader,
-  changeRecord,
+  payment,
+  changePayment,
   handleAddField,
   handleRemoveField,
   handleSubmit,
@@ -34,9 +34,9 @@ const EditModal = ({
   return (
     <div>
       <Modal
-        isOpen={header.isOpen && header.type === 'EDIT_MODAL'}
+        isOpen={header.isOpen && header.type === 'CHECK_MODAL'}
         toggle={toggle}>
-        <ModalHeader toggle={toggle} onChange={changeHeader}>
+        <ModalHeader toggle={toggle}>
           {header.name} [{header.plate}]
         </ModalHeader>
         <ModalBody>
@@ -52,7 +52,7 @@ const EditModal = ({
                         variant='filled'
                         id='material'
                         value={subRecord.material}
-                        onChange={e => changeRecord(index, e)}
+                        onChange={e => changePayment(index, e)}
                       />
                     </Col>
                     <Col xs='2' sm='2'>
@@ -62,7 +62,7 @@ const EditModal = ({
                         variant='filled'
                         id='deduction'
                         value={subRecord.deduction}
-                        onChange={e => changeRecord(index, e)}
+                        onChange={e => changePayment(index, e)}
                       />
                     </Col>
                     <Col xs='3' sm='4'>
@@ -72,7 +72,7 @@ const EditModal = ({
                         variant='filled'
                         id='filled'
                         value={subRecord.remarks}
-                        onChange={e => changeRecord(index, e)}
+                        onChange={e => changePayment(index, e)}
                       />
                     </Col>
 
@@ -91,7 +91,7 @@ const EditModal = ({
                         variant='filled'
                         id='weignIn'
                         value={subRecord.weighIn}
-                        onChange={e => changeRecord(index, e)}
+                        onChange={e => changePayment(index, e)}
                       />
                     </Col>
                     <Col>
@@ -101,7 +101,7 @@ const EditModal = ({
                         variant='filled'
                         id='weighOut'
                         value={subRecord.weighOut}
-                        onChange={e => changeRecord(index, e)}
+                        onChange={e => changePayment(index, e)}
                       />
                     </Col>
                     <Col xs='2' sm='2'>
@@ -111,7 +111,7 @@ const EditModal = ({
                         variant='filled'
                         id='price'
                         value={subRecord.price}
-                        onChange={e => changeRecord(index, e)}
+                        onChange={e => changePayment(index, e)}
                       />
                     </Col>
                   </Row>
@@ -134,4 +134,4 @@ const EditModal = ({
   )
 }
 
-export default EditModal
+export default CheckModal

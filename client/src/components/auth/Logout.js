@@ -9,7 +9,7 @@ const Logout = () => {
   return (
     <Fragment>
       <NavLink onClick={() => dispatch(logout())} href='#'>
-        Logout
+        ออกจากระบบ
       </NavLink>
     </Fragment>
   )

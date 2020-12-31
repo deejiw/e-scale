@@ -1,23 +1,30 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Container, ListGroup, ListGroupItem } from 'reactstrap'
+import {
+  Button,
+  ButtonGroup,
+  Container,
+  ListGroup,
+  ListGroupItem
+} from 'reactstrap'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { useSelector, useDispatch } from 'react-redux'
 import {
-  addItem,
-  getItems,
-  deleteItem,
-  updateItem
+  addTransaction,
+  getTransactions,
+  deleteTransaction,
+  updateTransaction
 } from '../actions/transactionActions'
 
 import AddModal from './modal/AddModal'
 import EditModal from './modal/EditModal'
+import CheckModal from './modal/CheckModal'
 import PropTypes from 'prop-types'
 
 const MainList = () => {
   const items = useSelector(state => state.item.items)
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
   const dispatch = useDispatch()
-  const subRecordTemplate = {
+  const recordTemplate = {
     material: '',
     weighIn: 0,
     weighOut: 0,
@@ -25,124 +32,211 @@ const MainList = () => {
     remarks: '',
     price: 0
   }
+  // ARRAY TEMPLATES
+  const paymentTemplate = {
+    type: '',
+    bank: '',
+    accountNumber: '',
+    accountName: ''
+  }
 
-  const [addForm, setAddForm] = useState({
-    isOpen: false,
-    name: ''
-  })
+  const [plate, setPlate] = useState([{ plate: '' }])
 
-  const [editForm, setEditForm] = useState({
+  const [header, setHeader] = useState({
     isOpen: false,
+    type: '',
     id: '',
     name: ''
   })
 
-  const [editInput, setEditInput] = useState([subRecordTemplate])
+  console.log(header.type)
 
-  const changeAddForm = e =>
-    setAddForm({ ...addForm, [e.target.name]: e.target.value })
+  const [records, setRecords] = useState([recordTemplate])
+  const [payment, setPayment] = useState([paymentTemplate])
 
-  const changeEditInput = (ind, e) => {
-    const values = [...editInput]
-    values[ind][e.target.name] = e.target.value
-    setEditInput(values)
+  //onChange handlers
+  const changeHeader = e =>
+    setHeader({ ...header, [e.target.name]: e.target.value })
+
+  const changePlate = (i, e) => {
+    const values = [...plate]
+    values[i][e.target.name] = e.target.value
+    setPlate(values)
+  }
+  const changeRecord = (i, e) => {
+    const values = [...records]
+    values[i][e.target.name] = e.target.value
+    setRecords(values)
+  }
+  const changePayment = (i, e) => {
+    const values = [...payment]
+    values[i][e.target.name] = e.target.value
+    setPayment(values)
   }
 
-  const [isDelete, setIsDelete] = useState(false)
+  const [viewDelete, setViewDelete] = useState({
+    isOpen: false,
+    buttonText: 'แก้ไข'
+  })
 
   // eslint-disable-next-line
-  useEffect(() => dispatch(getItems()), [])
-  const onDeleteClick = id => dispatch(deleteItem(id))
+  useEffect(() => dispatch(getTransactions()), [])
+  const onDeleteClick = id => dispatch(deleteTransaction(id))
 
-  const openViewAdd = () => setAddForm({ isOpen: true })
-  const openViewEdit = item => {
-    setEditForm({
+  const openViewAdd = modalType =>
+    setHeader({
       isOpen: true,
-      id: item._id,
-      name: item.name
+      type: modalType
     })
-    setEditInput(item.records)
+  const openViewEdit = (modalType, item) => {
+    setHeader({
+      isOpen: true,
+      type: modalType,
+      id: item._id,
+      name: item.name,
+      plate: item.plate
+    })
+    setRecords(item.records)
+  }
+  const openViewCheck = (modalType, item) => {
+    setHeader({
+      isOpen: true,
+      type: modalType,
+      id: item._id,
+      name: item.name,
+      plate: item.plate
+    })
+    setRecords(item.records)
   }
 
-  const handleAddField = () => {
-    setEditInput([...editInput, subRecordTemplate])
+  const handleAddRecord = () => {
+    setRecords([...records, recordTemplate])
+    // const i = records.length
+    // if (i > 0) {
+    // setRecords((records[i - 1].weightIn = records[i - 2].weighOut))
+    // }
   }
-  const handleRemoveField = i => {
-    const values = [...editInput]
+
+  const handleAddPayment = () => {
+    setPayment([...payment, paymentTemplate])
+    // const i = payment.length
+  }
+
+  const handleRemoveRecord = i => {
+    const values = [...records]
     values.splice(i, 1)
-    setEditInput(values)
+    setRecords(values)
+  }
+  const handleRemovePayment = i => {
+    const values = [...payment]
+    values.splice(i, 1)
+    setPayment(values)
   }
 
   const submitAdd = e => {
     e.preventDefault()
-    dispatch(addItem(addForm))
-    closeViewAdd()
+    dispatch(addTransaction(header))
+    closeModal()
   }
   const submitEdit = e => {
     e.preventDefault()
-    dispatch(updateItem(editForm.id, editInput))
-    closeViewEdit()
+    dispatch(updateTransaction(header.id, records))
+    closeModal()
+  }
+  const submitCheck = e => {
+    e.preventDefault()
+    dispatch(updateTransaction(header.id, payment))
+    closeModal()
   }
 
-  const closeViewAdd = () => setAddForm({ isOpen: false })
-  const closeViewEdit = () => setEditForm({ isOpen: false })
+  const closeModal = () => setHeader({ isOpen: false })
 
   return (
     <div>
       <Container>
         <AddModal
-          addForm={addForm}
-          changeAddForm={changeAddForm}
-          submitAdd={submitAdd}
-          toggle={closeViewAdd}
+          header={header}
+          plate={plate}
+          changeHeader={changeHeader}
+          changePlate={changePlate}
+          handleSubmit={submitAdd}
+          toggle={closeModal}
         />
 
         {isAuthenticated ? (
           <div>
-            {/* <BusinessPartner /> */}
-
             <Button // Add Record
-              color='dark'
+              color='success'
               style={{ marginBottom: '1rem', marginRight: '0.5rem' }}
-              onClick={openViewAdd}>
-              Add Record
+              onClick={() => openViewAdd('ADD_MODAL')}>
+              บิลใหม่
             </Button>
 
             <Button // Edit
-              color='dark'
+              color='warning'
               style={{ marginBottom: '1rem', marginRight: '0.5rem' }}
-              onClick={() => setIsDelete(!isDelete)}>
-              {setIsDelete ? 'Edit' : 'Done'}
+              onClick={() =>
+                setViewDelete({
+                  isOpen: !viewDelete.isOpen,
+                  buttonText:
+                    viewDelete.buttonText === 'แก้ไข' ? 'เสร็จ' : 'แก้ไข'
+                })
+              }>
+              {viewDelete.buttonText}
             </Button>
 
             <ListGroup>
               <TransitionGroup className='shopping-list'>
                 {items.map(item => (
-                  <CSSTransition key={item._id} timeout={500} classNames='fade'>
+                  <CSSTransition
+                    key={item._id}
+                    timeout={500}
+                    // classNames='fade'
+                  >
                     <ListGroupItem>
-                      {isDelete ? (
-                        <Button
-                          className='remove-btn'
-                          color='danger'
-                          size='sm'
-                          onClick={() => onDeleteClick(item._id)}>
-                          &times;
-                        </Button>
+                      {viewDelete.isOpen ? (
+                        <ButtonGroup>
+                          <Button
+                            className='remove-btn'
+                            color='danger'
+                            size='sm'
+                            onClick={() => onDeleteClick(item._id)}>
+                            &times;
+                          </Button>
+                          <Button
+                            color='warning'
+                            size='sm'
+                            onClick={() => openViewCheck('CHECK_MODAL', item)}>
+                            เช็คออก
+                          </Button>
+                        </ButtonGroup>
                       ) : null}
                       <Button
-                        className='mr-2'
-                        onClick={() => openViewEdit(item)}>
+                        className='ml-2'
+                        onClick={() => openViewEdit('EDIT_MODAL', item)}
+                        color='dark'>
                         {item.name}
                       </Button>
 
                       <EditModal
-                        editForm={editForm}
-                        editInput={editInput}
-                        changeEditInput={changeEditInput}
-                        handleAddField={handleAddField}
-                        handleRemoveField={handleRemoveField}
-                        submitEdit={submitEdit}
-                        toggle={closeViewEdit}
+                        header={header}
+                        records={records}
+                        changeHeader={changeHeader}
+                        changeRecord={changeRecord}
+                        handleAddRecord={handleAddRecord}
+                        handleRemoveField={handleRemoveRecord}
+                        handleSubmit={submitEdit}
+                        toggle={closeModal}
+                      />
+                      <CheckModal
+                        header={header}
+                        records={records}
+                        payment={payment}
+                        changePayment={changePayment}
+                        handleAddField={handleAddPayment}
+                        handleRemoveField={handleRemovePayment}
+                        handleSubmit={submitCheck}
+                        toggle={closeModal}
                       />
                     </ListGroupItem>
                   </CSSTransition>
@@ -163,10 +257,10 @@ const MainList = () => {
 }
 
 MainList.propTypes = {
-  getItems: PropTypes.func.isRequired,
-  addItem: PropTypes.func.isRequired,
-  updateItem: PropTypes.func.isRequired,
-  deleteItem: PropTypes.func.isRequired,
+  getTransactions: PropTypes.func.isRequired,
+  addTransaction: PropTypes.func.isRequired,
+  updateTransaction: PropTypes.func.isRequired,
+  deleteTransaction: PropTypes.func.isRequired,
   items: PropTypes.object.isRequired,
   isAuthenticated: PropTypes.bool.isRequired
 }

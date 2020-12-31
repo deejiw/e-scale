@@ -101,7 +101,7 @@ const LoginModal = () => {
                 onChange={onChange}
               />
               <Button color='dark' style={{ marginTop: '2rem' }} block>
-                Login
+                เข้าสู่ระบบ
               </Button>
             </FormGroup>
           </Form>

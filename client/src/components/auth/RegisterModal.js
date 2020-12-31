@@ -86,7 +86,7 @@ const RegisterModal = () => {
           {state.msg ? <Alert color='danger'>{state.msg}</Alert> : null}
           <Form onSubmit={onSubmit}>
             <FormGroup>
-              <Label for='name'>Name</Label>
+              <Label for='name'>ชื่อ-นามสกุล</Label>
               <Input
                 type='text'
                 name='name'
@@ -112,7 +112,7 @@ const RegisterModal = () => {
                 onChange={onChange}
               />
               <Button color='dark' style={{ marginTop: '2rem' }} block>
-                Register
+                ลงทะเบียน
               </Button>
             </FormGroup>
           </Form>

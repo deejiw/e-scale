@@ -75,11 +75,11 @@ const Partner = () => {
   return (
     <div>
       <NavLink onClick={toggle} href='#'>
-        Partner
+        คู่ค้า
       </NavLink>
 
       <Modal isOpen={state.modal} toggle={toggle}>
-        <ModalHeader toggle={toggle}>Manage Business Partner</ModalHeader>
+        <ModalHeader toggle={toggle}>จัดการคู่ค้า</ModalHeader>
         <ModalBody>
           {state.msg ? <Alert color='danger'>{state.msg}</Alert> : null}
           <Form onSubmit={onSubmit}>

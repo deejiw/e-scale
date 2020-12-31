@@ -5,25 +5,53 @@ import {
   ModalHeader,
   ModalBody,
   Form,
-  FormGroup,
-  Label,
-  Input
+  FormGroup
 } from 'reactstrap'
+import { TextField } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
 
-const AddModal = ({ addForm, changeAddForm, submitAdd, toggle }) => {
+const useStyles = makeStyles(theme => ({
+  root: {
+    '& .MuiTextField-root': {
+      margin: theme.spacing(0.75, 0)
+    }
+  }
+}))
+
+const AddModal = ({
+  header,
+  plate,
+  changeHeader,
+  changePlate,
+  handleSubmit,
+  toggle
+}) => {
+  const classes = useStyles()
+
   return (
-    <Modal isOpen={addForm.isOpen} toggle={toggle}>
-      <ModalHeader toggle={toggle}>Add New Record</ModalHeader>
+    <Modal
+      isOpen={header.isOpen && header.type === 'ADD_MODAL'}
+      toggle={toggle}>
+      <ModalHeader toggle={toggle}>เพิ่มบันทึกใหม่</ModalHeader>
       <ModalBody>
-        <Form onSubmit={submitAdd}>
+        <Form className={classes.root} onSubmit={handleSubmit}>
           <FormGroup>
-            <Label for='name'>Business Partner Name</Label>
-            <Input
+            <TextField
               type='text'
+              label='Business Partner'
+              variant='filled'
               name='name'
               id='name'
-              placeholder='Type name and identity here'
-              onChange={changeAddForm}
+              onChange={changeHeader}
+            />
+            <br />
+            <TextField
+              type='text'
+              label='Car ID'
+              variant='filled'
+              name='plate'
+              id='plate'
+              onChange={changePlate}
             />
             <Button color='dark' style={{ marginTop: '2rem' }} block>
               Add Record
