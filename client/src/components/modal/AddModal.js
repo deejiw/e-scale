@@ -9,6 +9,7 @@ import {
 } from 'reactstrap'
 import { TextField } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import { ADD_MODAL } from './types'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -29,9 +30,7 @@ const AddModal = ({
   const classes = useStyles()
 
   return (
-    <Modal
-      isOpen={header.isOpen && header.type === 'ADD_MODAL'}
-      toggle={toggle}>
+    <Modal isOpen={header.isOpen && header.type === ADD_MODAL} toggle={toggle}>
       <ModalHeader toggle={toggle}>เพิ่มบันทึกใหม่</ModalHeader>
       <ModalBody>
         <Form className={classes.root} onSubmit={handleSubmit}>

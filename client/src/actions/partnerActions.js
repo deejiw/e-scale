@@ -10,7 +10,7 @@ import { tokenConfig } from './authActions'
 import { returnErrors } from './errorActions'
 
 // dispatch utilizes thunk for asyncronous request
-export const getItems = () => dispatch => {
+export const getPartners = () => dispatch => {
   dispatch(setItemsLoading())
   axios
     .get('./api/bps')
@@ -25,7 +25,7 @@ export const getItems = () => dispatch => {
     )
 }
 
-export const addItem = item => (dispatch, getState) => {
+export const addPartner = item => (dispatch, getState) => {
   axios
     .post('/api/bps', item, tokenConfig(getState))
     .then(res =>
@@ -40,7 +40,7 @@ export const addItem = item => (dispatch, getState) => {
     )
 }
 
-export const updateItem = item => (dispatch, getState) => {
+export const updatePartner = item => (dispatch, getState) => {
   axios
     .patch(`/api/bps/${item.id}`, item, tokenConfig(getState))
     .then(res =>
@@ -55,7 +55,7 @@ export const updateItem = item => (dispatch, getState) => {
     )
 }
 
-export const deleteItem = id => (dispatch, getState) => {
+export const deletePartner = id => (dispatch, getState) => {
   // Delete from MongoDB
   axios
     .delete(`/api/bps/${id}`, tokenConfig(getState))

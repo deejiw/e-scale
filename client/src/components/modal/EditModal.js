@@ -10,6 +10,7 @@ import {
   Row,
   Col
 } from 'reactstrap'
+import { EDIT_MODAL } from './types'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -34,7 +35,7 @@ const EditModal = ({
   return (
     <div>
       <Modal
-        isOpen={header.isOpen && header.type === 'EDIT_MODAL'}
+        isOpen={header.isOpen && header.type === EDIT_MODAL}
         toggle={toggle}>
         <ModalHeader toggle={toggle} onChange={changeHeader}>
           {header.name} [{header.plate}]

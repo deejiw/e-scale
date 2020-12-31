@@ -10,6 +10,7 @@ import {
   Row,
   Col
 } from 'reactstrap'
+import { CHECK_MODAL } from './types'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -34,7 +35,7 @@ const CheckModal = ({
   return (
     <div>
       <Modal
-        isOpen={header.isOpen && header.type === 'CHECK_MODAL'}
+        isOpen={header.isOpen && header.type === CHECK_MODAL}
         toggle={toggle}>
         <ModalHeader toggle={toggle}>
           {header.name} [{header.plate}]

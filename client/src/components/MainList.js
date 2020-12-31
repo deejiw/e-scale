@@ -8,13 +8,16 @@ import {
 } from 'reactstrap'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { useSelector, useDispatch } from 'react-redux'
+
 import {
   addTransaction,
   getTransactions,
   deleteTransaction,
   updateTransaction
 } from '../actions/transactionActions'
+import { getPartners } from '../actions/partnerActions'
 
+import { ADD_MODAL, CHECK_MODAL, EDIT_MODAL, DELETE_MODAL } from './modal/types'
 import AddModal from './modal/AddModal'
 import EditModal from './modal/EditModal'
 import CheckModal from './modal/CheckModal'
@@ -48,8 +51,6 @@ const MainList = () => {
     id: '',
     name: ''
   })
-
-  console.log(header.type)
 
   const [records, setRecords] = useState([recordTemplate])
   const [payment, setPayment] = useState([paymentTemplate])
@@ -168,7 +169,7 @@ const MainList = () => {
             <Button // Add Record
               color='success'
               style={{ marginBottom: '1rem', marginRight: '0.5rem' }}
-              onClick={() => openViewAdd('ADD_MODAL')}>
+              onClick={() => openViewAdd(ADD_MODAL)}>
               บิลใหม่
             </Button>
 
@@ -206,14 +207,14 @@ const MainList = () => {
                           <Button
                             color='warning'
                             size='sm'
-                            onClick={() => openViewCheck('CHECK_MODAL', item)}>
+                            onClick={() => openViewCheck(CHECK_MODAL, item)}>
                             เช็คออก
                           </Button>
                         </ButtonGroup>
                       ) : null}
                       <Button
                         className='ml-2'
-                        onClick={() => openViewEdit('EDIT_MODAL', item)}
+                        onClick={() => openViewEdit(EDIT_MODAL, item)}
                         color='dark'>
                         {item.name}
                       </Button>
