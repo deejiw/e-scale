@@ -26,14 +26,13 @@ const EditModal = ({
   records,
   changeHeader,
   changeRecord,
-  handleAddField,
-  handleRemoveField,
+  handleAddRecord,
+  handleRemoveRecord,
   handleSubmit,
   toggle
 }) => {
   const classes = useStyles()
 
-  console.log(records)
   return (
     <div>
       <Modal
@@ -45,11 +44,11 @@ const EditModal = ({
         <ModalBody>
           <Form className={classes.root} onSubmit={handleSubmit}>
             <Container>
-              {records.map((record, index) => (
-                <div key={index}>
+              {records.map((record, i) => (
+                <div key={i}>
                   <Label>{record.plate}</Label>
-                  {record.record.map((subRecord, index) => (
-                    <div key={index}>
+                  {/* {record.record.map((subRecord, j) => (
+                    <div key={j}>
                       <Row>
                         <Col xs='4' sm='5'>
                           <TextField
@@ -58,7 +57,7 @@ const EditModal = ({
                             variant='filled'
                             id='material'
                             value={subRecord.material}
-                            onChange={e => changeRecord(index, e)}
+                            onChange={e => changeRecord(i, j, e)}
                           />
                         </Col>
                         <Col xs='2' sm='2'>
@@ -68,7 +67,7 @@ const EditModal = ({
                             variant='filled'
                             id='deduction'
                             value={subRecord.deduction}
-                            onChange={e => changeRecord(index, e)}
+                            onChange={e => changeRecord(i, j, e)}
                           />
                         </Col>
                         <Col xs='3' sm='4'>
@@ -78,12 +77,12 @@ const EditModal = ({
                             variant='filled'
                             id='filled'
                             value={subRecord.remarks}
-                            onChange={e => changeRecord(index, e)}
+                            onChange={e => changeRecord(i, j, e)}
                           />
                         </Col>
 
                         <Button
-                          onClick={() => handleRemoveField(index)}
+                          onClick={() => handleRemoveRecord(i, j)}
                           bold='true'
                           color='danger'>
                           &minus;
@@ -97,7 +96,7 @@ const EditModal = ({
                             variant='filled'
                             id='weignIn'
                             value={subRecord.weighIn}
-                            onChange={e => changeRecord(index, e)}
+                            onChange={e => changeRecord(i, j, e)}
                           />
                         </Col>
                         <Col>
@@ -107,7 +106,7 @@ const EditModal = ({
                             variant='filled'
                             id='weighOut'
                             value={subRecord.weighOut}
-                            onChange={e => changeRecord(index, e)}
+                            onChange={e => changeRecord(i, j, e)}
                           />
                         </Col>
                         <Col xs='2' sm='2'>
@@ -117,15 +116,15 @@ const EditModal = ({
                             variant='filled'
                             id='price'
                             value={subRecord.price}
-                            onChange={e => changeRecord(index, e)}
+                            onChange={e => changeRecord(i, j, e)}
                           />
                         </Col>
                       </Row>
                     </div>
-                  ))}
+                  ))} */}
 
                   <Button
-                    onClick={() => handleAddField()}
+                    onClick={() => handleAddRecord(i)}
                     style={{ margin: '0 0.5rem 0 0.5rem' }}
                     color='secondary'>
                     เพิ่มรายการ

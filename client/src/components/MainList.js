@@ -28,21 +28,22 @@ const MainList = () => {
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
   const dispatch = useDispatch()
 
-  const plateTemplate = {
+  const carTemplate = {
     plate: ''
   }
+
   const recordTemplate = {
-    plate: '',
-    record: [
-      {
-        material: '',
-        weighIn: 0,
-        weighOut: 0,
-        deduction: 0,
-        remarks: '',
-        price: 0
-      }
-    ]
+    material: '',
+    weighIn: 0,
+    weighOut: 0,
+    deduction: 0,
+    remarks: '',
+    price: 0
+  }
+
+  const recordsTemplate = {
+    carTemplate,
+    record: [recordTemplate]
   }
 
   // ARRAY TEMPLATES
@@ -53,7 +54,7 @@ const MainList = () => {
     accountName: ''
   }
 
-  const [plate, setPlate] = useState([plateTemplate])
+  const [plate, setPlate] = useState([carTemplate])
 
   const [header, setHeader] = useState({
     isOpen: false,
@@ -62,7 +63,7 @@ const MainList = () => {
     name: ''
   })
 
-  const [records, setRecords] = useState([recordTemplate])
+  const [records, setRecords] = useState([recordsTemplate])
   const [payment, setPayment] = useState([paymentTemplate])
 
   //onChange handlers
@@ -119,7 +120,7 @@ const MainList = () => {
   }
 
   // Handle plate
-  const addPlate = () => setPlate([...plate, plateTemplate])
+  const addPlate = () => setPlate([...plate, carTemplate])
   const removePlate = i => {
     const values = [...plate]
     values.splice(i, 1)
@@ -127,8 +128,13 @@ const MainList = () => {
   }
 
   // Handle record
-  const addRecord = () => {
-    setRecords([...records, recordTemplate])
+  const addRecord = i => {
+    setRecords(
+      records.map((record, index) =>
+        index == i ? { record: recordTemplate } : record
+      )
+    )
+
     // const i = records.length
     // if (i > 0) {
     // setRecords((records[i - 1].weightIn = records[i - 2].weighOut))
@@ -244,7 +250,7 @@ const MainList = () => {
                         changeHeader={changeHeader}
                         changeRecord={changeRecord}
                         handleAddRecord={addRecord}
-                        handleRemoveField={removeRecord}
+                        handleRemoveRecord={removeRecord}
                         handleSubmit={submitEdit}
                         toggle={closeModal}
                       />

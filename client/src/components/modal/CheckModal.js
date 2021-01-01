@@ -41,7 +41,7 @@ const CheckModal = ({
         <ModalBody>
           <Form className={classes.root} onSubmit={handleSubmit}>
             <Container>
-              {records.map((subRecord, index) => (
+              {/* {records.map((subRecord, index) => (
                 <div key={index}>
                   <Row>
                     <Col xs='4' sm='5'>
@@ -116,7 +116,7 @@ const CheckModal = ({
                   </Row>
                   <hr />
                 </div>
-              ))}
+              ))} */}
 
               <Button onClick={() => handleAddField()} color='secondary'>
                 เพิ่มรายการ
