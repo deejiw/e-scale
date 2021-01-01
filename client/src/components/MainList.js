@@ -32,13 +32,19 @@ const MainList = () => {
     plate: ''
   }
   const recordTemplate = {
-    material: '',
-    weighIn: 0,
-    weighOut: 0,
-    deduction: 0,
-    remarks: '',
-    price: 0
+    plate: '',
+    record: [
+      {
+        material: '',
+        weighIn: 0,
+        weighOut: 0,
+        deduction: 0,
+        remarks: '',
+        price: 0
+      }
+    ]
   }
+
   // ARRAY TEMPLATES
   const paymentTemplate = {
     type: '',
@@ -98,8 +104,7 @@ const MainList = () => {
       isOpen: true,
       type: modalType,
       id: item._id,
-      name: item.name,
-      plate: item.plate
+      name: item.name
     })
     setRecords(item.records)
   }
@@ -108,8 +113,7 @@ const MainList = () => {
       isOpen: true,
       type: modalType,
       id: item._id,
-      name: item.name,
-      plate: item.plate
+      name: item.name
     })
     setRecords(item.records)
   }
@@ -123,14 +127,14 @@ const MainList = () => {
   }
 
   // Handle record
-  const handleAddRecord = () => {
+  const addRecord = () => {
     setRecords([...records, recordTemplate])
     // const i = records.length
     // if (i > 0) {
     // setRecords((records[i - 1].weightIn = records[i - 2].weighOut))
     // }
   }
-  const handleRemoveRecord = i => {
+  const removeRecord = i => {
     const values = [...records]
     values.splice(i, 1)
     setRecords(values)
@@ -239,8 +243,8 @@ const MainList = () => {
                         records={records}
                         changeHeader={changeHeader}
                         changeRecord={changeRecord}
-                        handleAddRecord={handleAddRecord}
-                        handleRemoveField={handleRemoveRecord}
+                        handleAddRecord={addRecord}
+                        handleRemoveField={removeRecord}
                         handleSubmit={submitEdit}
                         toggle={closeModal}
                       />
