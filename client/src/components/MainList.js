@@ -130,8 +130,8 @@ const MainList = () => {
   // Handle record
   const addRecord = i => {
     setRecords(
-      records.map((record, index) =>
-        index == i ? { record: recordTemplate } : record
+      records.map((car, index) =>
+        index == i ? { ...car, record: [...car.record, recordTemplate] } : car
       )
     )
 
