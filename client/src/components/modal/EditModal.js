@@ -47,7 +47,7 @@ const EditModal = ({
               {records.map((record, i) => (
                 <div key={i}>
                   <Label>{record.plate}</Label>
-                  {/* {record.record.map((subRecord, j) => (
+                  {record.record.map((subRecord, j) => (
                     <div key={j}>
                       <Row>
                         <Col xs='4' sm='5'>
@@ -121,7 +121,7 @@ const EditModal = ({
                         </Col>
                       </Row>
                     </div>
-                  ))} */}
+                  ))}
 
                   <Button
                     onClick={() => handleAddRecord(i)}

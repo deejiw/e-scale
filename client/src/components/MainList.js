@@ -75,11 +75,23 @@ const MainList = () => {
     values[i][e.target.name] = e.target.value
     setPlate(values)
   }
-  const changeRecord = (i, e) => {
-    const values = [...records]
-    values[i][e.target.name] = e.target.value
-    setRecords(values)
+  const changeRecord = (i, j, e) => {
+    console.log(i, j)
+    // const car = [records.record][i]
+    // car[j][e.target.name] = e.target.value
+    // setRecords(values)
+
+    setRecords(
+      records.map((car, index) =>
+        index == i
+          ? { ...car, [car.record[j][e.target.name]]: e.target.value }
+          : car
+      )
+    )
   }
+
+  // { ...car, record: [car.record.splice(j, 1)] }
+
   const changePayment = (i, e) => {
     const values = [...payment]
     values[i][e.target.name] = e.target.value
@@ -134,16 +146,13 @@ const MainList = () => {
         index == i ? { ...car, record: [...car.record, recordTemplate] } : car
       )
     )
-
-    // const i = records.length
-    // if (i > 0) {
-    // setRecords((records[i - 1].weightIn = records[i - 2].weighOut))
-    // }
   }
-  const removeRecord = i => {
-    const values = [...records]
-    values.splice(i, 1)
-    setRecords(values)
+  const removeRecord = (i, j) => {
+    setRecords(
+      records.map((car, index) =>
+        index == i ? { ...car, record: [car.record.splice(j, 1)] } : car
+      )
+    )
   }
 
   const handleAddPayment = () => {
