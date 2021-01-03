@@ -76,21 +76,10 @@ const MainList = () => {
     setPlate(values)
   }
   const changeRecord = (i, j, e) => {
-    console.log(i, j)
-    // const car = [records.record][i]
-    // car[j][e.target.name] = e.target.value
-    // setRecords(values)
-
-    setRecords(
-      records.map((car, index) =>
-        index == i
-          ? { ...car, [car.record[j][e.target.name]]: e.target.value }
-          : car
-      )
-    )
+    const values = [...records]
+    values[i].record[j][e.target.name] = e.target.value
+    setRecords(values)
   }
-
-  // { ...car, record: [car.record.splice(j, 1)] }
 
   const changePayment = (i, e) => {
     const values = [...payment]
