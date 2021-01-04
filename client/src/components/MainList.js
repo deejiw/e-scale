@@ -137,11 +137,12 @@ const MainList = () => {
     )
   }
   const removeRecord = (i, j) => {
-    setRecords(
-      records.map((car, index) =>
-        index == i ? { ...car, record: [car.record.splice(j, 1)] } : car
+    setRecords(prevRecords => {
+      prevRecords[i].record.splice(j, 1)
+      return prevRecords.map((car, index) =>
+        index == i ? { ...car, record: prevRecords[i].record } : car
       )
-    )
+    })
   }
 
   const handleAddPayment = () => {
