@@ -33,6 +33,15 @@ const EditModal = ({
 }) => {
   const classes = useStyles()
 
+  function len(arr) {
+    var count = 0
+    for (var i in arr) {
+      if (arr.hasOwnProperty(i)) {
+        count++
+      }
+    }
+    return count
+  }
   return (
     <div>
       <Modal
@@ -124,9 +133,7 @@ const EditModal = ({
                   ))}
 
                   <Button
-                    onClick={() =>
-                      handleAddRecord(i, Object.keys(records).length)
-                    }
+                    onClick={() => handleAddRecord(i)}
                     style={{ margin: '0 0.5rem 0 0.5rem' }}
                     color='secondary'>
                     เพิ่มรายการ

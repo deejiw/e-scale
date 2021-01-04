@@ -129,14 +129,26 @@ const MainList = () => {
   }
 
   // Handle record
-  const addRecord = (i, lastIndex) => {
+  const addRecord = i => {
     setRecords(prevRecords => {
-      const prevWeighOut = prevRecords[i].record[lastIndex].weighOut
+      const lastIndex = prevRecords[i].record.length
+      const prevWeightOut = () => {
+        switch (lastIndex) {
+          case 0:
+            return 0
+          default:
+            return prevRecords[i].record[lastIndex - 1].weighOut
+        }
+      }
+      console.log(lastIndex)
       return prevRecords.map((car, index) =>
         index == i
           ? {
               ...car,
-              record: [...car.record, { recordTemplate, weighIn: prevWeighOut }]
+              record: [
+                ...car.record,
+                { recordTemplate, weighIn: prevWeightOut() }
+              ]
             }
           : car
       )
