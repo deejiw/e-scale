@@ -140,7 +140,7 @@ const MainList = () => {
             return prevRecords[i].record[lastIndex].weighOut
         }
       }
-      console.log(lastIndex)
+
       return prevRecords.map((car, index) =>
         index == i
           ? {
@@ -154,6 +154,7 @@ const MainList = () => {
       )
     })
   }
+
   const removeRecord = (i, j) => {
     setRecords(prevRecords => {
       prevRecords[i].record.splice(j, 1)

@@ -33,15 +33,6 @@ const EditModal = ({
 }) => {
   const classes = useStyles()
 
-  function len(arr) {
-    var count = 0
-    for (var i in arr) {
-      if (arr.hasOwnProperty(i)) {
-        count++
-      }
-    }
-    return count
-  }
   return (
     <div>
       <Modal
