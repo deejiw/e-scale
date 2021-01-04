@@ -129,12 +129,18 @@ const MainList = () => {
   }
 
   // Handle record
-  const addRecord = i => {
-    setRecords(
-      records.map((car, index) =>
-        index == i ? { ...car, record: [...car.record, recordTemplate] } : car
+  const addRecord = (i, lastIndex) => {
+    setRecords(prevRecords => {
+      const prevWeighOut = prevRecords[i].record[lastIndex].weighOut
+      return prevRecords.map((car, index) =>
+        index == i
+          ? {
+              ...car,
+              record: [...car.record, { recordTemplate, weighIn: prevWeighOut }]
+            }
+          : car
       )
-    )
+    })
   }
   const removeRecord = (i, j) => {
     setRecords(prevRecords => {

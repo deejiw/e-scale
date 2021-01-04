@@ -59,7 +59,7 @@ const TransactionSchema = new Schema({
             required: [true, 'Please enter weigh out']
           },
           deduction: {
-            type: String,
+            type: Number,
             required: false
           },
           remarks: {

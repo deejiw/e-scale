@@ -124,7 +124,9 @@ const EditModal = ({
                   ))}
 
                   <Button
-                    onClick={() => handleAddRecord(i)}
+                    onClick={() =>
+                      handleAddRecord(i, Object.keys(records).length)
+                    }
                     style={{ margin: '0 0.5rem 0 0.5rem' }}
                     color='secondary'>
                     เพิ่มรายการ
