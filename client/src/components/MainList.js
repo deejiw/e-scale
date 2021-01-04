@@ -131,13 +131,13 @@ const MainList = () => {
   // Handle record
   const addRecord = i => {
     setRecords(prevRecords => {
-      const lastIndex = prevRecords[i].record.length
+      const lastIndex = prevRecords[i].record.length - 1
       const prevWeightOut = () => {
         switch (lastIndex) {
-          case 0:
+          case -1:
             return 0
           default:
-            return prevRecords[i].record[lastIndex - 1].weighOut
+            return prevRecords[i].record[lastIndex].weighOut
         }
       }
       console.log(lastIndex)
