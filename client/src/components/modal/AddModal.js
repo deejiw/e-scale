@@ -44,8 +44,10 @@ const AddModal = ({
                 label='Business Partner'
                 variant='filled'
                 name='name'
-                style={{ margin: ' 0 0 0.25rem 1rem' }}
                 id='name'
+                style={{ margin: ' 0 0 1rem 1rem' }}
+                autoFocus='true'
+                required='true'
                 onChange={changeHeader}
               />
             </Row>
@@ -59,13 +61,15 @@ const AddModal = ({
                       label='Car Number'
                       variant='filled'
                       id='plate'
+                      autoFocus='true'
+                      required='true'
                       value={subRecord.plate}
                       onChange={e => changePlate(index, e)}
                     />
                   </Col>
                   <Button
                     onClick={() => handleRemovePlate(index)}
-                    style={{ padding: '0 1.5rem 0 1.5rem' }}
+                    style={{ padding: '0 1.5remrem 0 1.5rem' }}
                     bold='true'
                     color='danger'>
                     &minus;
@@ -73,10 +77,13 @@ const AddModal = ({
                 </Row>
               </div>
             ))}
-            <Button onClick={() => handleAddPlate()} color='secondary'>
+            <Button
+              style={{ margin: '0.5rem 0 0 0' }}
+              onClick={() => handleAddPlate()}
+              color='secondary'>
               เพิ่มรถ
             </Button>
-            <Button color='dark' style={{ marginTop: '2rem' }} block>
+            <Button color='success' style={{ margin: '2rem 0 0 0' }} block>
               บันทึกบิลใหม่
             </Button>
           </Container>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Container, TextField } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -32,6 +32,28 @@ const EditModal = ({
   toggle
 }) => {
   const classes = useStyles()
+  const [helperText, setHelperText] = useState({
+    isError: 'false',
+    text: ''
+  })
+
+  const validateWeighOut = (i, j, weighIn, weighOut) => {
+    if (weighOut !== '' && weighOut > weighIn) {
+      setHelperText({
+        isError: true,
+        text: 'Must be lower than weigh in'
+      })
+    } else {
+      setHelperText({
+        isError: false,
+        text: ''
+      })
+    }
+  }
+
+  const isLastIndex = (record, j) => {
+    return Object.keys(record).length - 1 === j
+  }
 
   return (
     <div>
@@ -40,6 +62,7 @@ const EditModal = ({
         toggle={toggle}>
         <ModalHeader toggle={toggle} onChange={changeHeader}>
           Edit {header.name}
+          <Button style={{ margin: '0 0 0 1rem' }}>เพิ่มรถ</Button>
         </ModalHeader>
         <ModalBody>
           <Form className={classes.root} onSubmit={handleSubmit}>
@@ -47,42 +70,58 @@ const EditModal = ({
               {records.map((record, i) => (
                 <div key={i}>
                   <Label>{record.plate}</Label>
-                  {record.record.map((subRecord, j) => (
+                  <Button
+                    onClick={() => handleAddRecord(i)}
+                    style={{ margin: '0 0 0 1rem' }}
+                    color='secondary'>
+                    เพิ่มรายการ
+                  </Button>
+                  {record.record.map((_, j) => (
                     <div key={j}>
                       <Row>
                         <Col xs='4' sm='5'>
                           <TextField
                             name='material'
+                            type='text'
                             label='Material'
                             variant='filled'
                             id='material'
-                            value={subRecord.material}
+                            autoFocus='true'
+                            required='true'
+                            value={_.material}
                             onChange={e => changeRecord(i, j, e)}
                           />
                         </Col>
                         <Col xs='2' sm='2'>
                           <TextField
                             name='deduction'
+                            type='number'
                             label='Deduct'
                             variant='filled'
                             id='deduction'
-                            value={subRecord.deduction}
+                            value={_.deduction}
+                            defaultValue='0'
                             onChange={e => changeRecord(i, j, e)}
                           />
                         </Col>
                         <Col xs='3' sm='4'>
                           <TextField
                             name='remarks'
+                            type='text'
                             label='Remarks'
                             variant='filled'
                             id='filled'
-                            value={subRecord.remarks}
+                            value={_.remarks}
                             onChange={e => changeRecord(i, j, e)}
                           />
                         </Col>
 
                         <Button
-                          onClick={() => handleRemoveRecord(i, j)}
+                          onClick={() => {
+                            if (isLastIndex(record.record, j)) {
+                              handleRemoveRecord(i, j)
+                            }
+                          }}
                           bold='true'
                           color='danger'>
                           &minus;
@@ -92,43 +131,47 @@ const EditModal = ({
                         <Col>
                           <TextField
                             name='weighIn'
+                            type='number'
                             label='Weigh In'
                             variant='filled'
                             id='weignIn'
-                            value={subRecord.weighIn}
+                            value={_.weighIn}
+                            defaultValue='0'
                             onChange={e => changeRecord(i, j, e)}
                           />
                         </Col>
                         <Col>
                           <TextField
                             name='weighOut'
+                            type='number'
                             label='Weigh Out'
                             variant='filled'
                             id='weighOut'
-                            value={subRecord.weighOut}
-                            onChange={e => changeRecord(i, j, e)}
+                            value={_.weighOut}
+                            defaultValue='0'
+                            error={helperText.isError}
+                            helperText={helperText.text}
+                            onChange={e => {
+                              changeRecord(i, j, e)
+                              validateWeighOut(i, j, _.weighIn, e.target.value)
+                            }}
                           />
                         </Col>
                         <Col xs='2' sm='2'>
                           <TextField
                             name='price'
+                            type='number'
                             label='Price'
                             variant='filled'
                             id='price'
-                            value={subRecord.price}
+                            value={_.price}
+                            defaultValue='0'
                             onChange={e => changeRecord(i, j, e)}
                           />
                         </Col>
                       </Row>
                     </div>
                   ))}
-
-                  <Button
-                    onClick={() => handleAddRecord(i)}
-                    style={{ margin: '0 0.5rem 0 0.5rem' }}
-                    color='secondary'>
-                    เพิ่มรายการ
-                  </Button>
                   <hr />
                 </div>
               ))}

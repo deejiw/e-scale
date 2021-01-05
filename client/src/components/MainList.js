@@ -28,6 +28,7 @@ const MainList = () => {
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
   const dispatch = useDispatch()
 
+  // ARRAY TEMPLATES
   const carTemplate = {
     plate: ''
   }
@@ -38,15 +39,14 @@ const MainList = () => {
     weighOut: 0,
     deduction: 0,
     remarks: '',
-    price: 0
+    price: 0,
+    amount: 0
   }
 
   const recordsTemplate = {
     carTemplate,
     record: [recordTemplate]
   }
-
-  // ARRAY TEMPLATES
   const paymentTemplate = {
     type: '',
     bank: '',
@@ -93,7 +93,8 @@ const MainList = () => {
   })
 
   // eslint-disable-next-line
-  useEffect(() => dispatch(getTransactions()), [])
+  useEffect(() => dispatch(getTransactions()))
+
   const onDeleteClick = id => dispatch(deleteTransaction(id))
 
   const openViewAdd = modalType =>
@@ -142,7 +143,7 @@ const MainList = () => {
       }
 
       return prevRecords.map((car, index) =>
-        index == i
+        index === i
           ? {
               ...car,
               record: [
@@ -159,7 +160,7 @@ const MainList = () => {
     setRecords(prevRecords => {
       prevRecords[i].record.splice(j, 1)
       return prevRecords.map((car, index) =>
-        index == i ? { ...car, record: prevRecords[i].record } : car
+        index === i ? { ...car, record: prevRecords[i].record } : car
       )
     })
   }
@@ -191,7 +192,9 @@ const MainList = () => {
     closeModal()
   }
 
-  const closeModal = () => setHeader({ isOpen: false })
+  const closeModal = () => {
+    setHeader({ isOpen: false })
+  }
 
   return (
     <div>
@@ -217,7 +220,7 @@ const MainList = () => {
             </Button>
 
             <Button // Edit
-              color='warning'
+              color={viewDelete.buttonText === 'แก้ไข' ? 'primary' : 'warning'}
               style={{ marginBottom: '1rem', marginRight: '0.5rem' }}
               onClick={() =>
                 setViewDelete({
@@ -276,6 +279,7 @@ const MainList = () => {
                         header={header}
                         records={records}
                         payment={payment}
+                        changeHeader={changeHeader}
                         changePayment={changePayment}
                         handleAddField={handleAddPayment}
                         handleRemoveField={handleRemovePayment}

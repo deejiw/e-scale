@@ -71,6 +71,11 @@ const TransactionSchema = new Schema({
             min: [0, 'Must be positive'],
             max: [1000, 'Must be less than 1000'],
             required: [true, 'Please enter price']
+          },
+          amount: {
+            type: Number,
+            min: [0, 'Must be positive'],
+            required: [true, 'Please enter price']
           }
         }
       ]
