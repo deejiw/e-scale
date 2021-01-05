@@ -62,7 +62,9 @@ const EditModal = ({
         toggle={toggle}>
         <ModalHeader toggle={toggle} onChange={changeHeader}>
           Edit {header.name}
-          <Button style={{ margin: '0 0 0 1rem' }}>เพิ่มรถ</Button>
+          <Button style={{ margin: '0 0 0 1rem' }} color='primary'>
+            เพิ่มรถ
+          </Button>
         </ModalHeader>
         <ModalBody>
           <Form className={classes.root} onSubmit={handleSubmit}>
@@ -73,7 +75,7 @@ const EditModal = ({
                   <Button
                     onClick={() => handleAddRecord(i)}
                     style={{ margin: '0 0 0 1rem' }}
-                    color='secondary'>
+                    color='primary'>
                     เพิ่มรายการ
                   </Button>
                   {record.record.map((_, j) => (
@@ -115,17 +117,18 @@ const EditModal = ({
                             onChange={e => changeRecord(i, j, e)}
                           />
                         </Col>
-
-                        <Button
-                          onClick={() => {
-                            if (isLastIndex(record.record, j)) {
-                              handleRemoveRecord(i, j)
+                        {isLastIndex(record.record, j) ? (
+                          <Button
+                            onClick={() =>
+                              isLastIndex(record.record, j)
+                                ? handleRemoveRecord(i, j)
+                                : null
                             }
-                          }}
-                          bold='true'
-                          color='danger'>
-                          &minus;
-                        </Button>
+                            bold='true'
+                            color='danger'>
+                            &minus;
+                          </Button>
+                        ) : null}
                       </Row>
                       <Row>
                         <Col>
