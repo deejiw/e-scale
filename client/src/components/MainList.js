@@ -12,8 +12,9 @@ import { useSelector, useDispatch } from 'react-redux'
 import {
   addTransaction,
   getTransactions,
-  deleteTransaction,
-  updateTransaction
+  updateTransaction,
+  openViewDelete,
+  deleteTransaction
 } from '../actions/transactionActions'
 import { getPartners } from '../actions/partnerActions'
 
@@ -22,6 +23,7 @@ import AddModal from './modal/AddModal'
 import EditModal from './modal/EditModal'
 import CheckModal from './modal/CheckModal'
 import PropTypes from 'prop-types'
+import DeleteModal from './modal/DeleteModal'
 
 const MainList = () => {
   const items = useSelector(state => state.item.items)
@@ -94,9 +96,17 @@ const MainList = () => {
   })
 
   // eslint-disable-next-line
-  useEffect(() => dispatch(getTransactions()), [])
+  useEffect(() => {
+    dispatch(getTransactions())
+  }, [])
 
-  const onDeleteClick = id => dispatch(deleteTransaction(id))
+  const openViewDelete = (modalType, item) =>
+    setHeader({
+      isOpen: true,
+      type: modalType,
+      id: item._id,
+      name: item.name
+    })
 
   const openViewAdd = modalType =>
     setHeader({
@@ -110,6 +120,7 @@ const MainList = () => {
       id: item._id,
       name: item.name
     })
+
     setRecords(item.records)
   }
   const openViewCheck = (modalType, item) => {
@@ -168,7 +179,6 @@ const MainList = () => {
 
   const handleAddPayment = () => {
     setPayment([...payment, paymentTemplate])
-    // const i = payment.length
   }
 
   const handleRemovePayment = i => {
@@ -189,7 +199,7 @@ const MainList = () => {
   }
   const submitCheck = e => {
     e.preventDefault()
-    // dispatch(checkTransaction(header, totalAmount))
+    //dispatch(checkTransaction(header, totalAmount))
     closeModal()
   }
 
@@ -248,7 +258,7 @@ const MainList = () => {
                             className='remove-btn'
                             color='danger'
                             size='sm'
-                            onClick={() => onDeleteClick(item._id)}>
+                            onClick={() => openViewDelete(DELETE_MODAL, item)}>
                             &times;
                           </Button>
                           <Button
@@ -287,6 +297,8 @@ const MainList = () => {
                         handleSubmit={submitCheck}
                         toggle={closeModal}
                       />
+
+                      <DeleteModal header={header} toggle={closeModal} />
                     </ListGroupItem>
                   </CSSTransition>
                 ))}
@@ -309,7 +321,7 @@ MainList.propTypes = {
   getTransactions: PropTypes.func.isRequired,
   addTransaction: PropTypes.func.isRequired,
   updateTransaction: PropTypes.func.isRequired,
-  deleteTransaction: PropTypes.func.isRequired,
+  openViewDelete: PropTypes.func.isRequired,
   items: PropTypes.object.isRequired,
   isAuthenticated: PropTypes.bool.isRequired
 }
