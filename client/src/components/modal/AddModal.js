@@ -11,6 +11,7 @@ import {
 import { Container, TextField } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { ADD_MODAL } from './types'
+import SearchPage from '../searchPartner/SearchBar'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -38,29 +39,34 @@ const AddModal = ({
       <ModalBody>
         <Form className={classes.root} onSubmit={handleSubmit}>
           <Container>
-            <Row>
-              <TextField
-                type='text'
-                label='Business Partner'
-                variant='filled'
-                name='name'
-                id='name'
-                style={{ margin: ' 0 0 1rem 1rem' }}
-                autoFocus='true'
-                required='true'
-                onChange={changeHeader}
-              />
+            <Row style={{ margin: '0 0 -1rem -1rem' }}>
+              <Col>
+                <SearchPage />
+              </Col>
+              <Col>
+                <Button
+                  // onClick={() => handleRemovePlate(index)}
+                  style={
+                    ({ margin: '0 0 0 0' },
+                    { padding: '1rem 1.25rem 1rem 1.25rem' })
+                  }
+                  bold='true'
+                  color='primary'>
+                  Add
+                </Button>
+              </Col>
             </Row>
-
+            <hr />
             {plate.map((subRecord, index) => (
               <div key={index}>
-                <Row>
+                <Row style={{ margin: '0 0 0.5rem -1rem' }}>
                   <Col xs='5' sm='6'>
                     <TextField
                       name='plate'
                       label='Car Number'
                       variant='filled'
                       id='plate'
+                      size='small'
                       autoFocus='true'
                       required='true'
                       value={subRecord.plate}
@@ -69,7 +75,10 @@ const AddModal = ({
                   </Col>
                   <Button
                     onClick={() => handleRemovePlate(index)}
-                    style={{ padding: '0 1.5remrem 0 1.5rem' }}
+                    style={
+                      ({ margin: '0 0 0 0' },
+                      { padding: '0.75rem 1.25rem 0.75rem 1.25rem' })
+                    }
                     bold='true'
                     color='danger'>
                     &minus;

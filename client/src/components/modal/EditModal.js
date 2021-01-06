@@ -90,6 +90,9 @@ const EditModal = ({
                             id='material'
                             autoFocus='true'
                             required='true'
+                            size='small'
+                            multiline
+                            rowsMax={2}
                             value={_.material}
                             onChange={e => changeRecord(i, j, e)}
                           />
@@ -101,6 +104,7 @@ const EditModal = ({
                             label='Deduct'
                             variant='filled'
                             id='deduction'
+                            size='small'
                             value={_.deduction}
                             defaultValue='0'
                             onChange={e => changeRecord(i, j, e)}
@@ -113,6 +117,9 @@ const EditModal = ({
                             label='Remarks'
                             variant='filled'
                             id='filled'
+                            size='small'
+                            multiline
+                            rowsMax={2}
                             value={_.remarks}
                             onChange={e => changeRecord(i, j, e)}
                           />
@@ -138,6 +145,7 @@ const EditModal = ({
                             label='Weigh In'
                             variant='filled'
                             id='weignIn'
+                            size='small'
                             value={_.weighIn}
                             defaultValue='0'
                             onChange={e => changeRecord(i, j, e)}
@@ -150,6 +158,7 @@ const EditModal = ({
                             label='Weigh Out'
                             variant='filled'
                             id='weighOut'
+                            size='small'
                             value={_.weighOut}
                             defaultValue='0'
                             error={helperText.isError}
@@ -167,6 +176,7 @@ const EditModal = ({
                             label='Price'
                             variant='filled'
                             id='price'
+                            size='small'
                             value={_.price}
                             defaultValue='0'
                             onChange={e => changeRecord(i, j, e)}
