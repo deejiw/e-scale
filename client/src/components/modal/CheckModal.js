@@ -34,15 +34,20 @@ const CheckModal = ({
 }) => {
   const classes = useStyles()
 
-  const [totalAmount, setTotalAmount] = useState(0)
+  const subAmount = []
 
   const netWeight = (weighIn, weighOut, deduction) =>
     weighIn - weighOut - deduction
 
-  const amount = (netWeight, price) => {
-    const amount = netWeight * price
-    return amount
+  const amount = (i, j, netWeight, price) => {
+    const _ = netWeight * price
+    if (!subAmount[(i, j)]) {
+      subAmount[(i, j)] = _
+    }
+    return _
   }
+
+  const totalAmount = () => subAmount.reduce((a, b) => a + b, 0)
 
   return (
     <div>
@@ -56,34 +61,34 @@ const CheckModal = ({
           <Form className={classes.root} onSubmit={handleSubmit}>
             <Container fluid>
               <Row>
-                <Col xs='auto' sm='4'>
+                <Col xs='4' sm='4'>
                   <Row>
                     <h6>สินค้า</h6>
                   </Row>
-                  <Row>
+                  <Row style={{ margin: '-0.5rem 0 0 -1rem' }}>
                     <h6>หมายเหตุ</h6>
                   </Row>
                 </Col>
-                <Col xs='auto' sm='2'>
+                <Col xs='2' sm='2'>
                   <Row>
                     <h6>เข้า</h6>
                   </Row>
-                  <Row>
-                    <h6>ออก</h6>
+                  <Row style={{ margin: '-0.5rem 0 0 -1rem' }}>
+                    <h6>(ออก)</h6>
                   </Row>
                 </Col>
-                <Col xs='auto' sm='1'>
+                <Col xs='1' sm='1'>
                   <Row>
                     <h6>สุทธิ</h6>
                   </Row>
-                  <Row>
-                    <h6>หัก</h6>
+                  <Row style={{ margin: '-0.5rem 0 0 -1rem' }}>
+                    <h6>(หัก)</h6>
                   </Row>
                 </Col>
                 <Col xs='auto' sm={{ size: 'auto', offset: 1 }}>
                   <h6>ราคา</h6>
                 </Col>
-                <Col xs='2' sm='2'>
+                <Col xs='1' sm='2' style={{ margin: '0 -2rem 0 0' }}>
                   <h6>จำนวนเงิน</h6>
                 </Col>
               </Row>
@@ -97,10 +102,10 @@ const CheckModal = ({
                     <div key={j}>
                       <Row>
                         <Col xs='4' sm='4'>
-                          <Row style={{ margin: '0 0 0 -1.75rem' }}>
+                          <Row>
                             <Label>{_.material}</Label>
                           </Row>
-                          <Row style={{ margin: '0 0 0 -1.75rem' }}>
+                          <Row style={{ margin: '-0.5rem 0 0 -1rem' }}>
                             <Label>{_.remarks}</Label>
                           </Row>
                         </Col>
@@ -108,8 +113,8 @@ const CheckModal = ({
                           <Row>
                             <Label>{_.weighIn}</Label>
                           </Row>
-                          <Row>
-                            <Label>{_.weighOut}</Label>
+                          <Row style={{ margin: '-0.5rem 0 0 -1rem' }}>
+                            <Label>({_.weighOut})</Label>
                           </Row>
                         </Col>
                         <Col xs='1' sm='1'>
@@ -118,8 +123,8 @@ const CheckModal = ({
                               {netWeight(_.weighIn, _.weighOut, _.deduction)}
                             </Label>
                           </Row>
-                          <Row>
-                            <Label>{_.deduction}</Label>
+                          <Row style={{ margin: '-0.5rem 0 0 -1rem' }}>
+                            <Label>({_.deduction})</Label>
                           </Row>
                         </Col>
                         <Col xs='auto' sm={{ size: 'auto', offset: 1 }}>
@@ -127,7 +132,10 @@ const CheckModal = ({
                         </Col>
                         <Col xs='1' sm='2' style={{ margin: '0 -2rem 0 0' }}>
                           <Label>
+                            ฿
                             {amount(
+                              i,
+                              j,
                               netWeight(_.weighIn, _.weighOut, _.deduction),
                               _.price
                             ).toLocaleString(undefined, {
@@ -143,7 +151,20 @@ const CheckModal = ({
                 </div>
               ))}
 
-              <Row>ยอดรวมทั้งสิ้น</Row>
+              <Row>
+                <Col>
+                  <Label>ยอดรวมทั้งสิ้น</Label>
+                </Col>
+
+                <Col sm='3' md={{ size: 6, offset: 3 }}>
+                  <h5>
+                    ฿
+                    {totalAmount().toLocaleString(undefined, {
+                      maximumFractionDigits: 2
+                    })}
+                  </h5>
+                </Col>
+              </Row>
 
               <Button
                 // onClick={() => handleAddRecord(i)}

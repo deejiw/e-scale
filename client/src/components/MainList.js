@@ -60,7 +60,8 @@ const MainList = () => {
     isOpen: false,
     type: '',
     id: '',
-    name: ''
+    name: '',
+    totalAmount: 0
   })
 
   const [records, setRecords] = useState([recordsTemplate])
@@ -93,7 +94,7 @@ const MainList = () => {
   })
 
   // eslint-disable-next-line
-  useEffect(() => dispatch(getTransactions()))
+  useEffect(() => dispatch(getTransactions()), [])
 
   const onDeleteClick = id => dispatch(deleteTransaction(id))
 
@@ -183,12 +184,12 @@ const MainList = () => {
   }
   const submitEdit = e => {
     e.preventDefault()
-    dispatch(updateTransaction(header.id, records))
+    dispatch(updateTransaction(header, records))
     closeModal()
   }
   const submitCheck = e => {
     e.preventDefault()
-    dispatch(updateTransaction(header.id, payment))
+    // dispatch(checkTransaction(header, totalAmount))
     closeModal()
   }
 

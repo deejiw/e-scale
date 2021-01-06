@@ -14,6 +14,10 @@ const TransactionSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  totalAmount: {
+    type: Number,
+    required: false
+  },
   payment: [
     {
       type: {
@@ -60,7 +64,8 @@ const TransactionSchema = new Schema({
           },
           deduction: {
             type: Number,
-            required: false
+            required: false,
+            default: 0
           },
           remarks: {
             type: String,

@@ -40,9 +40,13 @@ export const getTransactions = () => dispatch => {
     )
 }
 
-export const updateTransaction = (id, item) => (dispatch, getState) => {
+export const updateTransaction = (header, records) => (dispatch, getState) => {
   axios
-    .patch(`/api/transactions/${id}`, item, tokenConfig(getState))
+    .patch(
+      `/api/transactions/${header.id}`,
+      { header, records },
+      tokenConfig(getState)
+    )
     .then(res =>
       dispatch({
         type: UPDATE_ITEM,
