@@ -26,7 +26,7 @@ const MainList = () => {
   const dispatch = useDispatch()
   // eslint-disable-next-line
   useEffect(() => dispatch(getTransactions()))
-  const items = useSelector(state => state.item.items)
+  const items = useSelector(state => state.transaction.items)
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
 
   // ARRAY TEMPLATES

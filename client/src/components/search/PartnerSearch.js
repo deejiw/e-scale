@@ -45,14 +45,6 @@ const PartnerSearch = ({ changeHeader }) => {
     fetchData()
   }, [])
 
-  // const list = document.getElementById('partner')
-
-  // partnerListDefault.forEach(item => {
-  //   let option = document.createElement('partner')
-  //   option.value = item
-  //   list.appendChild(option)
-  // })
-
   const BarStyling = {
     width: '15rem',
     background: '#F2F1F9',
@@ -72,6 +64,7 @@ const PartnerSearch = ({ changeHeader }) => {
         onChange={e => {
           changeHeader(e)
           updateInput(e.target.value)
+
           var options = ''
           for (var i = 0; i < partnerListDefault.length; i++) {
             options += '<option value="' + partnerListDefault[i] + '" />'
