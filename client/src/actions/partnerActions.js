@@ -1,22 +1,22 @@
 import axios from 'axios'
 import {
-  ADD_ITEM,
-  GET_ITEMS,
-  UPDATE_ITEM,
-  DELETE_ITEM,
-  ITEMS_LOADING
+  ADD_PARTNER,
+  GET_PARTNERS,
+  UPDATE_PARTNER,
+  DELETE_PARTNER,
+  PARTNERS_LOADING
 } from './types'
 import { tokenConfig } from './authActions'
 import { returnErrors } from './errorActions'
 
 // dispatch utilizes thunk for asyncronous request
 export const getPartners = () => dispatch => {
-  dispatch(setItemsLoading())
+  dispatch(setPartnersLoading())
   axios
     .get('./api/bps')
     .then(res =>
       dispatch({
-        type: GET_ITEMS,
+        type: GET_PARTNERS,
         payload: res.data
       })
     )
@@ -30,7 +30,7 @@ export const addPartner = item => (dispatch, getState) => {
     .post('/api/bps', item, tokenConfig(getState))
     .then(res =>
       dispatch({
-        type: ADD_ITEM,
+        type: ADD_PARTNER,
         payload: res.data
       })
     )
@@ -44,7 +44,7 @@ export const updatePartner = item => (dispatch, getState) => {
     .patch(`/api/bps/${item.id}`, item, tokenConfig(getState))
     .then(res =>
       dispatch({
-        type: UPDATE_ITEM,
+        type: UPDATE_PARTNER,
         payload: res.data
       })
     )
@@ -58,7 +58,7 @@ export const deletePartner = id => (dispatch, getState) => {
     .delete(`/api/bps/${id}`, tokenConfig(getState))
     .then(res =>
       dispatch({
-        type: DELETE_ITEM,
+        type: DELETE_PARTNER,
         payload: id
       })
     )
@@ -67,8 +67,8 @@ export const deletePartner = id => (dispatch, getState) => {
     )
 }
 
-export const setItemsLoading = () => {
+export const setPartnersLoading = () => {
   return {
-    type: ITEMS_LOADING
+    type: PARTNERS_LOADING
   }
 }

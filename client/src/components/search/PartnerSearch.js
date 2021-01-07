@@ -8,8 +8,10 @@ import {
   Form
 } from 'reactstrap'
 import { getPartners } from '../../actions/partnerActions'
+import { useSelector, useDispatch } from 'react-redux'
 
-const SearchBar = ({ changeHeader }) => {
+const PartnerSearch = ({ changeHeader }) => {
+  const dispatch = useDispatch()
   const [header, setHeader] = useState({
     isOpen: false
   })
@@ -39,6 +41,7 @@ const SearchBar = ({ changeHeader }) => {
   }
 
   useEffect(() => {
+    dispatch(getPartners())
     fetchData()
   }, [])
 
@@ -103,4 +106,4 @@ const SearchBar = ({ changeHeader }) => {
   )
 }
 
-export default SearchBar
+export default PartnerSearch

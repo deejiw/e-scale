@@ -11,7 +11,7 @@ import {
 import { Container, TextField } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { ADD_MODAL } from './types'
-import SearchBar from '../searchPartner/SearchBar'
+import PartnerSearch from '../search/PartnerSearch'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -41,7 +41,7 @@ const AddModal = ({
           <Container>
             <Row style={{ margin: '0 0 -1rem -1rem' }}>
               <Col>
-                <SearchBar changeHeader={changeHeader} />
+                <PartnerSearch changeHeader={changeHeader} />
               </Col>
             </Row>
             <hr />

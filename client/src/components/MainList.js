@@ -12,9 +12,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import {
   addTransaction,
   getTransactions,
-  updateTransaction,
-  openViewDelete,
-  deleteTransaction
+  updateTransaction
 } from '../actions/transactionActions'
 
 import { ADD_MODAL, CHECK_MODAL, EDIT_MODAL, DELETE_MODAL } from './modal/types'
@@ -25,9 +23,11 @@ import PropTypes from 'prop-types'
 import DeleteModal from './modal/DeleteModal'
 
 const MainList = () => {
+  const dispatch = useDispatch()
+  // eslint-disable-next-line
+  useEffect(() => dispatch(getTransactions()))
   const items = useSelector(state => state.item.items)
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
-  const dispatch = useDispatch()
 
   // ARRAY TEMPLATES
   const carTemplate = {
@@ -93,11 +93,6 @@ const MainList = () => {
     isOpen: false,
     buttonText: 'แก้ไข'
   })
-
-  // eslint-disable-next-line
-  useEffect(() => {
-    dispatch(getTransactions())
-  }, [])
 
   const openViewDelete = (modalType, item) =>
     setHeader({

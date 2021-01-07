@@ -27,7 +27,10 @@ const DeleteModal = ({ header, toggle }) => {
             </Label>
             <br />
             <Button
-              onClick={() => dispatch(deleteTransaction(header.id))}
+              onClick={() => {
+                dispatch(deleteTransaction(header.id))
+                toggle()
+              }}
               style={{ margin: '0 0.5rem 0 0' }}
               color='danger'>
               ยืนยัน
