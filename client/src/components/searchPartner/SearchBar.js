@@ -1,10 +1,25 @@
 import React, { useState, useEffect } from 'react'
-import PartnerList from './PartnerList'
-import { TextField } from '@material-ui/core'
-const SearchPage = props => {
+import {
+  Container,
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  Form
+} from 'reactstrap'
+import { getPartners } from '../../actions/partnerActions'
+
+const SearchBar = ({ changeHeader }) => {
+  const [header, setHeader] = useState({
+    isOpen: false
+  })
   const [input, setInput] = useState('')
   const [partnerListDefault, setPartnerListDefault] = useState()
   const [partnerList, setPartnerList] = useState()
+
+  const closeModal = () => {
+    setHeader({ isOpen: false })
+  }
 
   const fetchData = async () => {
     return await fetch('https://restcountries.eu/rest/v2/all')
@@ -17,7 +32,7 @@ const SearchPage = props => {
 
   const updateInput = async input => {
     const filtered = partnerListDefault.filter(country => {
-      return country.toLowerCase().includes(input.toLowerCase())
+      return country.includes(input)
     })
     setInput(input)
     setPartnerList(filtered)
@@ -36,27 +51,56 @@ const SearchPage = props => {
   // })
 
   const BarStyling = {
-    width: '20rem',
+    width: '15rem',
     background: '#F2F1F9',
     border: '#F2F1F9',
     padding: '0.5rem'
   }
 
   return (
-    <>
+    <div>
       <input
+        name='name'
         style={BarStyling}
-        key='random1'
+        id='name'
         value={input}
-        list='partner'
+        list='partners'
         placeholder={'Search Partner'}
-        onChange={e => updateInput(e.target.value)}
-      />
-      <datalist id='partner'></datalist>
+        onChange={e => {
+          changeHeader(e)
+          updateInput(e.target.value)
+          var options = ''
+          for (var i = 0; i < partnerListDefault.length; i++) {
+            options += '<option value="' + partnerListDefault[i] + '" />'
+          }
 
-      <PartnerList partnerList={partnerList} />
-    </>
+          document.getElementById('partners').innerHTML = options
+        }}
+      />
+      <datalist id='partners'></datalist>
+
+      <Button
+        style={{ margin: '0 0 0 0.5rem' }}
+        color='primary'
+        onClick={() => setHeader({ isOpen: true })}>
+        เพิ่มคู่ค้าใหม่
+      </Button>
+      <Modal isOpen={header.isOpen} toggle={closeModal}>
+        <ModalHeader toggle={closeModal}>เพิ่มคู่ค้าใหม่</ModalHeader>
+        <ModalBody>
+          <Form
+          // onSubmit={setPartner}
+          >
+            <Container>
+              <Button color='success' style={{ margin: '2rem 0 0 0' }} block>
+                บันทึกคู่ค้าใหม่
+              </Button>
+            </Container>
+          </Form>
+        </ModalBody>
+      </Modal>
+    </div>
   )
 }
 
-export default SearchPage
+export default SearchBar

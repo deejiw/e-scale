@@ -16,7 +16,6 @@ import {
   openViewDelete,
   deleteTransaction
 } from '../actions/transactionActions'
-import { getPartners } from '../actions/partnerActions'
 
 import { ADD_MODAL, CHECK_MODAL, EDIT_MODAL, DELETE_MODAL } from './modal/types'
 import AddModal from './modal/AddModal'

@@ -11,7 +11,7 @@ import {
 import { Container, TextField } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { ADD_MODAL } from './types'
-import SearchPage from '../searchPartner/SearchBar'
+import SearchBar from '../searchPartner/SearchBar'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -41,19 +41,7 @@ const AddModal = ({
           <Container>
             <Row style={{ margin: '0 0 -1rem -1rem' }}>
               <Col>
-                <SearchPage />
-              </Col>
-              <Col>
-                <Button
-                  // onClick={() => handleRemovePlate(index)}
-                  style={
-                    ({ margin: '0 0 0 0' },
-                    { padding: '1rem 1.25rem 1rem 1.25rem' })
-                  }
-                  bold='true'
-                  color='primary'>
-                  Add
-                </Button>
+                <SearchBar changeHeader={changeHeader} />
               </Col>
             </Row>
             <hr />
