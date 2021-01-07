@@ -54,20 +54,6 @@ const SearchPage = props => {
       />
       <datalist id='partner'></datalist>
 
-      {/* <TextField
-        select
-        type='text'
-        label='Business Partner'
-        variant='filled'
-        name='name'
-        id='name'
-        size='small'
-        autoFocus='true'
-        required='true'
-        value={input}
-        onChange={e => updateInput(e.target.value)}
-      /> */}
-
       <PartnerList partnerList={partnerList} />
     </>
   )
