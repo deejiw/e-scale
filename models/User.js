@@ -22,4 +22,5 @@ const UserSchema = new Schema({
   }
 })
 
+// Define MongoDB collection name here
 module.exports = User = mongoose.model('user', UserSchema)

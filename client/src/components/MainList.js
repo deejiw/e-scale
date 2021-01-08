@@ -22,6 +22,14 @@ import CheckModal from './modal/CheckModal'
 import PropTypes from 'prop-types'
 import DeleteModal from './modal/DeleteModal'
 
+export const paymentTemplate = {
+  type: '',
+  bank: '',
+  accountNumber: '',
+  accountName: ''
+}
+
+// ****************MainList*******************
 const MainList = () => {
   const dispatch = useDispatch()
   // eslint-disable-next-line
@@ -29,7 +37,6 @@ const MainList = () => {
   const items = useSelector(state => state.transaction.items)
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
 
-  // ARRAY TEMPLATES
   const carTemplate = {
     plate: ''
   }
@@ -43,16 +50,9 @@ const MainList = () => {
     price: 0,
     amount: 0
   }
-
   const recordsTemplate = {
     carTemplate,
     record: [recordTemplate]
-  }
-  const paymentTemplate = {
-    type: '',
-    bank: '',
-    accountNumber: '',
-    accountName: ''
   }
 
   const [plate, setPlate] = useState([carTemplate])
@@ -171,11 +171,11 @@ const MainList = () => {
     })
   }
 
-  const handleAddPayment = () => {
+  const addPayment = () => {
     setPayment([...payment, paymentTemplate])
   }
 
-  const handleRemovePayment = i => {
+  const removePayment = i => {
     const values = [...payment]
     values.splice(i, 1)
     setPayment(values)
@@ -216,10 +216,10 @@ const MainList = () => {
         />
 
         {isAuthenticated ? (
-          <div>
+          <div style={{ margin: '-1rem 0 0 0' }}>
             <Button // Add Record
               color='success'
-              style={{ marginBottom: '1rem', marginRight: '0.5rem' }}
+              style={{ margin: '0 0.5rem 1rem 0' }}
               onClick={() => openViewAdd(ADD_MODAL)}>
               บิลใหม่
             </Button>
@@ -240,11 +240,7 @@ const MainList = () => {
             <ListGroup>
               <TransitionGroup className='shopping-list'>
                 {items.map(item => (
-                  <CSSTransition
-                    key={item._id}
-                    timeout={500}
-                    // classNames='fade'
-                  >
+                  <CSSTransition key={item._id} timeout={500}>
                     <ListGroupItem>
                       {viewDelete.isOpen ? (
                         <ButtonGroup>
@@ -264,7 +260,6 @@ const MainList = () => {
                         </ButtonGroup>
                       ) : null}
                       <Button
-                        className='ml-2'
                         onClick={() => openViewEdit(EDIT_MODAL, item)}
                         color='dark'>
                         {item.name}
@@ -286,8 +281,8 @@ const MainList = () => {
                         payment={payment}
                         changeHeader={changeHeader}
                         changePayment={changePayment}
-                        handleAddField={handleAddPayment}
-                        handleRemoveField={handleRemovePayment}
+                        handleAddField={addPayment}
+                        handleRemoveField={removePayment}
                         handleSubmit={submitCheck}
                         toggle={closeModal}
                       />

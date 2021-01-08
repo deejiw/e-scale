@@ -10,6 +10,18 @@ const PartnerSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  taxId: {
+    type: Number,
+    required: false
+  },
+  tel1: {
+    type: Number,
+    required: false
+  },
+  tel2: {
+    type: Number,
+    required: false
+  },
   payment: [
     {
       type: {
@@ -32,4 +44,5 @@ const PartnerSchema = new Schema({
   ]
 })
 
-module.exports = Partner = mongoose.model('bp_master', PartnerSchema)
+// Define MongoDB collection name here
+module.exports = Partner = mongoose.model('partner', PartnerSchema)

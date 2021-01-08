@@ -88,4 +88,5 @@ const TransactionSchema = new Schema({
   ]
 })
 
+// Define MongoDB collection name here
 module.exports = Transaction = mongoose.model('transaction', TransactionSchema)

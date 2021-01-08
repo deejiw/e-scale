@@ -8,7 +8,11 @@ const Partner = require('../../models/Partner')
 // @access  Private
 router.post('/', auth, (req, res) => {
   const newItem = new Partner({
-    name: req.body.name
+    name: req.body.name,
+    taxId: req.body.taxId,
+    tel1: req.body.tel1,
+    tel2: req.body.tel2,
+    payment: []
   })
   newItem.save().then(item => res.json(item))
 })

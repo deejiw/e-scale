@@ -39,48 +39,54 @@ const AddModal = ({
       <ModalBody>
         <Form className={classes.root} onSubmit={handleSubmit}>
           <Container>
+            <h6>คู่ค้า</h6>
             <Row style={{ margin: '0 0 -1rem -1rem' }}>
               <Col>
                 <PartnerSearch changeHeader={changeHeader} />
               </Col>
             </Row>
             <hr />
-            {plate.map((subRecord, index) => (
+            <h6>รถยนต์</h6>
+            {plate.map((car, index) => (
               <div key={index}>
                 <Row style={{ margin: '0 0 0.5rem -1rem' }}>
-                  <Col xs='5' sm='6'>
+                  <Col xs='8' sm='8'>
                     <TextField
                       name='plate'
-                      label='Car Number'
-                      variant='filled'
+                      label='ทะเบียน (XX-XXXX)'
+                      variant='outlined'
                       id='plate'
-                      size='small'
+                      margin='dense'
                       autoFocus='true'
                       required='true'
-                      value={subRecord.plate}
+                      value={car.plate}
                       onChange={e => changePlate(index, e)}
                     />
                   </Col>
-                  <Button
-                    onClick={() => handleRemovePlate(index)}
-                    style={
-                      ({ margin: '0 0 0 0' },
-                      { padding: '0.75rem 1.25rem 0.75rem 1.25rem' })
-                    }
-                    bold='true'
-                    color='danger'>
-                    &minus;
-                  </Button>
+                  <Col style={{ margin: '0 0 0 -1.25rem' }}>
+                    <Button
+                      onClick={() => handleRemovePlate(index)}
+                      style={
+                        ({ margin: '0 0 0 -2rem' },
+                        { padding: '0.75rem 1.25rem 0.75rem 1.25rem' })
+                      }
+                      xs='2'
+                      sm='2'
+                      bold='true'
+                      color='danger'>
+                      &minus;
+                    </Button>
+                  </Col>
                 </Row>
               </div>
             ))}
             <Button
-              style={{ margin: '0.5rem 0 0 0' }}
+              style={{ margin: '-0.25rem 0 0 0' }}
               onClick={() => handleAddPlate()}
               color='secondary'>
               เพิ่มรถ
             </Button>
-            <Button color='success' style={{ margin: '2rem 0 0 0' }} block>
+            <Button color='success' style={{ margin: '1.5rem 0 0 0' }} block>
               บันทึกบิลใหม่
             </Button>
           </Container>

@@ -13,7 +13,7 @@ import { returnErrors } from './errorActions'
 export const getPartners = () => dispatch => {
   dispatch(setPartnersLoading())
   axios
-    .get('./api/bps')
+    .get('./api/partners')
     .then(res =>
       dispatch({
         type: GET_PARTNERS,
@@ -27,7 +27,7 @@ export const getPartners = () => dispatch => {
 
 export const addPartner = item => (dispatch, getState) => {
   axios
-    .post('/api/bps', item, tokenConfig(getState))
+    .post('/api/partners', item, tokenConfig(getState))
     .then(res =>
       dispatch({
         type: ADD_PARTNER,
@@ -41,7 +41,7 @@ export const addPartner = item => (dispatch, getState) => {
 
 export const updatePartner = item => (dispatch, getState) => {
   axios
-    .patch(`/api/bps/${item.id}`, item, tokenConfig(getState))
+    .patch(`/api/partners/${item.id}`, item, tokenConfig(getState))
     .then(res =>
       dispatch({
         type: UPDATE_PARTNER,
@@ -55,7 +55,7 @@ export const updatePartner = item => (dispatch, getState) => {
 
 export const deletePartner = id => (dispatch, getState) => {
   axios
-    .delete(`/api/bps/${id}`, tokenConfig(getState))
+    .delete(`/api/partners/${id}`, tokenConfig(getState))
     .then(res =>
       dispatch({
         type: DELETE_PARTNER,
