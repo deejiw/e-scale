@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Modal, ModalHeader, ModalBody, Form, Row } from 'reactstrap'
 import { useSelector, useDispatch } from 'react-redux'
-import { Container, TextField, Grid } from '@material-ui/core'
+import { Container, TextField, Grid, MenuItem } from '@material-ui/core'
 import { AccountCircle, FormatQuote, Call } from '@material-ui/icons'
-
+import PropTypes from 'prop-types'
 import { addPartner, getPartners } from '../../actions/partnerActions'
-
+import MaskedInput from 'react-text-mask'
 import { paymentTemplate } from '../MainList'
-
+import { banks } from '../master/banks'
 const PartnerSearch = ({ changeHeader }) => {
   const dispatch = useDispatch()
   useEffect(() => {
@@ -34,15 +34,6 @@ const PartnerSearch = ({ changeHeader }) => {
     setHeader({ isOpen: false })
   }
 
-  // const fetchData = async () => {
-  //   return await fetch('https://restcountries.eu/rest/v2/all')
-  //     .then(response => response.json())
-  //     .then(data => {
-  //       setPartnerList(data.map(a => a.name))
-  //       setPartnerListDefault(data.map(a => a.name))
-  //     })
-  // }
-
   const updateInput = async input => {
     const filtered = partnerListDefault.filter(country => {
       return country.includes(input)
@@ -60,19 +51,61 @@ const PartnerSearch = ({ changeHeader }) => {
   }
 
   const addPayment = () => {
-    setPayment([...payment, paymentTemplate])
+    setPayment([
+      ...payment,
+      {
+        ...paymentTemplate,
+        accountNumber: '   -      - '
+      }
+    ])
   }
 
   const changePayment = (i, e) => {
-    const values = [...payment]
-    values[i][e.target.name] = e.target.value
-    setPayment(values)
+    const _ = [...payment]
+    _[i][e.target.name] = e.target.value
+    setPayment(_)
   }
 
   const removePayment = i => {
-    const values = [...payment]
-    values.splice(i, 1)
-    setPayment(values)
+    const _ = [...payment]
+    _.splice(i, 1)
+    setPayment(_)
+  }
+
+  const maskedAccountNumber = props => {
+    const { inputRef, ...other } = props
+
+    return (
+      <MaskedInput
+        {...other}
+        ref={inputRef}
+        mask={[
+          /[1-9]/,
+          /\d/,
+          /\d/,
+          /\d/,
+          '-',
+          /\d/,
+          /\d/,
+          /\d/,
+          /\d/,
+          /\d/,
+          /\d/,
+          '-',
+          /\d/
+        ]}
+        placeholderChar={'\u2000'}
+        showMask
+      />
+    )
+  }
+
+  maskedAccountNumber.propTypes = {
+    inputRef: PropTypes.func.isRequired
+  }
+
+  const handleChange = name => e => {
+    setPayment({ ...payment, [name]: e.target.value })
   }
 
   return (
@@ -198,7 +231,7 @@ const PartnerSearch = ({ changeHeader }) => {
                   label='เบอร์ติดต่อ 2'
                   margin='dense'
                   autoFocus='true'
-                  value={header.tel1}
+                  value={header.tel2}
                   onChange={e => changeNewHeader(e)}
                 />
               </Grid>
@@ -219,6 +252,7 @@ const PartnerSearch = ({ changeHeader }) => {
                       id='type'
                       label='ประเภท'
                       variant='outlined'
+                      fullWidth='true'
                       margin='dense'
                       autoFocus='true'
                       required='true'
@@ -228,15 +262,22 @@ const PartnerSearch = ({ changeHeader }) => {
                   </Grid>
                   <Grid item xs={4} sm={4}>
                     <TextField
+                      select
                       name='bank'
                       id='bank'
                       label='ธนาคาร'
                       variant='outlined'
+                      fullWidth='true'
                       margin='dense'
                       required='true'
                       value={_.bank}
-                      onChange={e => changePayment(index, e)}
-                    />
+                      onChange={e => changePayment(index, e)}>
+                      {banks.map(option => (
+                        <MenuItem key={option.value} value={option.label}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
                   </Grid>
 
                   <Grid item xs={2} sm={2}>
@@ -270,8 +311,11 @@ const PartnerSearch = ({ changeHeader }) => {
                       variant='outlined'
                       margin='dense'
                       required='true'
-                      value={_.accountNumber}
-                      onChange={e => changePayment(index, e)}
+                      InputProps={{
+                        inputComponent: maskedAccountNumber,
+                        value: _.accountNumber,
+                        onChange: handleChange('accountNumber')
+                      }}
                     />
                   </Grid>
 
