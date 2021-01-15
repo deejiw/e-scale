@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Container, TextField } from '@material-ui/core'
+import { Container, TextField, Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Button,
@@ -8,10 +8,12 @@ import {
   ModalBody,
   Form,
   Row,
-  Col,
   Label
 } from 'reactstrap'
 import { CHECK_MODAL } from './types'
+import { useSelector, useDispatch } from 'react-redux'
+import { getPartners } from '../../actions/partnerActions'
+import { paymentTemplate } from '../MainList'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -24,16 +26,37 @@ const useStyles = makeStyles(theme => ({
 const CheckModal = ({
   header,
   records,
-  payment,
   changeHeader,
-  changePayment,
-  handleAddField,
-  shandleRemoveField,
   handleSubmit,
   toggle
 }) => {
   const classes = useStyles()
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(getPartners(header.name))
+  }, [header.isOpen])
 
+  const activePartner = useSelector(_ => _.partner.items[0])
+
+  const [payment, setPayment] = useState([])
+
+  useEffect(() => setPayment(activePartner ? activePartner.payment : []), [
+    activePartner
+  ])
+  const addPayment = () => {
+    setPayment([...payment, paymentTemplate])
+  }
+
+  const changePayment = (i, e) => {
+    const values = [...payment]
+    values[i][e.target.name] = e.target.value
+    setPayment(values)
+  }
+  const removePayment = i => {
+    const values = [...payment]
+    values.splice(i, 1)
+    setPayment(values)
+  }
   const subAmount = []
 
   const netWeight = (weighIn, weighOut, deduction) =>
@@ -48,50 +71,55 @@ const CheckModal = ({
   }
 
   const totalAmount = () => subAmount.reduce((a, b) => a + b, 0)
-
   return (
     <div>
       <Modal
         isOpen={header.isOpen && header.type === CHECK_MODAL}
         toggle={toggle}>
         <ModalHeader toggle={toggle} onChange={changeHeader}>
-          Check {header.name}
+          สรุปยอด {header.name}
         </ModalHeader>
         <ModalBody>
           <Form className={classes.root} onSubmit={handleSubmit}>
             <Container fluid>
-              <Row>
-                <Col xs='4' sm='4'>
+              <Grid
+                container
+                spacing={1}
+                direction='row'
+                justify='space-between'
+                alignItems='center'>
+                <Grid item xs='4' sm='4'>
                   <Row>
                     <h6>สินค้า</h6>
                   </Row>
                   <Row style={{ margin: '-0.5rem 0 0 -1rem' }}>
                     <h6>หมายเหตุ</h6>
                   </Row>
-                </Col>
-                <Col xs='2' sm='2'>
+                </Grid>
+                <Grid item xs='2' sm='2'>
                   <Row>
                     <h6>เข้า</h6>
                   </Row>
                   <Row style={{ margin: '-0.5rem 0 0 -1rem' }}>
                     <h6>(ออก)</h6>
                   </Row>
-                </Col>
-                <Col xs='1' sm='1'>
+                </Grid>
+                <Grid item xs='1' sm='1'>
                   <Row>
                     <h6>สุทธิ</h6>
                   </Row>
                   <Row style={{ margin: '-0.5rem 0 0 -1rem' }}>
                     <h6>(หัก)</h6>
                   </Row>
-                </Col>
-                <Col xs='auto' sm={{ size: 'auto', offset: 1 }}>
+                </Grid>
+                <Grid item xs='2' sm='2'>
                   <h6>ราคา</h6>
-                </Col>
-                <Col xs='1' sm='2' style={{ margin: '0 -2rem 0 0' }}>
+                </Grid>
+                <Grid item xs='2.5' sm='2.5'>
                   <h6>จำนวนเงิน</h6>
-                </Col>
-              </Row>
+                </Grid>
+              </Grid>
+
               {records.map((record, i) => (
                 <div key={i}>
                   <Label style={{ margin: '0 0 0.5rem -1.5rem' }}>
@@ -100,37 +128,36 @@ const CheckModal = ({
 
                   {record.record.map((_, j) => (
                     <div key={j}>
-                      <Row>
-                        <Col xs='4' sm='4'>
+                      <Grid
+                        container
+                        spacing={1}
+                        direction='row'
+                        justify='space-between'
+                        alignItems='flex-start'>
+                        <Grid item xs='4' sm='4'>
+                          <Row>{_.material}</Row>
+                          <Row style={{ margin: '-0.5rem 0 0 -1rem' }}>
+                            {_.remarks}
+                          </Row>
+                        </Grid>
+                        <Grid item xs='2' sm='2'>
+                          <Row>{_.weighIn}</Row>
+                          <Row style={{ margin: '-0.5rem 0 0 -1rem' }}>
+                            {_.weighOut}
+                          </Row>
+                        </Grid>
+                        <Grid item xs='1' sm='1'>
                           <Row>
-                            <Label>{_.material}</Label>
+                            {netWeight(_.weighIn, _.weighOut, _.deduction)}
                           </Row>
                           <Row style={{ margin: '-0.5rem 0 0 -1rem' }}>
-                            <Label>{_.remarks}</Label>
+                            {_.deduction}
                           </Row>
-                        </Col>
-                        <Col xs='2' sm='2'>
-                          <Row>
-                            <Label>{_.weighIn}</Label>
-                          </Row>
-                          <Row style={{ margin: '-0.5rem 0 0 -1rem' }}>
-                            <Label>({_.weighOut})</Label>
-                          </Row>
-                        </Col>
-                        <Col xs='1' sm='1'>
-                          <Row>
-                            <Label>
-                              {netWeight(_.weighIn, _.weighOut, _.deduction)}
-                            </Label>
-                          </Row>
-                          <Row style={{ margin: '-0.5rem 0 0 -1rem' }}>
-                            <Label>({_.deduction})</Label>
-                          </Row>
-                        </Col>
-                        <Col xs='auto' sm={{ size: 'auto', offset: 1 }}>
-                          <Label>{_.price}</Label>
-                        </Col>
-                        <Col xs='1' sm='2' style={{ margin: '0 -2rem 0 0' }}>
+                        </Grid>
+                        <Grid item xs='2' sm='2'>
+                          {_.price}
+                        </Grid>
+                        <Grid item xs='2.5' sm='2.5'>
                           <Label>
                             ฿
                             {amount(
@@ -142,8 +169,8 @@ const CheckModal = ({
                               maximumFractionDigits: 2
                             })}
                           </Label>
-                        </Col>
-                      </Row>
+                        </Grid>
+                      </Grid>
                     </div>
                   ))}
 
@@ -151,27 +178,63 @@ const CheckModal = ({
                 </div>
               ))}
 
-              <Row>
-                <Col>
+              <Grid
+                container
+                spacing={1}
+                direction='row'
+                justify='flex-end'
+                alignItems='center'>
+                <Grid item xs={2.5} sm={2.5}>
                   <Label>ยอดรวมทั้งสิ้น</Label>
-                </Col>
-
-                <Col sm='3' md={{ size: 6, offset: 3 }}>
+                </Grid>
+                <Grid item xs={2.5} sm={2.5}>
                   <h5>
                     ฿
                     {totalAmount().toLocaleString(undefined, {
                       maximumFractionDigits: 2
                     })}
                   </h5>
-                </Col>
-              </Row>
+                </Grid>
+              </Grid>
 
-              <Button
-                // onClick={() => handleAddRecord(i)}
-                style={{ margin: '3rem 0.5rem 0 -0.25rem' }}
-                color='secondary'>
-                เพิ่มข้อมูลการจ่ายเงิน
-              </Button>
+              <Grid
+                container
+                spacing={2}
+                direction='row'
+                justify='flex-start'
+                alignItems='center'>
+                <Grid item>
+                  <h5>การชำระเงิน</h5>
+                </Grid>
+                <Grid item>
+                  <Button color='secondary'>เพิ่ม</Button>
+                </Grid>
+              </Grid>
+
+              {payment.map((_, i) => (
+                <div key={i}>
+                  <Grid
+                    container
+                    spacing={0.5}
+                    direction='row'
+                    justify='space-between'
+                    alignItems='flex-start'>
+                    <Grid item xs={1.5} sm={1.5}>
+                      {_.type}
+                    </Grid>
+                    <Grid item xs={2.5} sm={2.5}>
+                      {_.bank}
+                    </Grid>
+                    <Grid item xs={4.5} sm={4.5}>
+                      {_.accountNumber}
+                    </Grid>
+                    <Grid item xs={2.5} sm={2.5}>
+                      {_.accountName}
+                    </Grid>
+                  </Grid>
+                </div>
+              ))}
+
               <Button color='primary' style={{ marginTop: '2rem' }} block>
                 ยืนยันการจ่ายเงิน
               </Button>

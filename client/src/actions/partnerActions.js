@@ -10,10 +10,10 @@ import { tokenConfig } from './authActions'
 import { returnErrors } from './errorActions'
 
 // dispatch utilizes thunk for asyncronous request
-export const getPartners = () => dispatch => {
+export const getPartners = name => dispatch => {
   dispatch(setPartnersLoading())
   axios
-    .get('./api/partners')
+    .get(`./api/partners/${name}`)
     .then(res =>
       dispatch({
         type: GET_PARTNERS,
@@ -25,9 +25,9 @@ export const getPartners = () => dispatch => {
     )
 }
 
-export const addPartner = item => (dispatch, getState) => {
+export const addPartner = (header, payment) => (dispatch, getState) => {
   axios
-    .post('/api/partners', item, tokenConfig(getState))
+    .post('/api/partners', { header, payment }, tokenConfig(getState))
     .then(res =>
       dispatch({
         type: ADD_PARTNER,

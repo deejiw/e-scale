@@ -37,7 +37,7 @@ const AddModal = ({
     <Modal isOpen={header.isOpen && header.type === ADD_MODAL} toggle={toggle}>
       <ModalHeader toggle={toggle}>เพิ่มบิลใหม่</ModalHeader>
       <ModalBody>
-        <Form className={classes.root} onSubmit={handleSubmit}>
+        <Form className={classes.root}>
           <Container>
             <h6>คู่ค้า</h6>
             <Row style={{ margin: '0 0 -1rem -1rem' }}>
@@ -86,7 +86,11 @@ const AddModal = ({
               color='secondary'>
               เพิ่มรถ
             </Button>
-            <Button color='success' style={{ margin: '1.5rem 0 0 0' }} block>
+            <Button
+              color='success'
+              style={{ margin: '1.5rem 0 0 0' }}
+              block
+              onClick={handleSubmit}>
               บันทึกบิลใหม่
             </Button>
           </Container>

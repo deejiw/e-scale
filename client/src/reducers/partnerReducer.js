@@ -1,5 +1,6 @@
 // Where actual state is going, can check action, send payload
 import {
+  GET_PARTNER,
   GET_PARTNERS,
   ADD_PARTNER,
   DELETE_PARTNER,

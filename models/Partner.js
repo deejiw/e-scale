@@ -33,7 +33,7 @@ const PartnerSchema = new Schema({
         required: [true, 'Bank is required']
       },
       accountNumber: {
-        type: Number,
+        type: String,
         required: [true, 'Account number is required']
       },
       accountName: {

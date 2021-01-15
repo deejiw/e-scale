@@ -3,27 +3,31 @@ const router = express.Router()
 const auth = require('../../middleware/auth')
 const Partner = require('../../models/Partner')
 
+// @route   GET api/partners
+// @desc    Get all items
+// @access  Public
+router.get('/:name', (req, res) => {
+  if (req.params.name !== '') {
+    Partner.find({ name: req.params.name }).then(partner => res.json(partner))
+  } else {
+    Partner.find()
+      .sort({ date: -1 })
+      .then(partners => res.json(partners))
+  }
+})
+
 // @route   POST api/partners
 // @desc    Create a post
 // @access  Private
 router.post('/', auth, (req, res) => {
   const newItem = new Partner({
-    name: req.body.name,
-    taxId: req.body.taxId,
-    tel1: req.body.tel1,
-    tel2: req.body.tel2,
-    payment: []
+    name: req.body.header.name,
+    taxId: req.body.header.taxId,
+    tel1: req.body.header.tel1,
+    tel2: req.body.header.tel2,
+    payment: req.body.payment
   })
   newItem.save().then(item => res.json(item))
-})
-
-// @route   GET api/partners
-// @desc    Get all items
-// @access  Public
-router.get('/', (req, res) => {
-  Partner.find()
-    .sort({ date: -1 })
-    .then(items => res.json(items))
 })
 
 // @route   PATCH api/partners

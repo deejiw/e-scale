@@ -90,10 +90,10 @@ const EditModal = ({
                           sm='5'>
                           <TextField
                             name='material'
+                            id='material'
                             type='text'
                             label='สินค้า'
                             variant='outlined'
-                            id='material'
                             autoFocus='true'
                             required='true'
                             margin='dense'
@@ -106,10 +106,10 @@ const EditModal = ({
                         <Col style={{ margin: '0 -0.5rem 0 0' }} xs='3' sm='3'>
                           <TextField
                             name='deduction'
+                            id='deduction'
                             type='number'
                             label='หัก (kg)'
                             variant='outlined'
-                            id='deduction'
                             margin='dense'
                             value={_.deduction}
                             defaultValue='0'
@@ -125,10 +125,10 @@ const EditModal = ({
                           sm='3'>
                           <TextField
                             name='remarks'
+                            id='remarks'
                             type='text'
                             label='อธิบาย'
                             variant='outlined'
-                            id='outlined'
                             margin='dense'
                             multiline
                             rowsMax={4}
@@ -160,10 +160,10 @@ const EditModal = ({
                         <Col style={{ margin: '0 -0.5rem 0 -1rem' }}>
                           <TextField
                             name='weighIn'
+                            id='weignIn'
                             type='number'
                             label='ชั่งเข้า (kg)'
                             variant='outlined'
-                            id='weignIn'
                             margin='dense'
                             value={_.weighIn}
                             defaultValue='0'
@@ -173,10 +173,10 @@ const EditModal = ({
                         <Col>
                           <TextField
                             name='weighOut'
+                            id='weighOut'
                             type='number'
                             label='ชั่งออก (kg)'
                             variant='outlined'
-                            id='weighOut'
                             margin='dense'
                             aria-describedby='standard-weight-helper-text'
                             value={_.weighOut}
@@ -195,10 +195,10 @@ const EditModal = ({
                           sm='3'>
                           <TextField
                             name='price'
+                            id='price'
                             type='number'
                             label='ราคา'
                             variant='outlined'
-                            id='price'
                             margin='dense'
                             value={_.price}
                             defaultValue='0'

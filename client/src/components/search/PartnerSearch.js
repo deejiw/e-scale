@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Modal, ModalHeader, ModalBody, Form, Row } from 'reactstrap'
+import { Button, Modal, ModalHeader, ModalBody, Form } from 'reactstrap'
 import { useSelector, useDispatch } from 'react-redux'
-import { Container, TextField, Grid, MenuItem } from '@material-ui/core'
+import { TextField, Grid, MenuItem } from '@material-ui/core'
 import { AccountCircle, FormatQuote, Call } from '@material-ui/icons'
-import PropTypes from 'prop-types'
 import { addPartner, getPartners } from '../../actions/partnerActions'
-import MaskedInput from 'react-text-mask'
 import { paymentTemplate } from '../MainList'
 import { banks } from '../master/banks'
 const PartnerSearch = ({ changeHeader }) => {
   const dispatch = useDispatch()
   useEffect(() => {
-    dispatch(getPartners())
-  }, [])
+    dispatch(getPartners(''))
+  })
 
   const [header, setHeader] = useState({
     isOpen: false,
@@ -25,6 +23,7 @@ const PartnerSearch = ({ changeHeader }) => {
   const partners = useSelector(_ => _.partner.items)
 
   const [input, setInput] = useState('')
+  // eslint-disable-next-line
   const [partnerListDefault, setPartnerListDefault] = useState(
     partners.map(_ => _.name)
   )
@@ -47,15 +46,15 @@ const PartnerSearch = ({ changeHeader }) => {
   }
 
   const handleSubmit = () => {
-    dispatch(addPartner(header))
+    dispatch(addPartner(header, payment))
+    closeModal()
   }
 
   const addPayment = () => {
     setPayment([
       ...payment,
       {
-        ...paymentTemplate,
-        accountNumber: '   -      - '
+        ...paymentTemplate
       }
     ])
   }
@@ -72,40 +71,17 @@ const PartnerSearch = ({ changeHeader }) => {
     setPayment(_)
   }
 
-  const maskedAccountNumber = props => {
-    const { inputRef, ...other } = props
-
-    return (
-      <MaskedInput
-        {...other}
-        ref={inputRef}
-        mask={[
-          /[1-9]/,
-          /\d/,
-          /\d/,
-          /\d/,
-          '-',
-          /\d/,
-          /\d/,
-          /\d/,
-          /\d/,
-          /\d/,
-          /\d/,
-          '-',
-          /\d/
-        ]}
-        placeholderChar={'\u2000'}
-        showMask
-      />
-    )
-  }
-
-  maskedAccountNumber.propTypes = {
-    inputRef: PropTypes.func.isRequired
-  }
-
-  const handleChange = name => e => {
-    setPayment({ ...payment, [name]: e.target.value })
+  const maskedAccountNumber = (i, e) => {
+    const maskedValue =
+      e.target.value
+        .replace(/\s/g, '')
+        .replace(/-/g, '')
+        .match(/.{1,4}/g)
+        ?.join('-')
+        .substr(0, 12) || ''
+    const _ = [...payment]
+    _[i][e.target.name] = maskedValue
+    setPayment(_)
   }
 
   return (
@@ -147,7 +123,7 @@ const PartnerSearch = ({ changeHeader }) => {
       <Modal isOpen={header.isOpen} toggle={closeModal}>
         <ModalHeader toggle={closeModal}>เพิ่มคู่ค้าใหม่</ModalHeader>
         <ModalBody>
-          <Form onSubmit={handleSubmit}>
+          <Form>
             <Grid
               container
               spacing={1}
@@ -302,25 +278,32 @@ const PartnerSearch = ({ changeHeader }) => {
                   spacing={1}
                   direction='row'
                   justify='flex-start'
-                  alignItems='center'>
+                  alignItems='top'>
                   <Grid item xs={6}>
-                    <TextField
+                    <input
                       name='accountNumber'
                       id='accountNumber'
-                      label='เลขบัญชี'
-                      variant='outlined'
-                      margin='dense'
-                      required='true'
-                      InputProps={{
-                        inputComponent: maskedAccountNumber,
-                        value: _.accountNumber,
-                        onChange: handleChange('accountNumber')
+                      style={{
+                        margin: '0 0 1rem 0',
+                        width: '10rem',
+                        height: '2.5rem',
+                        background: 'white',
+                        border: '1px solid #c4c4c4',
+                        borderRadius: '4px',
+                        padding: '0.5rem'
+                      }}
+                      placeholder='เลขบัญชี (10 หลัก)'
+                      inputMode='numeric'
+                      value={_.accountNumber}
+                      onChange={e => {
+                        maskedAccountNumber(index, e)
                       }}
                     />
                   </Grid>
 
                   <Grid item xs={6}>
                     <TextField
+                      style={{ marginTop: '0rem' }}
                       name='accountName'
                       id='accountName'
                       label='ชื่อ'
@@ -340,7 +323,11 @@ const PartnerSearch = ({ changeHeader }) => {
               color='secondary'>
               เพิ่มบัญชีการเงิน
             </Button>
-            <Button color='success' style={{ margin: '2rem 0 0 0' }} block>
+            <Button
+              color='success'
+              style={{ margin: '2rem 0 0 0' }}
+              block
+              onClick={handleSubmit}>
               บันทึกคู่ค้าใหม่
             </Button>
           </Form>

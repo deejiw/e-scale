@@ -6,7 +6,6 @@ import {
   ListGroup,
   ListGroupItem
 } from 'reactstrap'
-import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { useSelector, useDispatch } from 'react-redux'
 
 import {
@@ -34,8 +33,8 @@ const MainList = () => {
   const dispatch = useDispatch()
   // eslint-disable-next-line
   useEffect(() => dispatch(getTransactions()))
-  const items = useSelector(state => state.transaction.items)
-  const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
+  const items = useSelector(_ => _.transaction.items)
+  const isAuthenticated = useSelector(_ => _.auth.isAuthenticated)
 
   const carTemplate = {
     plate: ''
@@ -83,12 +82,6 @@ const MainList = () => {
     setRecords(values)
   }
 
-  const changePayment = (i, e) => {
-    const values = [...payment]
-    values[i][e.target.name] = e.target.value
-    setPayment(values)
-  }
-
   const [viewDelete, setViewDelete] = useState({
     isOpen: false,
     buttonText: 'แก้ไข'
@@ -125,6 +118,8 @@ const MainList = () => {
       name: item.name
     })
     setRecords(item.records)
+
+    // setPayment(tempPayment)
   }
 
   // Handle plate
@@ -169,16 +164,6 @@ const MainList = () => {
         index === i ? { ...car, record: prevRecords[i].record } : car
       )
     })
-  }
-
-  const addPayment = () => {
-    setPayment([...payment, paymentTemplate])
-  }
-
-  const removePayment = i => {
-    const values = [...payment]
-    values.splice(i, 1)
-    setPayment(values)
   }
 
   const submitAdd = e => {
@@ -238,60 +223,52 @@ const MainList = () => {
             </Button>
 
             <ListGroup>
-              <TransitionGroup className='shopping-list'>
-                {items.map(item => (
-                  <CSSTransition key={item._id} timeout={500}>
-                    <ListGroupItem>
-                      {viewDelete.isOpen ? (
-                        <ButtonGroup>
-                          <Button
-                            className='remove-btn'
-                            color='danger'
-                            size='sm'
-                            onClick={() => openViewDelete(DELETE_MODAL, item)}>
-                            &times;
-                          </Button>
-                          <Button
-                            color='warning'
-                            size='sm'
-                            onClick={() => openViewCheck(CHECK_MODAL, item)}>
-                            เช็คออก
-                          </Button>
-                        </ButtonGroup>
-                      ) : null}
+              {items.map(item => (
+                <ListGroupItem>
+                  {viewDelete.isOpen ? (
+                    <ButtonGroup>
                       <Button
-                        onClick={() => openViewEdit(EDIT_MODAL, item)}
-                        color='dark'>
-                        {item.name}
+                        className='remove-btn'
+                        color='danger'
+                        size='sm'
+                        onClick={() => openViewDelete(DELETE_MODAL, item)}>
+                        &times;
                       </Button>
+                      <Button
+                        color='warning'
+                        size='sm'
+                        onClick={() => openViewCheck(CHECK_MODAL, item)}>
+                        สรุปยอด
+                      </Button>
+                    </ButtonGroup>
+                  ) : null}
+                  <Button
+                    onClick={() => openViewEdit(EDIT_MODAL, item)}
+                    color='dark'>
+                    {item.name}
+                  </Button>
 
-                      <EditModal
-                        header={header}
-                        records={records}
-                        changeHeader={changeHeader}
-                        changeRecord={changeRecord}
-                        handleAddRecord={addRecord}
-                        handleRemoveRecord={removeRecord}
-                        handleSubmit={submitEdit}
-                        toggle={closeModal}
-                      />
-                      <CheckModal
-                        header={header}
-                        records={records}
-                        payment={payment}
-                        changeHeader={changeHeader}
-                        changePayment={changePayment}
-                        handleAddField={addPayment}
-                        handleRemoveField={removePayment}
-                        handleSubmit={submitCheck}
-                        toggle={closeModal}
-                      />
+                  <EditModal
+                    header={header}
+                    records={records}
+                    changeHeader={changeHeader}
+                    changeRecord={changeRecord}
+                    handleAddRecord={addRecord}
+                    handleRemoveRecord={removeRecord}
+                    handleSubmit={submitEdit}
+                    toggle={closeModal}
+                  />
+                  <CheckModal
+                    header={header}
+                    records={records}
+                    changeHeader={changeHeader}
+                    handleSubmit={submitCheck}
+                    toggle={closeModal}
+                  />
 
-                      <DeleteModal header={header} toggle={closeModal} />
-                    </ListGroupItem>
-                  </CSSTransition>
-                ))}
-              </TransitionGroup>
+                  <DeleteModal header={header} toggle={closeModal} />
+                </ListGroupItem>
+              ))}
             </ListGroup>
           </div>
         ) : (
