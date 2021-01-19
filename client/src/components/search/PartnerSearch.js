@@ -6,6 +6,7 @@ import { AccountCircle, FormatQuote, Call } from '@material-ui/icons'
 import { addPartner, getPartners } from '../../actions/partnerActions'
 import { paymentTemplate } from '../MainList'
 import { banks } from '../master/banks'
+import { accountTypes } from '../master/accountTypes'
 const PartnerSearch = ({ changeHeader }) => {
   const dispatch = useDispatch()
   useEffect(() => {
@@ -146,7 +147,6 @@ const PartnerSearch = ({ changeHeader }) => {
                 />
               </Grid>
             </Grid>
-
             <Grid
               container
               spacing={1}
@@ -168,7 +168,6 @@ const PartnerSearch = ({ changeHeader }) => {
                 />
               </Grid>
             </Grid>
-
             <Grid
               container
               spacing={1}
@@ -222,8 +221,9 @@ const PartnerSearch = ({ changeHeader }) => {
                   direction='row'
                   justify='flex-start'
                   alignItems='center'>
-                  <Grid item xs={6} sm={6}>
+                  <Grid item xs={4} sm={4}>
                     <TextField
+                      select
                       name='type'
                       id='type'
                       label='ประเภท'
@@ -233,10 +233,15 @@ const PartnerSearch = ({ changeHeader }) => {
                       autoFocus='true'
                       required='true'
                       value={_.type}
-                      onChange={e => changePayment(index, e)}
-                    />
+                      onChange={e => changePayment(index, e)}>
+                      {accountTypes.map(option => (
+                        <MenuItem key={option.value} value={option.label}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
                   </Grid>
-                  <Grid item xs={4} sm={4}>
+                  <Grid item xs={6} sm={6}>
                     <TextField
                       select
                       name='bank'
@@ -303,7 +308,7 @@ const PartnerSearch = ({ changeHeader }) => {
 
                   <Grid item xs={6}>
                     <TextField
-                      style={{ marginTop: '0rem' }}
+                      style={{ margin: '0 0 0 0' }}
                       name='accountName'
                       id='accountName'
                       label='ชื่อ'

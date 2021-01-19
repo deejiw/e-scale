@@ -96,7 +96,7 @@ const EditModal = ({
                             variant='outlined'
                             autoFocus='true'
                             required='true'
-                            margin='dense'
+                            size='small'
                             multiline
                             rowsMax={3}
                             value={_.material}
@@ -110,7 +110,7 @@ const EditModal = ({
                             type='number'
                             label='หัก (kg)'
                             variant='outlined'
-                            margin='dense'
+                            size='small'
                             value={_.deduction}
                             defaultValue='0'
                             onChange={e => changeRecord(i, j, e)}
@@ -129,7 +129,7 @@ const EditModal = ({
                             type='text'
                             label='อธิบาย'
                             variant='outlined'
-                            margin='dense'
+                            size='small'
                             multiline
                             rowsMax={4}
                             value={_.remarks}
@@ -164,7 +164,7 @@ const EditModal = ({
                             type='number'
                             label='ชั่งเข้า (kg)'
                             variant='outlined'
-                            margin='dense'
+                            size='small'
                             value={_.weighIn}
                             defaultValue='0'
                             onChange={e => changeRecord(i, j, e)}
@@ -177,7 +177,7 @@ const EditModal = ({
                             type='number'
                             label='ชั่งออก (kg)'
                             variant='outlined'
-                            margin='dense'
+                            size='small'
                             aria-describedby='standard-weight-helper-text'
                             value={_.weighOut}
                             defaultValue='0'
@@ -199,7 +199,7 @@ const EditModal = ({
                             type='number'
                             label='ราคา'
                             variant='outlined'
-                            margin='dense'
+                            size='small'
                             value={_.price}
                             defaultValue='0'
                             onChange={e => changeRecord(i, j, e)}
