@@ -15,8 +15,10 @@ import {
   ModalHeader,
   ModalBody,
   Form,
+  FormGroup,
   Row,
-  Label
+  Label,
+  Alert
 } from 'reactstrap'
 import { CHECK_MODAL } from './types'
 import { useSelector, useDispatch } from 'react-redux'
@@ -24,14 +26,7 @@ import { getPartners } from '../../actions/partnerActions'
 import { paymentTemplate } from '../MainList'
 import { accountTypes } from '../master/accountTypes'
 import { banks } from '../master/banks'
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    '& .MuiTextField-root': {
-      margin: theme.spacing(0.75, -1)
-    }
-  }
-}))
+import { usePrevious, updateError } from '../auth/customHook'
 
 const initialState = {
   isOpen: false,
@@ -39,7 +34,10 @@ const initialState = {
   isAccountReadOnly: false,
   isReadOnly: false,
   selected: 0,
-  isCash: false
+  isCash: false,
+  cashAmount: 0,
+  totalAmount: 0,
+  msg: null
 }
 
 const CheckModal = ({
@@ -49,13 +47,33 @@ const CheckModal = ({
   handleSubmit,
   toggle
 }) => {
-  const classes = useStyles()
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(getPartners(header.name))
-    setPaymentState(initialState)
-    setActivePayment([])
+    calculateTotal()
+    return () => {
+      setState(initialState)
+      setActivePayment([])
+    }
   }, [header.isOpen])
+
+  const error = useSelector(state => state.error)
+
+  const isAuthenticated = useSelector(state => state.isAuthenticated)
+
+  const prevError = usePrevious(error)
+
+  useEffect(() => {
+    updateError(
+      'SELECT_PAYMENT_FAIL',
+      state,
+      error,
+      prevError,
+      isAuthenticated,
+      setState,
+      toggleModal
+    )
+  }, [prevError])
 
   const activePartner = useSelector(_ => _.partner.items[0])
 
@@ -64,38 +82,37 @@ const CheckModal = ({
   useEffect(() => setPayment(activePartner ? activePartner.payment : []), [
     activePartner
   ])
-  const [paymentState, setPaymentState] = useState(initialState)
 
-  const [cash, setCash] = useState(0)
-  const [viewModal, setViewModal] = useState(false)
+  const [state, setState] = useState(initialState)
+
   const [activePayment, setActivePayment] = useState({
     ...paymentTemplate
   })
 
-  const addPayment = () => {
-    setPayment([...payment, paymentTemplate])
-  }
+  const [viewModal, setViewModal] = useState(false)
 
-  const changePayment = (i, e) => {
-    const arr = [...payment]
-    arr[i][e.target.name] = e.target.value
-    setPayment(arr)
+  const appendPayment = () => {
+    setPayment([...payment, activePayment])
+  }
+  const selectActivePayment = () => {
+    toggleModal()
+    setActivePayment(payment[state.selected])
+    setState({
+      isOpen: true,
+      isReadOnly: true,
+      isAccountReadOnly: true
+    })
   }
 
   const changeActivePayment = e =>
     setActivePayment({ ...activePayment, [e.target.name]: e.target.value })
 
   const changeRadio = e => {
-    setPaymentState({ ...paymentState, selected: e.target.value })
+    setState({ ...state, selected: e.target.value })
   }
 
   const toggleCash = () => {
-    setPaymentState({ ...paymentState, isCash: !paymentState.isCash })
-  }
-  const removePayment = i => {
-    const arr = [...payment]
-    arr.splice(i, 1)
-    setPayment(arr)
+    setState({ ...state, isCash: !state.isCash })
   }
   const subAmount = []
 
@@ -110,7 +127,28 @@ const CheckModal = ({
     return _
   }
 
-  const totalAmount = () => subAmount.reduce((a, b) => a + b, 0)
+  const calculateTotal = () => {
+    const total = subAmount.reduce((a, b) => a + b, 0)
+    setState({ ...state, totalAmount: total })
+  }
+
+  const formatComma = number => {
+    return number
+      ? number.toLocaleString(undefined, {
+          maximumFractionDigits: 2
+        })
+      : 0
+  }
+
+  const formatAccountNumber = accountNumber => {
+    return accountNumber
+      ? accountNumber
+          .replace(/[^0-9]/g, '')
+          .match(/.{1,4}/g)
+          ?.join('-')
+          .substr(0, 12) || ''
+      : null
+  }
 
   const toggleModal = () => {
     setViewModal(!viewModal)
@@ -124,7 +162,7 @@ const CheckModal = ({
           สรุปยอด {header.name}
         </ModalHeader>
         <ModalBody>
-          <Form className={classes.root} onSubmit={handleSubmit}>
+          <Form onSubmit={handleSubmit}>
             <Container fluid>
               <Grid //Header
                 container
@@ -188,17 +226,19 @@ const CheckModal = ({
                           </Row>
                         </Grid>
                         <Grid item xs='2' sm='2'>
-                          <Row>{_.weighIn}</Row>
+                          <Row>{formatComma(_.weighIn)}</Row>
                           <Row style={{ margin: '-0.5rem 0 0 -1rem' }}>
-                            ({_.weighOut})
+                            ({formatComma(_.weighOut)})
                           </Row>
                         </Grid>
                         <Grid item xs='1' sm='1'>
                           <Row>
-                            {netWeight(_.weighIn, _.weighOut, _.deduction)}
+                            {formatComma(
+                              netWeight(_.weighIn, _.weighOut, _.deduction)
+                            )}
                           </Row>
                           <Row style={{ margin: '-0.5rem 0 0 -1rem' }}>
-                            ({_.deduction})
+                            ({formatComma(_.deduction)})
                           </Row>
                         </Grid>
                         <Grid item xs='2' sm='2'>
@@ -207,14 +247,14 @@ const CheckModal = ({
                         <Grid item xs='2.5' sm='2.5'>
                           <Label>
                             ฿
-                            {amount(
-                              i,
-                              j,
-                              netWeight(_.weighIn, _.weighOut, _.deduction),
-                              _.price
-                            ).toLocaleString(undefined, {
-                              maximumFractionDigits: 2
-                            })}
+                            {formatComma(
+                              amount(
+                                i,
+                                j,
+                                netWeight(_.weighIn, _.weighOut, _.deduction),
+                                _.price
+                              )
+                            )}
                           </Label>
                         </Grid>
                       </Grid>
@@ -236,12 +276,7 @@ const CheckModal = ({
                   <Label>ยอดรวมทั้งสิ้น</Label>
                 </Grid>
                 <Grid item xs={2.5} sm={2.5}>
-                  <h5>
-                    ฿
-                    {totalAmount().toLocaleString(undefined, {
-                      maximumFractionDigits: 2
-                    })}
-                  </h5>
+                  <h5>฿{formatComma(state.totalAmount)}</h5>
                 </Grid>
               </Grid>
 
@@ -253,97 +288,92 @@ const CheckModal = ({
                   เลือกวิธีการจ่ายเงิน
                 </ModalHeader>
                 <ModalBody>
+                  {state.msg ? <Alert color='danger'>{state.msg}</Alert> : null}
                   <Form>
-                    {payment.map((_, index) => (
-                      <div key={index}>
-                        <Grid
-                          container
-                          spacing={1}
-                          direction='row'
-                          justify='flex-start'
-                          alignItems='top'>
-                          <Grid item xs={1.5} sm={1.5}>
-                            <Radio
-                              // eslint-disable-next-line
-                              checked={paymentState.selected == index}
-                              onChange={changeRadio}
-                              value={index}
-                              name='paymentRadio'
-                              color='default'
-                              inputProps={{ 'aria-label': 0 }}
-                            />
-                          </Grid>
-                          <Grid item xs={5} sm={5}>
-                            <TextField
-                              name='type'
-                              id='type'
-                              label='ประเภท'
-                              size='small'
-                              value={_.type}
-                              InputProps={{
-                                readOnly: true
-                              }}
-                            />
-                          </Grid>
+                    <FormGroup>
+                      {payment.map((_, index) => (
+                        <div key={index}>
+                          <Grid
+                            container
+                            spacing={1}
+                            direction='row'
+                            justify='flex-start'
+                            alignItems='top'>
+                            <Grid item xs={1.5} sm={1.5}>
+                              <Radio
+                                // eslint-disable-next-line
+                                checked={state.selected == index}
+                                onChange={changeRadio}
+                                value={index}
+                                name='paymentRadio'
+                                color='default'
+                                inputProps={{ 'aria-label': 0 }}
+                              />
+                            </Grid>
+                            <Grid item xs={5} sm={5}>
+                              <TextField
+                                name='type'
+                                id='type'
+                                label='ประเภท'
+                                size='small'
+                                value={_.type}
+                                InputProps={{
+                                  readOnly: true
+                                }}
+                              />
+                            </Grid>
 
-                          <Grid item xs={5} sm={5}>
-                            <TextField
-                              name='bank'
-                              id='bank'
-                              label='ธนาคาร'
-                              size='small'
-                              value={_.accountName}
-                              InputProps={{
-                                readOnly: true
-                              }}
-                            />
-                          </Grid>
+                            <Grid item xs={5} sm={5}>
+                              <TextField
+                                name='bank'
+                                id='bank'
+                                label='ธนาคาร'
+                                size='small'
+                                value={_.accountName}
+                                InputProps={{
+                                  readOnly: true
+                                }}
+                              />
+                            </Grid>
 
-                          <Grid item xs={6} sm={6}>
-                            <TextField
-                              name='accountNumber'
-                              id='accountNumber'
-                              label='เลขบัญชี'
-                              size='small'
-                              placeholder='เลขบัญชี (10 หลัก)'
-                              value={_.accountNumber}
-                              InputProps={{
-                                readOnly: true
-                              }}
-                            />
-                          </Grid>
+                            <Grid item xs={6} sm={6}>
+                              <TextField
+                                name='accountNumber'
+                                id='accountNumber'
+                                label='เลขบัญชี'
+                                size='small'
+                                placeholder='เลขบัญชี (10 หลัก)'
+                                value={_.accountNumber}
+                                InputProps={{
+                                  readOnly: true
+                                }}
+                              />
+                            </Grid>
 
-                          <Grid item xs={6}>
-                            <TextField
-                              name='accountName'
-                              id='accountName'
-                              label='ชื่อ'
-                              size='small'
-                              value={_.accountName}
-                              InputProps={{
-                                readOnly: true
-                              }}
-                            />
+                            <Grid item xs={6}>
+                              <TextField
+                                name='accountName'
+                                id='accountName'
+                                label='ชื่อ'
+                                size='small'
+                                value={_.accountName}
+                                InputProps={{
+                                  readOnly: true
+                                }}
+                              />
+                            </Grid>
                           </Grid>
-                        </Grid>
-                      </div>
-                    ))}
+                        </div>
+                      ))}
 
-                    <Button
-                      color='primary'
-                      style={{ margin: '1rem 0 0 0' }}
-                      onClick={() => {
-                        toggleModal()
-                        setActivePayment(payment[paymentState.selected])
-                        setPaymentState({
-                          isOpen: true,
-                          isReadOnly: true,
-                          isAccountReadOnly: true
-                        })
-                      }}
-                      block>
-                      เลือก
-                    </Button>
+                      <Button
+                        onClick={selectActivePayment}
+                        color='primary'
+                        style={{ margin: '1rem 0 0 0' }}
+                        block>
+                        เลือก
+                      </Button>
+                    </FormGroup>
                   </Form>
                 </ModalBody>
               </Modal>
@@ -359,14 +389,14 @@ const CheckModal = ({
                   <FormControlLabel
                     control={
                       <Checkbox
-                        disabled={paymentState.isAccountReadOnly}
-                        checked={paymentState.isAccount}
+                        disabled={state.isAccountReadOnly}
+                        checked={state.isAccount}
                         onChange={() => {
-                          if (!paymentState.isAccount) {
+                          if (!state.isAccount) {
                             toggleModal()
                           } else {
-                            setPaymentState({
-                              ...paymentState,
+                            setState({
+                              ...state,
                               isAccount: false,
                               isReadOnly: false
                             })
@@ -383,36 +413,34 @@ const CheckModal = ({
 
                 <Grid item>
                   <Button
-                    color={paymentState.isReadOnly ? 'danger' : 'info'}
+                    color={state.isReadOnly ? 'danger' : 'info'}
                     onClick={() => {
-                      console.log(paymentState)
+                      console.log(state)
                       if (
-                        !paymentState.isReadOnly &&
+                        !state.isReadOnly &&
                         activePayment.length == 0 &&
-                        !paymentState.isOpen
+                        !state.isOpen &&
+                        payment.length !== 0
                       ) {
-                        setPaymentState({
-                          ...paymentState,
+                        setState({
+                          ...state,
                           isAccount: true,
                           isAccountReadOnly: true,
                           isOpen: true
                         })
                       } else if (
-                        !paymentState.isReadOnly &&
+                        !state.isReadOnly &&
                         activePayment.length !== 0 &&
-                        paymentState.isOpen
+                        state.isOpen
                       ) {
-                        setPaymentState({
-                          ...paymentState,
+                        setState({
+                          ...state,
                           isReadOnly: true
                         })
-                      } else if (
-                        paymentState.isReadOnly &&
-                        paymentState.isAccountReadOnly
-                      ) {
+                      } else if (state.isReadOnly && state.isAccountReadOnly) {
                         setActivePayment([])
-                        setPaymentState({
-                          ...paymentState,
+                        setState({
+                          ...state,
                           isReadOnly: false,
                           isAccountReadOnly: false,
                           isOpen: false,
@@ -420,21 +448,21 @@ const CheckModal = ({
                         })
                       }
                     }}>
-                    {paymentState.isReadOnly
+                    {state.isReadOnly
                       ? 'ล้างค่า'
-                      : paymentState.isOpen
+                      : state.isOpen
                       ? 'บันทึก'
                       : 'เพิ่มใหม่'}
                   </Button>
                 </Grid>
 
-                {paymentState.isAccountReadOnly && !paymentState.isReadOnly ? (
+                {state.isAccountReadOnly && !state.isReadOnly ? (
                   <Grid item>
                     <Button
                       color='danger'
                       onClick={() =>
-                        setPaymentState({
-                          ...paymentState,
+                        setState({
+                          ...state,
                           isOpen: false,
                           isAccount: false,
                           isAccountReadOnly: false
@@ -446,7 +474,7 @@ const CheckModal = ({
                 ) : null}
               </Grid>
 
-              {paymentState.isOpen ? (
+              {state.isOpen ? (
                 <Grid
                   container
                   spacing={0.5}
@@ -467,7 +495,7 @@ const CheckModal = ({
                       value={activePayment.type}
                       defaultValue='0'
                       InputProps={{
-                        readOnly: paymentState.isReadOnly
+                        readOnly: state.isReadOnly
                       }}
                       onChange={e => changeActivePayment(e)}>
                       {accountTypes.map(option => (
@@ -489,7 +517,7 @@ const CheckModal = ({
                       required='true'
                       value={activePayment.bank}
                       InputProps={{
-                        readOnly: paymentState.isReadOnly
+                        readOnly: state.isReadOnly
                       }}
                       onChange={e => changeActivePayment(e)}>
                       {banks.map(option => (
@@ -513,10 +541,10 @@ const CheckModal = ({
                         label='เลชบัญชี'
                         variant='outlined'
                         size='small'
-                        value={activePayment.accountNumber}
+                        value={formatAccountNumber(activePayment.accountNumber)}
                         defaultValue='0'
                         InputProps={{
-                          readOnly: paymentState.isReadOnly
+                          readOnly: state.isReadOnly
                         }}
                         onChange={e => changeActivePayment(e)}
                       />
@@ -532,7 +560,7 @@ const CheckModal = ({
                         value={activePayment.accountName}
                         defaultValue='0'
                         InputProps={{
-                          readOnly: paymentState.isReadOnly
+                          readOnly: state.isReadOnly
                         }}
                         onChange={e => changeActivePayment(e)}
                       />
@@ -542,7 +570,7 @@ const CheckModal = ({
               ) : null}
               <Grid
                 container
-                spacing={60}
+                spacing={1}
                 direction='row'
                 justify='flex-start'
                 alignItems='center'>
@@ -550,7 +578,7 @@ const CheckModal = ({
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={paymentState.isCash}
+                        checked={state.isCash}
                         onChange={toggleCash}
                         name='isCash'
                         color='primary'
@@ -559,7 +587,7 @@ const CheckModal = ({
                     label='เงินสด'
                   />
                 </Grid>
-                {paymentState.isCash ? (
+                {state.isCash ? (
                   <Grid item xs={6} sm={6}>
                     <TextField
                       name='cashAmount'
@@ -568,9 +596,11 @@ const CheckModal = ({
                       label='Cash Amount'
                       variant='outlined'
                       size='small'
-                      value={cash}
+                      value={state.cashAmount}
                       defaultValue='0'
-                      onChange={e => setCash(e.target.value)}
+                      onChange={e =>
+                        setState({ ...state, cashAmount: e.target.value })
+                      }
                     />
                   </Grid>
                 ) : null}

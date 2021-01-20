@@ -1,5 +1,5 @@
 // aka container; a  compoenent that is hooked with redux
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Button,
   Modal,
@@ -15,6 +15,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import { login } from '../../actions/authActions'
 import { clearErrors } from '../../actions/errorActions'
+import { usePrevious, updateError } from './customHook'
 
 const LoginModal = () => {
   const dispatch = useDispatch()
@@ -30,28 +31,18 @@ const LoginModal = () => {
 
   const isAuthenticated = useSelector(state => state.isAuthenticated)
 
-  const usePrevious = value => {
-    const ref = useRef()
-    useEffect(() => {
-      ref.current = value
-    })
-    return ref.current
-  }
-
   const prevError = usePrevious(error)
 
   useEffect(() => {
-    if (error !== prevError) {
-      // Check for register error
-      if (error.id === 'LOGIN_FAIL') {
-        setState(prevState => ({ ...prevState, msg: error.msg.msg }))
-      } else {
-        setState({ msg: null })
-      }
-    }
-    if (state.modal && isAuthenticated) {
-      toggle()
-    } // eslint-disable-next-line react-hooks/exhaustive-deps
+    updateError(
+      'LOGIN_FAIL',
+      state,
+      error,
+      prevError,
+      isAuthenticated,
+      setState,
+      toggle
+    )
   }, [prevError])
 
   const toggle = () => {

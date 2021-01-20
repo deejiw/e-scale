@@ -16,6 +16,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import { register } from '../../actions/authActions'
 import { clearErrors } from '../../actions/errorActions'
+import { usePrevious, updateError } from './customHook'
 
 const RegisterModal = () => {
   const dispatch = useDispatch()
@@ -31,28 +32,18 @@ const RegisterModal = () => {
 
   const isAuthenticated = useSelector(state => state.isAuthenticated)
 
-  const usePrevious = value => {
-    const ref = useRef()
-    useEffect(() => {
-      ref.current = value // eslint-disable-next-line
-    })
-    return ref.current
-  }
-
   const prevError = usePrevious(error)
 
   useEffect(() => {
-    if (error !== prevError) {
-      // Check for register error
-      if (error.id === 'REGISTER_FAIL') {
-        setState(prevState => ({ ...prevState, msg: error.msg.msg }))
-      } else {
-        setState({ msg: null })
-      }
-    }
-    if (state.modal && isAuthenticated) {
-      toggle()
-    } // eslint-disable-next-line react-hooks/exhaustive-deps
+    updateError(
+      'REGISTER_FAIL',
+      state,
+      error,
+      prevError,
+      isAuthenticated,
+      setState,
+      toggle
+    )
   }, prevError)
 
   const toggle = () => {

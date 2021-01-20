@@ -7,6 +7,7 @@ import { addPartner, getPartners } from '../../actions/partnerActions'
 import { paymentTemplate } from '../MainList'
 import { banks } from '../master/banks'
 import { accountTypes } from '../master/accountTypes'
+
 const PartnerSearch = ({ changeHeader }) => {
   const dispatch = useDispatch()
   useEffect(() => {
@@ -75,8 +76,7 @@ const PartnerSearch = ({ changeHeader }) => {
   const maskedAccountNumber = (i, e) => {
     const maskedValue =
       e.target.value
-        .replace(/\s/g, '')
-        .replace(/-/g, '')
+        .replace(/[^0-9]/g, '')
         .match(/.{1,4}/g)
         ?.join('-')
         .substr(0, 12) || ''
