@@ -4,7 +4,9 @@ import {
   GET_ITEMS,
   UPDATE_ITEM,
   DELETE_ITEM,
-  ITEMS_LOADING
+  ITEMS_LOADING,
+  SELECT_PAYMENT_SUCCESS,
+  SELECT_PAYMENT_FAIL
 } from './types'
 import { tokenConfig } from './authActions'
 import { returnErrors } from './errorActions'
@@ -57,6 +59,39 @@ export const updateTransaction = (header, records) => (dispatch, getState) => {
     .catch(err =>
       dispatch(returnErrors(err.response.data, err.response.status))
     )
+}
+
+export const checkSelectedPayment = selected => dispatch => {
+  // Headers
+  const config = {
+    headers: {
+      'Content-type': 'application/json'
+    }
+  }
+
+  // Request body
+  const body = JSON.stringify(selected)
+
+  axios
+    .post('/api/transactions', body, config)
+    .then(res =>
+      dispatch({
+        type: SELECT_PAYMENT_SUCCESS,
+        payload: res.data
+      })
+    )
+    .catch(err => {
+      dispatch(
+        returnErrors(
+          err.response.data,
+          err.response.status,
+          'SELECT_PAYMENT_FAIL'
+        )
+      )
+      dispatch({
+        type: SELECT_PAYMENT_FAIL
+      })
+    })
 }
 
 export const deleteTransaction = id => (dispatch, getState) => {

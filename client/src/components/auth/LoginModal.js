@@ -42,7 +42,7 @@ const LoginModal = () => {
       isAuthenticated,
       setState,
       toggle
-    )
+    ) // eslint-disable-next-line
   }, [prevError])
 
   const toggle = () => {

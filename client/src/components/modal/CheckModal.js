@@ -23,6 +23,7 @@ import {
 import { CHECK_MODAL } from './types'
 import { useSelector, useDispatch } from 'react-redux'
 import { getPartners } from '../../actions/partnerActions'
+import { checkSelectedPayment } from '../../actions/transactionActions'
 import { paymentTemplate } from '../MainList'
 import { accountTypes } from '../master/accountTypes'
 import { banks } from '../master/banks'
@@ -72,7 +73,7 @@ const CheckModal = ({
       isAuthenticated,
       setState,
       toggleModal
-    )
+    ) // eslint-disable-next-line
   }, [prevError])
 
   const activePartner = useSelector(_ => _.partner.items[0])
@@ -94,8 +95,10 @@ const CheckModal = ({
   const appendPayment = () => {
     setPayment([...payment, activePayment])
   }
-  const selectActivePayment = () => {
+  const selectActivePayment = e => {
+    e.preventDefault()
     toggleModal()
+    // dispatch(checkSelectedPayment(state.selected))
     setActivePayment(payment[state.selected])
     setState({
       isOpen: true,
