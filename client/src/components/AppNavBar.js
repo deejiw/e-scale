@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react'
+import React, { useState, Fragment, memo } from 'react'
 import {
   Collapse,
   Navbar,
@@ -73,4 +73,4 @@ AppNavBar.propTypes = {
   user: PropTypes.object
 }
 
-export default AppNavBar
+export default memo(AppNavBar)

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, memo } from 'react'
 import {
   Container,
   FormControlLabel,
@@ -620,4 +620,4 @@ const CheckModal = ({
   )
 }
 
-export default CheckModal
+export default memo(CheckModal)

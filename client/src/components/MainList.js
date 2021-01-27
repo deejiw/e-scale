@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, memo } from 'react'
 import {
   Button,
   ButtonGroup,
@@ -292,4 +292,4 @@ MainList.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired
 }
 
-export default MainList
+export default memo(MainList)

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, memo } from 'react'
 import { Container, TextField } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -223,4 +223,4 @@ const EditModal = ({
   )
 }
 
-export default EditModal
+export default memo(EditModal)

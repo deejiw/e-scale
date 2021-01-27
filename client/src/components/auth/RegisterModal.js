@@ -1,5 +1,5 @@
 // aka container; a  compoenent that is hooked with redux
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useEffect, memo } from 'react'
 import {
   Button,
   Modal,
@@ -120,4 +120,4 @@ RegisterModal.propTypes = {
   clearErrors: PropTypes.func.isRequired
 }
 
-export default RegisterModal
+export default memo(RegisterModal)

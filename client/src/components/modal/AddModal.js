@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, memo } from 'react'
 import {
   Button,
   Modal,
@@ -100,4 +100,4 @@ const AddModal = ({
   )
 }
 
-export default AddModal
+export default memo(AddModal)

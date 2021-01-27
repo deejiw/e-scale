@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import {
   Button,
   Modal,
@@ -45,4 +45,4 @@ const DeleteModal = ({ header, toggle }) => {
   )
 }
 
-export default DeleteModal
+export default memo(DeleteModal)

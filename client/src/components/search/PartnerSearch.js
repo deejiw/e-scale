@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, memo } from 'react'
 import { Button, Modal, ModalHeader, ModalBody, Form } from 'reactstrap'
 import { useSelector, useDispatch } from 'react-redux'
 import { TextField, Grid, MenuItem } from '@material-ui/core'
@@ -342,4 +342,4 @@ const PartnerSearch = ({ changeHeader }) => {
   )
 }
 
-export default PartnerSearch
+export default memo(PartnerSearch)
