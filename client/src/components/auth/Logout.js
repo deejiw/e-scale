@@ -1,4 +1,4 @@
-import React, { memo, Fragment } from 'react'
+import React, { Fragment } from 'react'
 import { NavLink } from 'reactstrap'
 import { useDispatch } from 'react-redux'
 import { logout } from '../../actions/authActions'
@@ -18,4 +18,4 @@ Logout.propTypes = {
   logout: PropTypes.func.isRequired
 }
 
-export default memo(Logout)
+export default Logout

@@ -3,9 +3,8 @@ export const GET_ITEMS = 'GET_ITEMS'
 export const ADD_ITEM = 'ADD_ITEM'
 export const UPDATE_ITEM = 'UPDATE_ITEM'
 export const DELETE_ITEM = 'DELETE_ITEM'
+export const CHECK_ITEM = 'CHECK_ITEM'
 export const ITEMS_LOADING = 'ITEMS_LOADING'
-export const SELECT_PAYMENT_SUCCESS = 'SELECT_PAYMENT_SUCCESS'
-export const SELECT_PAYMENT_FAIL = 'SELECT_PAYMENT_FAIL'
 
 // PARTNERS
 export const GET_PARTNERS = 'GET_PARTNERS'

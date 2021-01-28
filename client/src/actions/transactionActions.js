@@ -3,10 +3,9 @@ import {
   ADD_ITEM,
   GET_ITEMS,
   UPDATE_ITEM,
+  CHECK_ITEM,
   DELETE_ITEM,
-  ITEMS_LOADING,
-  SELECT_PAYMENT_SUCCESS,
-  SELECT_PAYMENT_FAIL
+  ITEMS_LOADING
 } from './types'
 import { tokenConfig } from './authActions'
 import { returnErrors } from './errorActions'
@@ -18,7 +17,6 @@ export const addTransaction = (name, plate) => (dispatch, getState) => {
     .then(res =>
       dispatch({
         type: ADD_ITEM,
-        // res.data as designed from ../../routes/api/items (newItem)
         payload: res.data
       })
     )
@@ -52,7 +50,6 @@ export const updateTransaction = (header, records) => (dispatch, getState) => {
     .then(res =>
       dispatch({
         type: UPDATE_ITEM,
-        // res.data as designed from ../../routes/api/items (newItem)
         payload: res.data
       })
     )
@@ -61,41 +58,21 @@ export const updateTransaction = (header, records) => (dispatch, getState) => {
     )
 }
 
-export const checkSelectedPayment = selected => dispatch => {
-  // Headers
-  const config = {
-    headers: {
-      'Content-type': 'application/json'
-    }
-  }
-
-  // Request body
-  const body = JSON.stringify(selected)
-
+export const checkTransaction = (id, transaction) => (dispatch, getState) => {
   axios
-    .post('/api/transactions', body, config)
+    .put(`/api/transactions/${id}`, { transaction }, tokenConfig(getState))
     .then(res =>
       dispatch({
-        type: SELECT_PAYMENT_SUCCESS,
+        type: CHECK_ITEM,
         payload: res.data
       })
     )
-    .catch(err => {
-      dispatch(
-        returnErrors(
-          err.response.data,
-          err.response.status,
-          'SELECT_PAYMENT_FAIL'
-        )
-      )
-      dispatch({
-        type: SELECT_PAYMENT_FAIL
-      })
-    })
+    .catch(err =>
+      dispatch(returnErrors(err.response.data, err.response.status))
+    )
 }
 
 export const deleteTransaction = id => (dispatch, getState) => {
-  // Delete from MongoDB
   axios
     .delete(`/api/transactions/${id}`, tokenConfig(getState))
     .then(res =>

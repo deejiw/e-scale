@@ -8,7 +8,6 @@ import {
   Radio,
   Checkbox
 } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
 import {
   Button,
   Modal,
@@ -23,7 +22,7 @@ import {
 import { CHECK_MODAL } from './types'
 import { useSelector, useDispatch } from 'react-redux'
 import { getPartners } from '../../actions/partnerActions'
-import { checkSelectedPayment } from '../../actions/transactionActions'
+import { checkTransaction } from '../../actions/transactionActions'
 import { paymentTemplate } from '../MainList'
 import { accountTypes } from '../master/accountTypes'
 import { banks } from '../master/banks'
@@ -41,14 +40,9 @@ const initialState = {
   msg: null
 }
 
-const CheckModal = ({
-  header,
-  records,
-  changeHeader,
-  handleSubmit,
-  toggle
-}) => {
+const CheckModal = ({ header, records, changeHeader, toggle }) => {
   const dispatch = useDispatch()
+
   useEffect(() => {
     dispatch(getPartners(header.name))
     calculateTotal()
@@ -92,13 +86,38 @@ const CheckModal = ({
 
   const [viewModal, setViewModal] = useState(false)
 
-  const appendPayment = () => {
-    setPayment([...payment, activePayment])
+  const handleAddActivePayment = () => {
+    if (!state.isReadOnly && activePayment.length == 0 && !state.isOpen) {
+      setState({
+        ...state,
+        isAccount: true,
+        isAccountReadOnly: true,
+        isOpen: true
+      })
+    } else if (
+      !state.isReadOnly &&
+      activePayment.length !== 0 &&
+      state.isOpen
+    ) {
+      setState({
+        ...state,
+        isReadOnly: true
+      })
+    } else if (state.isReadOnly && state.isAccountReadOnly) {
+      setActivePayment([])
+      setState({
+        ...state,
+        isReadOnly: false,
+        isAccountReadOnly: false,
+        isOpen: false,
+        isAccount: false
+      })
+    }
   }
+
   const selectActivePayment = e => {
     e.preventDefault()
     toggleModal()
-    // dispatch(checkSelectedPayment(state.selected))
     setActivePayment(payment[state.selected])
     setState({
       isOpen: true,
@@ -156,6 +175,21 @@ const CheckModal = ({
   const toggleModal = () => {
     setViewModal(!viewModal)
   }
+
+  const handleSubmit = e => {
+    e.preventDefault()
+    const transaction = {
+      status: 'paid',
+      name: header.name,
+      dateStart: header.dateStart,
+      cashAmount: state.cashAmount,
+      totalAmount: state.totalAmount,
+      payment: [activePayment],
+      records: [records]
+    }
+    dispatch(checkTransaction(header.id, transaction))
+    toggle()
+  }
   return (
     <div>
       <Modal
@@ -165,7 +199,7 @@ const CheckModal = ({
           สรุปยอด {header.name}
         </ModalHeader>
         <ModalBody>
-          <Form onSubmit={handleSubmit}>
+          <Form>
             <Container fluid>
               <Grid //Header
                 container
@@ -417,40 +451,7 @@ const CheckModal = ({
                 <Grid item>
                   <Button
                     color={state.isReadOnly ? 'danger' : 'info'}
-                    onClick={() => {
-                      console.log(state)
-                      if (
-                        !state.isReadOnly &&
-                        activePayment.length == 0 &&
-                        !state.isOpen &&
-                        payment.length !== 0
-                      ) {
-                        setState({
-                          ...state,
-                          isAccount: true,
-                          isAccountReadOnly: true,
-                          isOpen: true
-                        })
-                      } else if (
-                        !state.isReadOnly &&
-                        activePayment.length !== 0 &&
-                        state.isOpen
-                      ) {
-                        setState({
-                          ...state,
-                          isReadOnly: true
-                        })
-                      } else if (state.isReadOnly && state.isAccountReadOnly) {
-                        setActivePayment([])
-                        setState({
-                          ...state,
-                          isReadOnly: false,
-                          isAccountReadOnly: false,
-                          isOpen: false,
-                          isAccount: false
-                        })
-                      }
-                    }}>
+                    onClick={handleAddActivePayment}>
                     {state.isReadOnly
                       ? 'ล้างค่า'
                       : state.isOpen
@@ -609,7 +610,11 @@ const CheckModal = ({
                 ) : null}
               </Grid>
 
-              <Button color='primary' style={{ margin: '0 0 0 0' }} block>
+              <Button
+                color='primary'
+                style={{ margin: '0 0 0 0' }}
+                onClick={handleSubmit}
+                block>
                 ยืนยันการจ่ายเงิน
               </Button>
             </Container>

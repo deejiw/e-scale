@@ -1,5 +1,5 @@
 // aka container; a  compoenent that is hooked with redux
-import React, { useState, useEffect, memo } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Button,
   Modal,
@@ -80,6 +80,7 @@ const LoginModal = () => {
                 name='email'
                 id='email'
                 placeholder='Email'
+                autoFocus='true'
                 className='mb-3'
                 onChange={onChange}
               />
@@ -108,4 +109,4 @@ LoginModal.propTypes = {
   clearErrors: PropTypes.func.isRequired
 }
 
-export default memo(LoginModal)
+export default LoginModal

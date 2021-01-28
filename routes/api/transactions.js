@@ -43,6 +43,19 @@ router.patch('/:id', auth, (req, res) => {
     .catch(err => res.status(404).json({ success: false }))
 })
 
+// @route   PUT api/transactions
+// @desc    Put a post
+// @access  Private
+router.put('/:id', auth, (req, res) => {
+  Transaction.findById(req.params.id)
+    .then(transaction => {
+      transaction
+        .replaceOne(req.body.transaction)
+        .then(() => res.json({ success: true }))
+    })
+    .catch(err => res.status(404).json({ success: false }))
+})
+
 // @route   DELETE api/transactions
 // @desc    Delete a post
 // @access  Private

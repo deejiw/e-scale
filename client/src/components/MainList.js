@@ -1,10 +1,15 @@
 import React, { useState, useEffect, memo } from 'react'
 import {
+  Nav,
+  NavItem,
+  NavLink,
   Button,
   ButtonGroup,
   Container,
   ListGroup,
-  ListGroupItem
+  ListGroupItem,
+  TabContent,
+  TabPane
 } from 'reactstrap'
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -20,7 +25,7 @@ import EditModal from './modal/EditModal'
 import CheckModal from './modal/CheckModal'
 import PropTypes from 'prop-types'
 import DeleteModal from './modal/DeleteModal'
-
+import classnames from 'classnames'
 export const paymentTemplate = {
   type: '',
   bank: '',
@@ -35,6 +40,12 @@ const MainList = () => {
   useEffect(() => dispatch(getTransactions()))
   const items = useSelector(_ => _.transaction.items)
   const isAuthenticated = useSelector(_ => _.auth.isAuthenticated)
+
+  const [activeTab, setActiveTab] = useState('1')
+
+  const toggle = tab => {
+    if (activeTab !== tab) setActiveTab(tab)
+  }
 
   const carTemplate = {
     plate: ''
@@ -115,7 +126,8 @@ const MainList = () => {
       isOpen: true,
       type: modalType,
       id: item._id,
-      name: item.name
+      name: item.name,
+      dateStart: item.dateStart
     })
     setRecords(item.records)
 
@@ -176,11 +188,6 @@ const MainList = () => {
     dispatch(updateTransaction(header, records))
     closeModal()
   }
-  const submitCheck = e => {
-    e.preventDefault()
-    //dispatch(checkTransaction(header, totalAmount))
-    closeModal()
-  }
 
   const closeModal = () => {
     setHeader({ isOpen: false })
@@ -201,75 +208,105 @@ const MainList = () => {
         />
 
         {isAuthenticated ? (
-          <div style={{ margin: '-1rem 0 0 0' }}>
-            <Button // Add Record
-              color='success'
-              style={{ margin: '0 0.5rem 1rem 0' }}
-              onClick={() => openViewAdd(ADD_MODAL)}>
-              บิลใหม่
-            </Button>
-
-            <Button // Edit
-              color={viewDelete.buttonText === 'แก้ไข' ? 'primary' : 'warning'}
-              style={{ marginBottom: '1rem', marginRight: '0.5rem' }}
-              onClick={() =>
-                setViewDelete({
-                  isOpen: !viewDelete.isOpen,
-                  buttonText:
-                    viewDelete.buttonText === 'แก้ไข' ? 'เสร็จ' : 'แก้ไข'
-                })
-              }>
-              {viewDelete.buttonText}
-            </Button>
-
-            <ListGroup>
-              {items.map(item => (
-                <ListGroupItem>
-                  {viewDelete.isOpen ? (
-                    <ButtonGroup>
-                      <Button
-                        className='remove-btn'
-                        color='danger'
-                        size='sm'
-                        onClick={() => openViewDelete(DELETE_MODAL, item)}>
-                        &times;
-                      </Button>
-                      <Button
-                        color='warning'
-                        size='sm'
-                        onClick={() => openViewCheck(CHECK_MODAL, item)}>
-                        สรุปยอด
-                      </Button>
-                    </ButtonGroup>
-                  ) : null}
-                  <Button
-                    onClick={() => openViewEdit(EDIT_MODAL, item)}
-                    color='dark'>
-                    {item.name}
+          <div>
+            <Nav tabs>
+              <NavItem>
+                <NavLink
+                  className={classnames({ active: activeTab === '1' })}
+                  onClick={() => {
+                    toggle('1')
+                  }}>
+                  Search
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink
+                  className={classnames({ active: activeTab === '2' })}
+                  onClick={() => {
+                    toggle('2')
+                  }}>
+                  Converter
+                </NavLink>
+              </NavItem>
+            </Nav>
+            <TabContent activeTab={activeTab}>
+              <TabPane tabId='1'>
+                <div style={{ margin: '-1rem 0 0 0' }}>
+                  <Button // Add Record
+                    color='success'
+                    style={{ margin: '0 0.5rem 1rem 0' }}
+                    onClick={() => openViewAdd(ADD_MODAL)}>
+                    บิลใหม่
                   </Button>
 
-                  <EditModal
-                    header={header}
-                    records={records}
-                    changeHeader={changeHeader}
-                    changeRecord={changeRecord}
-                    handleAddRecord={addRecord}
-                    handleRemoveRecord={removeRecord}
-                    handleSubmit={submitEdit}
-                    toggle={closeModal}
-                  />
-                  <CheckModal
-                    header={header}
-                    records={records}
-                    changeHeader={changeHeader}
-                    handleSubmit={submitCheck}
-                    toggle={closeModal}
-                  />
+                  <Button // Edit
+                    color={
+                      viewDelete.buttonText === 'แก้ไข' ? 'primary' : 'warning'
+                    }
+                    style={{ marginBottom: '1rem', marginRight: '0.5rem' }}
+                    onClick={() =>
+                      setViewDelete({
+                        isOpen: !viewDelete.isOpen,
+                        buttonText:
+                          viewDelete.buttonText === 'แก้ไข' ? 'เสร็จ' : 'แก้ไข'
+                      })
+                    }>
+                    {viewDelete.buttonText}
+                  </Button>
 
-                  <DeleteModal header={header} toggle={closeModal} />
-                </ListGroupItem>
-              ))}
-            </ListGroup>
+                  <ListGroup>
+                    {items.map(item => (
+                      <ListGroupItem>
+                        {viewDelete.isOpen ? (
+                          <ButtonGroup>
+                            <Button
+                              className='remove-btn'
+                              color='danger'
+                              size='sm'
+                              onClick={() =>
+                                openViewDelete(DELETE_MODAL, item)
+                              }>
+                              &times;
+                            </Button>
+                            <Button
+                              color='warning'
+                              size='sm'
+                              onClick={() => openViewCheck(CHECK_MODAL, item)}>
+                              สรุปยอด
+                            </Button>
+                          </ButtonGroup>
+                        ) : null}
+                        <Button
+                          onClick={() => openViewEdit(EDIT_MODAL, item)}
+                          color='dark'>
+                          {item.name}
+                        </Button>
+
+                        <EditModal
+                          header={header}
+                          records={records}
+                          changeHeader={changeHeader}
+                          changeRecord={changeRecord}
+                          handleAddRecord={addRecord}
+                          handleRemoveRecord={removeRecord}
+                          handleSubmit={submitEdit}
+                          toggle={closeModal}
+                        />
+                        <CheckModal
+                          header={header}
+                          records={records}
+                          changeHeader={changeHeader}
+                          toggle={closeModal}
+                        />
+
+                        <DeleteModal header={header} toggle={closeModal} />
+                      </ListGroupItem>
+                    ))}
+                  </ListGroup>
+                </div>
+              </TabPane>
+              <TabPane tabId='2'>History</TabPane>
+            </TabContent>
           </div>
         ) : (
           <div>

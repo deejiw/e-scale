@@ -2,9 +2,6 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const TransactionSchema = new Schema({
-  id: {
-    type: String
-  },
   status: {
     type: String,
     required: true
@@ -13,11 +10,14 @@ const TransactionSchema = new Schema({
     type: String,
     required: [true, 'Fill in name']
   },
-  date: {
+  dateStart: {
     type: Date,
     default: Date.now
   },
-
+  dateEnd: {
+    type: Date,
+    default: Date.now
+  },
   cashAmount: {
     type: Number,
     required: false

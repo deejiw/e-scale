@@ -53,7 +53,7 @@ const AppNavBar = () => {
     <div>
       <Navbar color='dark' dark expand='sm' className='mb-5'>
         <Container>
-          <NavbarBrand href='/'>e-Scale Record System</NavbarBrand>
+          <NavbarBrand href='/'>e-Scale Management Platform</NavbarBrand>
           {/* Handle clicking toggle */}
           <NavbarToggler onClick={handleToggle} />
           <Collapse isOpen={isOpen} navbar>
