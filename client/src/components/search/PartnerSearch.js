@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { TextField, Grid, MenuItem } from '@material-ui/core'
 import { AccountCircle, FormatQuote, Call } from '@material-ui/icons'
 import { addPartner, getPartners } from '../../actions/partnerActions'
-import { paymentTemplate } from '../MainList'
+import { paymentTemplate } from '../ActiveList'
 import { banks } from '../master/banks'
 import { accountTypes } from '../master/accountTypes'
 

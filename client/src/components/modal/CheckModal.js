@@ -23,7 +23,7 @@ import { CHECK_MODAL } from './types'
 import { useSelector, useDispatch } from 'react-redux'
 import { getPartners } from '../../actions/partnerActions'
 import { checkTransaction } from '../../actions/transactionActions'
-import { paymentTemplate } from '../MainList'
+import { paymentTemplate } from '../ActiveList'
 import { accountTypes } from '../master/accountTypes'
 import { banks } from '../master/banks'
 import { usePrevious, updateError } from '../auth/customHook'
@@ -40,7 +40,7 @@ const initialState = {
   msg: null
 }
 
-const CheckModal = ({ header, records, changeHeader, toggle }) => {
+const CheckModal = ({ header, records, toggle }) => {
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -88,21 +88,21 @@ const CheckModal = ({ header, records, changeHeader, toggle }) => {
 
   const handleAddActivePayment = () => {
     if (!state.isReadOnly && activePayment.length == 0 && !state.isOpen) {
-      setState({
-        ...state,
+      setState(prev => ({
+        ...prev,
         isAccount: true,
         isAccountReadOnly: true,
         isOpen: true
-      })
+      }))
     } else if (
       !state.isReadOnly &&
       activePayment.length !== 0 &&
       state.isOpen
     ) {
-      setState({
-        ...state,
+      setState(prev => ({
+        ...prev,
         isReadOnly: true
-      })
+      }))
     } else if (state.isReadOnly && state.isAccountReadOnly) {
       setActivePayment([])
       setState({
@@ -129,13 +129,10 @@ const CheckModal = ({ header, records, changeHeader, toggle }) => {
   const changeActivePayment = e =>
     setActivePayment({ ...activePayment, [e.target.name]: e.target.value })
 
-  const changeRadio = e => {
-    setState({ ...state, selected: e.target.value })
-  }
+  const changeRadio = e => setState({ ...state, selected: e.target.value })
 
-  const toggleCash = () => {
-    setState({ ...state, isCash: !state.isCash })
-  }
+  const toggleCash = () => setState({ ...state, isCash: !state.isCash })
+
   const subAmount = []
 
   const netWeight = (weighIn, weighOut, deduction) =>
@@ -153,6 +150,9 @@ const CheckModal = ({ header, records, changeHeader, toggle }) => {
     const total = subAmount.reduce((a, b) => a + b, 0)
     setState({ ...state, totalAmount: total })
   }
+
+  const handleTotalAmount = () =>
+    setState(prev => ({ ...prev, cashAmount: prev.totalAmount }))
 
   const formatComma = number => {
     return number
@@ -195,9 +195,7 @@ const CheckModal = ({ header, records, changeHeader, toggle }) => {
       <Modal
         isOpen={header.isOpen && header.type === CHECK_MODAL}
         toggle={toggle}>
-        <ModalHeader toggle={toggle} onChange={changeHeader}>
-          สรุปยอด {header.name}
-        </ModalHeader>
+        <ModalHeader toggle={toggle}>สรุปยอด {header.name}</ModalHeader>
         <ModalBody>
           <Form>
             <Container fluid>
@@ -308,12 +306,14 @@ const CheckModal = ({ header, records, changeHeader, toggle }) => {
                 direction='row'
                 justify='flex-end'
                 alignItems='center'
-                style={{ margin: '-0.5rem 0 -1rem 0' }}>
+                style={{ margin: '-0.75rem 0 -0.75rem 0' }}>
                 <Grid item xs={2.5} sm={2.5}>
                   <Label>ยอดรวมทั้งสิ้น</Label>
                 </Grid>
-                <Grid item xs={2.5} sm={2.5}>
-                  <h5>฿{formatComma(state.totalAmount)}</h5>
+                <Grid item xs='auto' sm='auto' md='auto' lg='auto' xl='auto'>
+                  <Button onClick={handleTotalAmount}>
+                    {`฿ ${formatComma(state.totalAmount)}`}
+                  </Button>
                 </Grid>
               </Grid>
 
