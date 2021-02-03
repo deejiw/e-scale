@@ -47,7 +47,6 @@ const ActiveList = () => {
   // eslint-disable-next-line
   useEffect(() => dispatch(getTransactions()))
   const items = useSelector(_ => _.transaction.items)
-  const isAuthenticated = useSelector(_ => _.auth.isAuthenticated)
 
   const recordsTemplate = {
     carTemplate,
@@ -184,96 +183,87 @@ const ActiveList = () => {
   return (
     <div>
       <Container>
-        {isAuthenticated ? (
-          <div style={{ margin: '1rem 0 0 0' }}>
-            <Button // Add Record
-              color='success'
-              style={{ margin: '0 0.5rem 1rem 0' }}
-              onClick={() => openViewAdd(ADD_MODAL)}>
-              บิลใหม่
-            </Button>
+        <div style={{ margin: '1rem 0 0 0' }}>
+          <Button // Add Record
+            color='success'
+            style={{ margin: '0 0.5rem 1rem 0' }}
+            onClick={() => openViewAdd(ADD_MODAL)}>
+            บิลใหม่
+          </Button>
 
-            <Button // Edit
-              color={viewDelete.buttonText === 'แก้ไข' ? 'primary' : 'warning'}
-              style={{ marginBottom: '1rem', marginRight: '0.5rem' }}
-              onClick={() =>
-                setViewDelete({
-                  isOpen: !viewDelete.isOpen,
-                  buttonText:
-                    viewDelete.buttonText === 'แก้ไข' ? 'เสร็จ' : 'แก้ไข'
-                })
-              }>
-              {viewDelete.buttonText}
-            </Button>
+          <Button // Edit
+            color={viewDelete.buttonText === 'แก้ไข' ? 'primary' : 'warning'}
+            style={{ marginBottom: '1rem', marginRight: '0.5rem' }}
+            onClick={() =>
+              setViewDelete({
+                isOpen: !viewDelete.isOpen,
+                buttonText:
+                  viewDelete.buttonText === 'แก้ไข' ? 'เสร็จ' : 'แก้ไข'
+              })
+            }>
+            {viewDelete.buttonText}
+          </Button>
 
-            <ListGroup>
-              {items
-                .filter(item => item.status.includes('active'))
-                .map(item => (
-                  <ListGroupItem>
-                    {viewDelete.isOpen ? (
-                      <ButtonGroup>
-                        <Button
-                          className='remove-btn'
-                          color='danger'
-                          size='sm'
-                          onClick={() => openViewDelete(DELETE_MODAL, item)}>
-                          &times;
-                        </Button>
-                        <Button
-                          color='warning'
-                          size='sm'
-                          onClick={() => openViewCheck(CHECK_MODAL, item)}>
-                          สรุปยอด
-                        </Button>
-                      </ButtonGroup>
-                    ) : null}
-                    <Button
-                      onClick={() => openViewEdit(EDIT_MODAL, item)}
-                      color='dark'>
-                      {item.name}
-                    </Button>
+          <ListGroup>
+            {items
+              .filter(item => item.status.includes('active'))
+              .map(item => (
+                <ListGroupItem>
+                  {viewDelete.isOpen ? (
+                    <ButtonGroup>
+                      <Button
+                        className='remove-btn'
+                        color='danger'
+                        size='sm'
+                        onClick={() => openViewDelete(DELETE_MODAL, item)}>
+                        &times;
+                      </Button>
+                      <Button
+                        color='warning'
+                        size='sm'
+                        onClick={() => openViewCheck(CHECK_MODAL, item)}>
+                        สรุปยอด
+                      </Button>
+                    </ButtonGroup>
+                  ) : null}
+                  <Button
+                    onClick={() => openViewEdit(EDIT_MODAL, item)}
+                    color='dark'>
+                    {item.name}
+                  </Button>
 
-                    <EditModal
-                      header={header}
-                      records={records}
-                      changeHeader={changeHeader}
-                      changeRecord={changeRecord}
-                      handleAddRecord={addRecord}
-                      handleRemoveRecord={removeRecord}
-                      handleSubmit={submitEdit}
-                      toggle={closeModal}
-                    />
-                    <CheckModal
-                      header={header}
-                      records={records}
-                      toggle={closeModal}
-                    />
+                  <EditModal
+                    header={header}
+                    records={records}
+                    changeHeader={changeHeader}
+                    changeRecord={changeRecord}
+                    handleAddRecord={addRecord}
+                    handleRemoveRecord={removeRecord}
+                    handleSubmit={submitEdit}
+                    toggle={closeModal}
+                  />
+                  <CheckModal
+                    header={header}
+                    records={records}
+                    toggle={closeModal}
+                  />
 
-                    <DeleteModal header={header} toggle={closeModal} />
-                  </ListGroupItem>
-                ))}
-            </ListGroup>
+                  <DeleteModal header={header} toggle={closeModal} />
+                </ListGroupItem>
+              ))}
+          </ListGroup>
 
-            <AddModal
-              header={header}
-              plate={plate}
-              changeHeader={changeHeader}
-              changePlate={changePlate}
-              handleAddPlate={addPlate}
-              handleRemovePlate={removePlate}
-              handleSubmit={submitAdd}
-              toggle={closeModal}
-            />
-          </div>
-        ) : (
-          <div>
-            <br />
-            <h4 className='mb-3 ml-4'>Welcome to e-Scale Record System</h4>
-            <br />
-            <h4 className='mb-3 ml-4'>Please login to access the system</h4>
-          </div>
-        )}
+          <AddModal
+            header={header}
+            plate={plate}
+            changeHeader={changeHeader}
+            changePlate={changePlate}
+            handleAddPlate={addPlate}
+            handleRemovePlate={removePlate}
+            handleSubmit={submitAdd}
+            toggle={closeModal}
+          />
+        </div>
       </Container>
     </div>
   )
@@ -284,8 +274,7 @@ ActiveList.propTypes = {
   addTransaction: PropTypes.func.isRequired,
   updateTransaction: PropTypes.func.isRequired,
   openViewDelete: PropTypes.func.isRequired,
-  items: PropTypes.object.isRequired,
-  isAuthenticated: PropTypes.bool.isRequired
+  items: PropTypes.object.isRequired
 }
 
 export default memo(ActiveList)

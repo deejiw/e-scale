@@ -1,5 +1,5 @@
 // aka container; a  compoenent that is hooked with redux
-import React, { useState, useEffect, memo } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Button,
   Modal,
@@ -7,18 +7,17 @@ import {
   ModalBody,
   Form,
   FormGroup,
-  Label,
   Input,
   NavLink,
   Alert
 } from 'reactstrap'
 import { useSelector, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
-import { register } from '../../actions/authActions'
+import { login } from '../../actions/authActions'
 import { clearErrors } from '../../actions/errorActions'
-import { usePrevious, updateError } from './customHook'
+import { usePrevious, updateError } from '../../error/customHook'
 
-const RegisterModal = () => {
+const LoginModal = () => {
   const dispatch = useDispatch()
   const [state, setState] = useState({
     modal: false,
@@ -36,7 +35,7 @@ const RegisterModal = () => {
 
   useEffect(() => {
     updateError(
-      'REGISTER_FAIL',
+      'LOGIN_FAIL',
       state,
       error,
       prevError,
@@ -44,7 +43,7 @@ const RegisterModal = () => {
       setState,
       toggle
     ) // eslint-disable-next-line
-  }, prevError)
+  }, [prevError])
 
   const toggle = () => {
     dispatch(clearErrors())
@@ -56,41 +55,32 @@ const RegisterModal = () => {
 
   const onSubmit = e => {
     e.preventDefault()
-    const { name, email, password } = state
-    const newUser = {
-      name,
+    const { email, password } = state
+    const user = {
       email,
       password
     }
-    dispatch(register(newUser))
+    dispatch(login(user))
   }
 
   return (
     <div>
       <NavLink onClick={toggle} href='#'>
-        Register
+        Login
       </NavLink>
 
       <Modal isOpen={state.modal} toggle={toggle}>
-        <ModalHeader toggle={toggle}>Register</ModalHeader>
+        <ModalHeader toggle={toggle}>Login</ModalHeader>
         <ModalBody>
           {state.msg ? <Alert color='danger'>{state.msg}</Alert> : null}
           <Form onSubmit={onSubmit}>
             <FormGroup>
-              <Label for='name'>ชื่อ-นามสกุล</Label>
-              <Input
-                type='text'
-                name='name'
-                id='name'
-                placeholder='Name'
-                className='mb-3'
-                onChange={onChange}
-              />
               <Input
                 type='email'
                 name='email'
                 id='email'
                 placeholder='Email'
+                autoFocus='true'
                 className='mb-3'
                 onChange={onChange}
               />
@@ -103,7 +93,7 @@ const RegisterModal = () => {
                 onChange={onChange}
               />
               <Button color='dark' style={{ marginTop: '2rem' }} block>
-                ลงทะเบียน
+                เข้าสู่ระบบ
               </Button>
             </FormGroup>
           </Form>
@@ -112,12 +102,11 @@ const RegisterModal = () => {
     </div>
   )
 }
-
-RegisterModal.propTypes = {
+LoginModal.propTypes = {
   isAuthenticated: PropTypes.bool,
   error: PropTypes.object.isRequired,
-  register: PropTypes.func.isRequired,
+  login: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired
 }
 
-export default memo(RegisterModal)
+export default LoginModal

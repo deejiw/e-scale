@@ -1,5 +1,4 @@
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+const { Schema, model } = require('mongoose')
 
 const UserSchema = new Schema({
   name: {
@@ -23,4 +22,4 @@ const UserSchema = new Schema({
 })
 
 // Define MongoDB collection name here
-module.exports = User = mongoose.model('user', UserSchema)
+module.exports = User = model('user', UserSchema)

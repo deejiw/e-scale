@@ -6,17 +6,18 @@ import {
   NavbarBrand,
   Nav,
   NavItem,
+  NavLink,
   Container
 } from 'reactstrap'
 import { useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
-
+import history from '../history'
 import RegisterModal from './auth/RegisterModal'
 import LoginModal from './auth/LoginModal'
 import Logout from './auth/Logout'
-import Partner from './Partner'
-
-const AppNavBar = () => {
+import Partner from '../Partner/Partner'
+import Payer from '../Payer/Payers'
+const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false)
   const handleToggle = () => setIsOpen(!isOpen)
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
@@ -29,6 +30,7 @@ const AppNavBar = () => {
           <strong>{user ? `${user.name}` : ''}</strong>
         </span>
       </NavItem>
+      <NavLink onClick={() => history.push('/Payer')}>Payer</NavLink>
       <NavItem>
         <Partner />
       </NavItem>
@@ -68,9 +70,9 @@ const AppNavBar = () => {
   )
 }
 
-AppNavBar.propTypes = {
+NavBar.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
   user: PropTypes.object
 }
 
-export default memo(AppNavBar)
+export default memo(NavBar)

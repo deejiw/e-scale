@@ -26,7 +26,6 @@ const HistoryList = () => {
   }, [])
 
   const items = useSelector(_ => _.transaction.items)
-  const isAuthenticated = useSelector(_ => _.auth.isAuthenticated)
 
   const initialState = {
     isOpen: false,
@@ -57,39 +56,29 @@ const HistoryList = () => {
   return (
     <div>
       <Container>
-        {isAuthenticated ? (
-          <div style={{ margin: '1rem 0 0 0' }}>
-            <ListGroup>
-              {items
-                .filter(item => item.status.includes('paid'))
-                .map(item => (
-                  <ListGroupItem>
-                    <Button
-                      onClick={() => openView(HISTORY_MODAL, item)}
-                      color='dark'>
-                      {item.name}
-                    </Button>
-                    <HistoryModal header={header} toggle={closeModal} />
-                  </ListGroupItem>
-                ))}
-            </ListGroup>
-          </div>
-        ) : (
-          <div>
-            <br />
-            <h4 className='mb-3 ml-4'>Welcome to e-Scale Record System</h4>
-            <br />
-            <h4 className='mb-3 ml-4'>Please login to access the system</h4>
-          </div>
-        )}
+        <div style={{ margin: '1rem 0 0 0' }}>
+          <ListGroup>
+            {items
+              .filter(item => item.status.includes('paid'))
+              .map(item => (
+                <ListGroupItem>
+                  <Button
+                    onClick={() => openView(HISTORY_MODAL, item)}
+                    color='dark'>
+                    {item.name}
+                  </Button>
+                  <HistoryModal header={header} toggle={closeModal} />
+                </ListGroupItem>
+              ))}
+          </ListGroup>
+        </div>
       </Container>
     </div>
   )
 }
 
 HistoryList.propTypes = {
-  items: PropTypes.object.isRequired,
-  isAuthenticated: PropTypes.bool.isRequired
+  items: PropTypes.object.isRequired
 }
 
 export default memo(HistoryList)

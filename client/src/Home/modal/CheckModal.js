@@ -26,7 +26,7 @@ import { checkTransaction } from '../../actions/transactionActions'
 import { paymentTemplate } from '../ActiveList'
 import { accountTypes } from '../master/accountTypes'
 import { banks } from '../master/banks'
-import { usePrevious, updateError } from '../auth/customHook'
+import { usePrevious, updateError } from '../../error/customHook'
 
 const initialState = {
   isOpen: false,

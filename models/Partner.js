@@ -1,5 +1,4 @@
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+const { Schema, model } = require('mongoose')
 
 const PartnerSchema = new Schema({
   name: {
@@ -45,4 +44,4 @@ const PartnerSchema = new Schema({
 })
 
 // Define MongoDB collection name here
-module.exports = Partner = mongoose.model('partner', PartnerSchema)
+module.exports = Partner = model('partner', PartnerSchema)

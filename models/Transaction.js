@@ -1,5 +1,4 @@
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+const { Schema, model } = require('mongoose')
 
 const TransactionSchema = new Schema({
   status: {
@@ -92,4 +91,4 @@ const TransactionSchema = new Schema({
 })
 
 // Define MongoDB collection name here
-module.exports = Transaction = mongoose.model('transaction', TransactionSchema)
+module.exports = Transaction = model('transaction', TransactionSchema)
