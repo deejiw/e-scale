@@ -13,10 +13,11 @@ import {
 } from 'reactstrap'
 import { useSelector, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
+
 import { login } from '../actions/authActions'
 import { clearErrors } from '../actions/errorActions'
 
-const Partner = () => {
+const Partners = () => {
   const dispatch = useDispatch()
   const [state, setState] = useState({
     modal: false,
@@ -74,41 +75,23 @@ const Partner = () => {
 
   return (
     <div>
-      <NavLink onClick={toggle} href='#'>
-        คู่ค้า
-      </NavLink>
-
-      <Modal isOpen={state.modal} toggle={toggle}>
-        <ModalHeader toggle={toggle}>จัดการคู่ค้า</ModalHeader>
-        <ModalBody>
-          {state.msg ? <Alert color='danger'>{state.msg}</Alert> : null}
-          <Form onSubmit={onSubmit}>
-            <FormGroup>
-              <Input
-                type='text'
-                name='name'
-                id='name'
-                placeholder='Name'
-                className='mb-3'
-                onChange={onChange}
-              />
-
-              <Button color='dark' style={{ marginTop: '2rem' }} block>
-                Search
-              </Button>
-            </FormGroup>
-          </Form>
-        </ModalBody>
-      </Modal>
+      <Input
+        type='text'
+        name='name'
+        id='name'
+        placeholder='Name'
+        className='mb-3'
+        onChange={onChange}
+      />
     </div>
   )
 }
 
-Partner.propTypes = {
+Partners.propTypes = {
   isAuthenticated: PropTypes.bool,
   error: PropTypes.object.isRequired,
   login: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired
 }
 
-export default memo(Partner)
+export default memo(Partners)

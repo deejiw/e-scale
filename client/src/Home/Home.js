@@ -20,7 +20,7 @@ const Home = () => {
   }
 
   return (
-    <div>
+    <div className='Home'>
       <Container>
         <Nav tabs>
           <NavItem>

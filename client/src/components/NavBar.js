@@ -15,7 +15,7 @@ import history from '../history'
 import RegisterModal from './auth/RegisterModal'
 import LoginModal from './auth/LoginModal'
 import Logout from './auth/Logout'
-import Partner from '../Partner/Partner'
+import Partner from '../Partner/Partners'
 import Payer from '../Payer/Payers'
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -32,7 +32,7 @@ const NavBar = () => {
       </NavItem>
       <NavLink onClick={() => history.push('/Payer')}>Payer</NavLink>
       <NavItem>
-        <Partner />
+        <NavLink onClick={() => history.push('/Partner')}>Partner</NavLink>
       </NavItem>
       <NavItem>
         <Logout />

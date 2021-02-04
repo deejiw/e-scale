@@ -1,11 +1,5 @@
 import React, { useState, useEffect, memo } from 'react'
-import {
-  Button,
-  ButtonGroup,
-  Container,
-  ListGroup,
-  ListGroupItem
-} from 'reactstrap'
+import { Button, Container, ListGroup, ListGroupItem } from 'reactstrap'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { getTransactions } from '../actions/transactionActions'
