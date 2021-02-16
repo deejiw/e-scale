@@ -8,11 +8,11 @@ import {
   Label,
   Container
 } from 'reactstrap'
-import { deleteTransaction } from '../../actions/transactionActions'
+
 import { DELETE_MODAL } from './types'
 import { useDispatch } from 'react-redux'
 
-const DeleteModal = ({ header, toggle }) => {
+const DeleteModal = ({ header, toggle, deleteTransaction }) => {
   const dispatch = useDispatch()
   return (
     <Modal

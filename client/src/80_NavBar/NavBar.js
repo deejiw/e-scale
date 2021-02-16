@@ -6,22 +6,25 @@ import {
   NavbarBrand,
   Nav,
   NavItem,
-  NavLink,
   Container
 } from 'reactstrap'
-import { useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
-import history from '../history'
-import RegisterModal from './auth/RegisterModal'
-import LoginModal from './auth/LoginModal'
-import Logout from './auth/Logout'
-import Partner from '../Partner/Partners'
-import Payer from '../Payer/Payers'
-const NavBar = () => {
+import { Link } from 'react-router-dom'
+import RegisterModal from './components/RegisterModal'
+import LoginModal from './components/LoginModal'
+import Logout from './components/Logout'
+
+const NavBar = ({
+  isAuthenticated,
+  user,
+  error,
+  clearErrors,
+  login,
+  logout,
+  register
+}) => {
   const [isOpen, setIsOpen] = useState(false)
   const handleToggle = () => setIsOpen(!isOpen)
-  const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
-  const user = useSelector(state => state.auth.user)
 
   const authLinks = (
     <Fragment>
@@ -30,12 +33,21 @@ const NavBar = () => {
           <strong>{user ? `${user.name}` : ''}</strong>
         </span>
       </NavItem>
-      <NavLink onClick={() => history.push('/Payer')}>Payer</NavLink>
+
       <NavItem>
-        <NavLink onClick={() => history.push('/Partner')}>Partner</NavLink>
+        <Link to='/'>Home</Link>
       </NavItem>
+
       <NavItem>
-        <Logout />
+        <Link to='/payer'>Payer</Link>
+      </NavItem>
+
+      <NavItem>
+        <Link to='/partner'>Partner</Link>
+      </NavItem>
+
+      <NavItem>
+        <Logout logout={logout} />
       </NavItem>
     </Fragment>
   )
@@ -43,10 +55,20 @@ const NavBar = () => {
   const guestLinks = (
     <Fragment>
       <NavItem>
-        <RegisterModal />
+        <RegisterModal
+          isAuthenticated={isAuthenticated}
+          register={register}
+          error={error}
+          clearErrors={clearErrors}
+        />
       </NavItem>
       <NavItem>
-        <LoginModal />
+        <LoginModal
+          isAuthenticated={isAuthenticated}
+          login={login}
+          error={error}
+          clearErrors={clearErrors}
+        />
       </NavItem>
     </Fragment>
   )
@@ -72,7 +94,11 @@ const NavBar = () => {
 
 NavBar.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
-  user: PropTypes.object
+  user: PropTypes.object,
+  error: PropTypes.object.isRequired,
+  clearErrors: PropTypes.func.isRequired,
+  login: PropTypes.func.isRequired,
+  logout: PropTypes.func.isRequired
 }
 
 export default memo(NavBar)

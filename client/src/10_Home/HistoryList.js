@@ -1,8 +1,6 @@
 import React, { useState, useEffect, memo } from 'react'
 import { Button, Container, ListGroup, ListGroupItem } from 'reactstrap'
-import { useSelector, useDispatch } from 'react-redux'
-
-import { getTransactions } from '../actions/transactionActions'
+import { useDispatch } from 'react-redux'
 
 import { HISTORY_MODAL } from './modal/types'
 import PropTypes from 'prop-types'
@@ -10,7 +8,7 @@ import HistoryModal from './modal/HistoryModal'
 import { carTemplate, recordTemplate, paymentTemplate } from './ActiveList'
 
 // ****************HistoryList*******************
-const HistoryList = () => {
+const HistoryList = ({ items, getTransactions }) => {
   const dispatch = useDispatch()
 
   // eslint-disable-next-line
@@ -18,8 +16,6 @@ const HistoryList = () => {
     dispatch(getTransactions())
     setHeader(initialState)
   }, [])
-
-  const items = useSelector(_ => _.transaction.items)
 
   const initialState = {
     isOpen: false,

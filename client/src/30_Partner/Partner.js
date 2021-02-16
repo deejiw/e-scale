@@ -17,7 +17,7 @@ import PropTypes from 'prop-types'
 import { login } from '../actions/authActions'
 import { clearErrors } from '../actions/errorActions'
 
-const Partners = () => {
+const Partner = () => {
   const dispatch = useDispatch()
   const [state, setState] = useState({
     modal: false,
@@ -87,11 +87,11 @@ const Partners = () => {
   )
 }
 
-Partners.propTypes = {
+Partner.propTypes = {
   isAuthenticated: PropTypes.bool,
   error: PropTypes.object.isRequired,
   login: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired
 }
 
-export default memo(Partners)
+export default memo(Partner)

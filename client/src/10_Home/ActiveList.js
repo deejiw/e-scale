@@ -6,19 +6,13 @@ import {
   ListGroup,
   ListGroupItem
 } from 'reactstrap'
-import { useSelector, useDispatch } from 'react-redux'
-
-import {
-  addTransaction,
-  getTransactions,
-  updateTransaction
-} from '../actions/transactionActions'
+import { useDispatch } from 'react-redux'
+import PropTypes from 'prop-types'
 
 import { ADD_MODAL, CHECK_MODAL, EDIT_MODAL, DELETE_MODAL } from './modal/types'
 import AddModal from './modal/AddModal'
 import EditModal from './modal/EditModal'
 import CheckModal from './modal/CheckModal'
-import PropTypes from 'prop-types'
 import DeleteModal from './modal/DeleteModal'
 
 export const carTemplate = {
@@ -42,11 +36,20 @@ export const paymentTemplate = {
 }
 
 // ****************ActiveList*******************
-const ActiveList = () => {
+const ActiveList = ({
+  isAuthenticated,
+  error,
+  clearErrors,
+  items,
+  addTransaction,
+  getTransactions,
+  updateTransaction,
+  checkTransaction,
+  deleteTransaction
+}) => {
   const dispatch = useDispatch()
   // eslint-disable-next-line
   useEffect(() => dispatch(getTransactions()))
-  const items = useSelector(_ => _.transaction.items)
 
   const recordsTemplate = {
     carTemplate,
@@ -243,12 +246,20 @@ const ActiveList = () => {
                     toggle={closeModal}
                   />
                   <CheckModal
+                    isAuthenticated={isAuthenticated}
+                    error={error}
+                    clearErrors={clearErrors}
                     header={header}
                     records={records}
+                    checkTransaction={checkTransaction}
                     toggle={closeModal}
                   />
 
-                  <DeleteModal header={header} toggle={closeModal} />
+                  <DeleteModal
+                    header={header}
+                    toggle={closeModal}
+                    deleteTransaction={deleteTransaction}
+                  />
                 </ListGroupItem>
               ))}
           </ListGroup>
@@ -270,6 +281,9 @@ const ActiveList = () => {
 }
 
 ActiveList.propTypes = {
+  isAuthenticated: PropTypes.bool.isRequired,
+  error: PropTypes.object.isRequired,
+  clearErrors: PropTypes.func.isRequired,
   getTransactions: PropTypes.func.isRequired,
   addTransaction: PropTypes.func.isRequired,
   updateTransaction: PropTypes.func.isRequired,

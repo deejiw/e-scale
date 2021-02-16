@@ -22,7 +22,6 @@ import {
 import { CHECK_MODAL } from './types'
 import { useSelector, useDispatch } from 'react-redux'
 import { getPartners } from '../../actions/partnerActions'
-import { checkTransaction } from '../../actions/transactionActions'
 import { paymentTemplate } from '../ActiveList'
 import { accountTypes } from '../master/accountTypes'
 import { banks } from '../master/banks'
@@ -40,7 +39,15 @@ const initialState = {
   msg: null
 }
 
-const CheckModal = ({ header, records, toggle }) => {
+const CheckModal = ({
+  isAuthenticated,
+  error,
+  clearErrors,
+  header,
+  records,
+  checkTransaction,
+  toggle
+}) => {
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -51,10 +58,6 @@ const CheckModal = ({ header, records, toggle }) => {
       setActivePayment([])
     }
   }, [header.isOpen])
-
-  const error = useSelector(state => state.error)
-
-  const isAuthenticated = useSelector(state => state.isAuthenticated)
 
   const prevError = usePrevious(error)
 

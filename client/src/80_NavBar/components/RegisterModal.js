@@ -12,13 +12,11 @@ import {
   NavLink,
   Alert
 } from 'reactstrap'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
-import { register } from '../../actions/authActions'
-import { clearErrors } from '../../actions/errorActions'
 import { usePrevious, updateError } from '../../error/customHook'
 
-const RegisterModal = () => {
+const RegisterModal = ({ isAuthenticated, register, error, clearErrors }) => {
   const dispatch = useDispatch()
   const [state, setState] = useState({
     modal: false,
@@ -27,10 +25,6 @@ const RegisterModal = () => {
     password: '',
     msg: null
   })
-
-  const error = useSelector(state => state.error)
-
-  const isAuthenticated = useSelector(state => state.isAuthenticated)
 
   const prevError = usePrevious(error)
 

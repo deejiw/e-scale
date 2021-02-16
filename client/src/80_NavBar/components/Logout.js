@@ -1,10 +1,10 @@
 import React, { Fragment } from 'react'
 import { NavLink } from 'reactstrap'
 import { useDispatch } from 'react-redux'
-import { logout } from '../../actions/authActions'
+
 import PropTypes from 'prop-types'
 
-const Logout = () => {
+const Logout = ({ logout }) => {
   const dispatch = useDispatch()
   return (
     <Fragment>

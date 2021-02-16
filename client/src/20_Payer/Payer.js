@@ -1,6 +1,6 @@
 import React from 'react'
 import { ListGroup } from 'reactstrap'
-const Payers = () => {
+const Payer = () => {
   return (
     <div>
       <ListGroup>
@@ -11,4 +11,4 @@ const Payers = () => {
     </div>
   )
 }
-export default Payers
+export default Payer

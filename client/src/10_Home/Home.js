@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 import {
   Container,
   Nav,
@@ -8,11 +9,21 @@ import {
   TabPane
 } from 'reactstrap'
 
+import {
+  addTransaction,
+  getTransactions,
+  updateTransaction,
+  checkTransaction,
+  deleteTransaction
+} from '../actions/transactionActions'
+
 import ActiveList from './ActiveList'
 import HistoryList from './HistoryList'
 import classnames from 'classnames'
 
-const Home = () => {
+const Home = ({ isAuthenticated, error, clearErrors }) => {
+  const items = useSelector(state => state.transaction.items)
+
   const [activeTab, setActiveTab] = useState('1')
 
   const toggle = tab => {
@@ -44,10 +55,20 @@ const Home = () => {
         </Nav>
         <TabContent activeTab={activeTab}>
           <TabPane tabId='1'>
-            <ActiveList />
+            <ActiveList
+              isAuthenticated={isAuthenticated}
+              error={error}
+              clearErrors={clearErrors}
+              items={items}
+              addTransaction={addTransaction}
+              getTransactions={getTransactions}
+              updateTransaction={updateTransaction}
+              checkTransaction={checkTransaction}
+              deleteTransaction={deleteTransaction}
+            />
           </TabPane>
           <TabPane tabId='2'>
-            <HistoryList />
+            <HistoryList items={items} getTransactions={getTransactions} />
           </TabPane>
         </TabContent>
       </Container>
